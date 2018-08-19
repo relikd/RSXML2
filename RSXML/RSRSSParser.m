@@ -31,6 +31,7 @@
 @property (nonatomic) BOOL endRSSFound;
 @property (nonatomic) NSString *link;
 @property (nonatomic) NSString *title;
+@property (nonatomic) NSString *subtitle;
 @property (nonatomic) NSDate *dateParsed;
 
 @end
@@ -105,6 +106,7 @@
 	[self parse];
 
 	RSParsedFeed *parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.urlString title:self.title link:self.link articles:self.articles];
+	parsedFeed.subtitle = self.subtitle;
 
 	return parsedFeed;
 }
@@ -235,6 +237,10 @@ static const NSInteger kTrueLength = 5;
 
 	else if (RSSAXEqualTags(localName, kTitle, kTitleLength)) {
 		self.title = self.parser.currentStringWithTrimmedWhitespace;
+	}
+	
+	else if (RSSAXEqualTags(localName, kDescription, kDescriptionLength)) {
+		self.subtitle = self.parser.currentStringWithTrimmedWhitespace;
 	}
 }
 

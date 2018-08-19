@@ -97,5 +97,9 @@
 	(void)self.articleID;
 }
 
+- (NSString*)description {
+	return [NSString stringWithFormat:@"{%@ '%@', guid: %@}", [self class], self.title, self.guid];
+}
+
 @end
 

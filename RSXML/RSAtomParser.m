@@ -31,6 +31,7 @@
 @property (nonatomic) NSMutableString *xhtmlString;
 @property (nonatomic) NSString *link;
 @property (nonatomic) NSString *title;
+@property (nonatomic) NSString *subtitle;
 @property (nonatomic) NSMutableArray *articles;
 @property (nonatomic) NSDate *dateParsed;
 @property (nonatomic) RSSAXParser *parser;
@@ -110,6 +111,7 @@
 	[self parse];
 
 	RSParsedFeed *parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.urlString title:self.title link:self.link articles:self.articles];
+	parsedFeed.subtitle = self.subtitle;
 
 	return parsedFeed;
 }
@@ -140,6 +142,9 @@ static const NSInteger kIDLength = 3;
 
 static const char *kTitle = "title";
 static const NSInteger kTitleLength = 6;
+
+static const char *kSubtitle = "subtitle";
+static const NSInteger kSubtitleLength = 9;
 
 static const char *kContent = "content";
 static const NSInteger kContentLength = 8;
@@ -271,6 +276,13 @@ static const NSInteger kSelfLength = 5;
 
 	if (self.title.length < 1) {
 		self.title = self.parser.currentStringWithTrimmedWhitespace;
+	}
+}
+
+- (void)addFeedSubtitle {
+	
+	if (self.subtitle.length < 1) {
+		self.subtitle = self.parser.currentStringWithTrimmedWhitespace;
 	}
 }
 
@@ -498,8 +510,13 @@ static const NSInteger kSelfLength = 5;
 		self.parsingSource = NO;
 	}
 
-	else if (!self.parsingArticle && !self.parsingSource && RSSAXEqualTags(localName, kTitle, kTitleLength)) {
-		[self addFeedTitle];
+	else if (!self.parsingArticle && !self.parsingSource) {
+		if (RSSAXEqualTags(localName, kTitle, kTitleLength)) {
+			[self addFeedTitle];
+		}
+		else if (RSSAXEqualTags(localName, kSubtitle, kSubtitleLength)) {
+			[self addFeedSubtitle];
+		}
 	}
 	[self.attributesStack removeLastObject];
 }

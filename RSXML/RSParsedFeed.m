@@ -25,5 +25,9 @@
 	return self;
 }
 
+- (NSString*)description {
+	return [NSString stringWithFormat:@"{%@ (%@), title: '%@', subtitle: '%@', entries: %@}",
+			[self class], _link, _title, _subtitle, _articles];
+}
 
 @end

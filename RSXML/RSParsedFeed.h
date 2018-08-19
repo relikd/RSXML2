@@ -17,6 +17,7 @@
 @property (nonatomic, readonly, nonnull) NSString *urlString;
 @property (nonatomic, readonly, nullable) NSString *title;
 @property (nonatomic, readonly, nullable) NSString *link;
+@property (nonatomic, nullable) NSString *subtitle;
 @property (nonatomic, readonly, nonnull) NSSet <RSParsedArticle *>*articles;
 
 @end
