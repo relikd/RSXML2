@@ -18,6 +18,7 @@
 
 @property (nonatomic, nullable) NSString *guid;
 @property (nonatomic, nullable) NSString *title;
+@property (nonatomic, nullable) NSString *abstract;
 @property (nonatomic, nullable) NSString *body;
 @property (nonatomic, nullable) NSString *link;
 @property (nonatomic, nullable) NSString *permalink;

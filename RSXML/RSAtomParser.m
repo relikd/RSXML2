@@ -29,9 +29,9 @@
 @property (nonatomic) NSMutableArray *attributesStack;
 @property (nonatomic, readonly) NSDictionary *currentAttributes;
 @property (nonatomic) NSMutableString *xhtmlString;
-@property (nonatomic) NSString *link;
-@property (nonatomic) NSString *title;
-@property (nonatomic) NSString *subtitle;
+@property (nonatomic) NSString *feedLink;
+@property (nonatomic) NSString *feedTitle;
+@property (nonatomic) NSString *feedSubtitle;
 @property (nonatomic) NSMutableArray *articles;
 @property (nonatomic) NSDate *dateParsed;
 @property (nonatomic) RSSAXParser *parser;
@@ -110,8 +110,8 @@
 
 	[self parse];
 
-	RSParsedFeed *parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.urlString title:self.title link:self.link articles:self.articles];
-	parsedFeed.subtitle = self.subtitle;
+	RSParsedFeed *parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.urlString title:self.feedTitle link:self.feedLink articles:self.articles];
+	parsedFeed.subtitle = self.feedSubtitle;
 
 	return parsedFeed;
 }
@@ -261,28 +261,28 @@ static const NSInteger kSelfLength = 5;
 
 - (void)addFeedLink {
 
-	if (self.link && self.link.length > 0) {
+	if (self.feedLink && self.feedLink.length > 0) {
 		return;
 	}
 
 	NSString *related = self.currentAttributes[kRelKey];
 	if (related == kAlternateValue) {
-		self.link = self.currentAttributes[kHrefKey];
+		self.feedLink = self.currentAttributes[kHrefKey];
 	}
 }
 
 
 - (void)addFeedTitle {
 
-	if (self.title.length < 1) {
-		self.title = self.parser.currentStringWithTrimmedWhitespace;
+	if (self.feedTitle.length < 1) {
+		self.feedTitle = self.parser.currentStringWithTrimmedWhitespace;
 	}
 }
 
 - (void)addFeedSubtitle {
 	
-	if (self.subtitle.length < 1) {
-		self.subtitle = self.parser.currentStringWithTrimmedWhitespace;
+	if (self.feedSubtitle.length < 1) {
+		self.feedSubtitle = self.parser.currentStringWithTrimmedWhitespace;
 	}
 }
 
@@ -319,9 +319,7 @@ static const NSInteger kSelfLength = 5;
 
 - (void)addSummary {
 
-	if (!self.currentArticle.body) {
-		self.currentArticle.body = [self currentStringWithHTMLEntitiesDecoded];
-	}
+	self.currentArticle.abstract = [self currentStringWithHTMLEntitiesDecoded];
 }
 
 
@@ -472,16 +470,12 @@ static const NSInteger kSelfLength = 5;
 		BOOL isContentTag = RSSAXEqualTags(localName, kContent, kContentLength);
 		BOOL isSummaryTag = RSSAXEqualTags(localName, kSummary, kSummaryLength);
 
-		if (self.parsingArticle && (isContentTag || isSummaryTag)) {
-
+		if (self.parsingArticle) {
 			if (isContentTag) {
 				self.currentArticle.body = [self.xhtmlString copy];
 			}
-
 			else if (isSummaryTag) {
-				if (self.currentArticle.body.length < 1) {
-					self.currentArticle.body = [self.xhtmlString copy];
-				}
+				self.currentArticle.abstract = [self.xhtmlString copy];
 			}
 		}
 

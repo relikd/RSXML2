@@ -29,9 +29,9 @@
 @property (nonatomic) BOOL parsingChannelImage;
 @property (nonatomic, readonly) NSDate *currentDate;
 @property (nonatomic) BOOL endRSSFound;
-@property (nonatomic) NSString *link;
-@property (nonatomic) NSString *title;
-@property (nonatomic) NSString *subtitle;
+@property (nonatomic) NSString *feedLink;
+@property (nonatomic) NSString *feedTitle;
+@property (nonatomic) NSString *feedSubtitle;
 @property (nonatomic) NSDate *dateParsed;
 
 @end
@@ -105,8 +105,8 @@
 	
 	[self parse];
 
-	RSParsedFeed *parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.urlString title:self.title link:self.link articles:self.articles];
-	parsedFeed.subtitle = self.subtitle;
+	RSParsedFeed *parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.urlString title:self.feedTitle link:self.feedLink articles:self.articles];
+	parsedFeed.subtitle = self.feedSubtitle;
 
 	return parsedFeed;
 }
@@ -230,17 +230,17 @@ static const NSInteger kTrueLength = 5;
 	}
 
 	if (RSSAXEqualTags(localName, kLink, kLinkLength)) {
-		if (!self.link) {
-			self.link = self.parser.currentStringWithTrimmedWhitespace;
+		if (!self.feedLink) {
+			self.feedLink = self.parser.currentStringWithTrimmedWhitespace;
 		}
 	}
 
 	else if (RSSAXEqualTags(localName, kTitle, kTitleLength)) {
-		self.title = self.parser.currentStringWithTrimmedWhitespace;
+		self.feedTitle = self.parser.currentStringWithTrimmedWhitespace;
 	}
 	
 	else if (RSSAXEqualTags(localName, kDescription, kDescriptionLength)) {
-		self.subtitle = self.parser.currentStringWithTrimmedWhitespace;
+		self.feedSubtitle = self.parser.currentStringWithTrimmedWhitespace;
 	}
 }
 
@@ -277,12 +277,12 @@ static const NSInteger kTrueLength = 5;
 		return s;
 	}
 
-	if (!self.link) {
+	if (!self.feedLink) {
 		//TODO: get feed URL and use that to resolve URL.*/
 		return s;
 	}
 
-	NSURL *baseURL = [NSURL URLWithString:self.link];
+	NSURL *baseURL = [NSURL URLWithString:self.feedLink];
 	if (!baseURL) {
 		return s;
 	}
@@ -332,10 +332,7 @@ static const NSInteger kTrueLength = 5;
 		self.currentArticle.link = [self urlString:self.parser.currentStringWithTrimmedWhitespace];
 	}
 	else if (RSSAXEqualTags(localName, kDescription, kDescriptionLength)) {
-
-		if (!self.currentArticle.body) {
-			self.currentArticle.body = [self currentStringWithHTMLEntitiesDecoded];
-		}
+		self.currentArticle.abstract = [self currentStringWithHTMLEntitiesDecoded];
 	}
 	else if (RSSAXEqualTags(localName, kTitle, kTitleLength)) {
 		self.currentArticle.title = [self currentStringWithHTMLEntitiesDecoded];
