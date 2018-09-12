@@ -21,7 +21,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"Subs" ofType:@"opml"];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"Subs" ofType:@"opml" inDirectory:@"Resources"];
 		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://example.org/"];
 	});
@@ -31,7 +31,7 @@
 
 - (void)testNotOPML {
 
-	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"DaringFireball" ofType:@"rss"];
+	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"DaringFireball" ofType:@"rss" inDirectory:@"Resources"];
 	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://example.org/"];
 	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];

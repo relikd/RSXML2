@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8400AC211E0DA78100AA7C57 /* Subs.opml in Resources */ = {isa = PBXBuildFile; fileRef = 8400AC201E0DA78100AA7C57 /* Subs.opml */; };
+		54FCE5F421493B5E00FABB65 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 54FCE5F321493B5E00FABB65 /* Resources */; };
 		8400B0F01B8C20A9004C4CFF /* RSXMLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8400B0F11B8C20A9004C4CFF /* RSXMLData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */; };
-		8428C0001D726CEB008013E8 /* KatieFloyd.rss in Resources */ = {isa = PBXBuildFile; fileRef = 8428BFFF1D726CEB008013E8 /* KatieFloyd.rss */; };
-		8428C0041D7359E1008013E8 /* EMarley.rss in Resources */ = {isa = PBXBuildFile; fileRef = 8428C0031D7359E1008013E8 /* EMarley.rss */; };
 		8429D1AC1C839FFC00F97695 /* RSOPMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1AA1C839FFC00F97695 /* RSOPMLDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8429D1AD1C839FFC00F97695 /* RSOPMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1AB1C839FFC00F97695 /* RSOPMLDocument.m */; };
 		8429D1B61C83A03100F97695 /* RSOPMLItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1B41C83A03100F97695 /* RSOPMLItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -21,7 +19,6 @@
 		8429D1BE1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1BC1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8429D1BF1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1BD1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m */; };
 		8429D1C31C83BCCB00F97695 /* RSOPMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1C21C83BCCB00F97695 /* RSOPMLTests.m */; };
-		8429D1C51C83D28400F97695 /* DaringFireball.rss in Resources */ = {isa = PBXBuildFile; fileRef = 8429D1C41C83D28400F97695 /* DaringFireball.rss */; };
 		842D514C1B52E7FC00E63D52 /* RSAtomParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D514A1B52E7FC00E63D52 /* RSAtomParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		842D514D1B52E7FC00E63D52 /* RSAtomParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D514B1B52E7FC00E63D52 /* RSAtomParser.m */; };
 		842D51521B52E80100E63D52 /* RSFeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51501B52E80100E63D52 /* RSFeedParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -41,7 +38,6 @@
 		8475C4091D57AB4C0076751E /* RSHTMLLinkParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475C4071D57AB4C0076751E /* RSHTMLLinkParser.m */; };
 		8486F1151BB646140092794F /* NSString+RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 8486F1131BB646140092794F /* NSString+RSXML.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8486F1161BB646140092794F /* NSString+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8486F1141BB646140092794F /* NSString+RSXML.m */; };
-		8486F1221BB667F80092794F /* manton.rss in Resources */ = {isa = PBXBuildFile; fileRef = 8486F1211BB667F80092794F /* manton.rss */; };
 		84AD0BF51E11A6FB00B38510 /* RSDateParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AD0BF31E11A6FB00B38510 /* RSDateParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0BF61E11A6FB00B38510 /* RSDateParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0BF41E11A6FB00B38510 /* RSDateParser.m */; };
 		84AD0BFA1E11A9A700B38510 /* RSXMLInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AD0BF81E11A9A700B38510 /* RSXMLInternal.h */; };
@@ -91,25 +87,19 @@
 		84AD0C391E11BAA800B38510 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84AD0C381E11BAA800B38510 /* libxml2.2.tbd */; };
 		84AD0C3B1E11C2D500B38510 /* RSEntityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0C3A1E11C2D500B38510 /* RSEntityTests.m */; };
 		84AD0C3D1E11D75400B38510 /* RSDateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0C3C1E11D75400B38510 /* RSDateParserTests.m */; };
-		84BA93B31C8D0498005FACD0 /* inessential.html in Resources */ = {isa = PBXBuildFile; fileRef = 84BA93B21C8D0498005FACD0 /* inessential.html */; };
-		84BA93B71C8D07A8005FACD0 /* sixcolors.html in Resources */ = {isa = PBXBuildFile; fileRef = 84BA93B61C8D07A8005FACD0 /* sixcolors.html */; };
 		84BF3E161C8CDD1A005562D8 /* RSHTMLMetadataParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BF3E141C8CDD1A005562D8 /* RSHTMLMetadataParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84BF3E171C8CDD1A005562D8 /* RSHTMLMetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BF3E151C8CDD1A005562D8 /* RSHTMLMetadataParser.m */; };
 		84BF3E1C1C8CDD6D005562D8 /* RSHTMLMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BF3E1A1C8CDD6D005562D8 /* RSHTMLMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84BF3E1D1C8CDD6D005562D8 /* RSHTMLMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BF3E1B1C8CDD6D005562D8 /* RSHTMLMetadata.m */; };
-		84BF3E1F1C8CEB74005562D8 /* furbo.html in Resources */ = {isa = PBXBuildFile; fileRef = 84BF3E1E1C8CEB74005562D8 /* furbo.html */; };
 		84E4BE451C8B8FE400A90B41 /* RSXMLError.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E4BE431C8B8FE400A90B41 /* RSXMLError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84E4BE461C8B8FE400A90B41 /* RSXMLError.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E4BE441C8B8FE400A90B41 /* RSXMLError.m */; };
 		84E4BE481C8B989D00A90B41 /* RSHTMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E4BE471C8B989D00A90B41 /* RSHTMLTests.m */; };
-		84E4BE4F1C8BA3BF00A90B41 /* DaringFireball.html in Resources */ = {isa = PBXBuildFile; fileRef = 84E4BE4E1C8BA3BF00A90B41 /* DaringFireball.html */; };
 		84F22C111B52DDEA000060CE /* RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 84F22C101B52DDEA000060CE /* RSXML.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84F22C181B52DDEA000060CE /* RSXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F22C0D1B52DDEA000060CE /* RSXML.framework */; };
 		84F22C1D1B52DDEA000060CE /* RSXMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F22C1C1B52DDEA000060CE /* RSXMLTests.m */; };
 		84F22C291B52DDFE000060CE /* RSSAXParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84F22C271B52DDFE000060CE /* RSSAXParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84F22C2A1B52DDFE000060CE /* RSSAXParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F22C281B52DDFE000060CE /* RSSAXParser.m */; };
 		84F22C461B52DF90000060CE /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F22C451B52DF90000060CE /* libxml2.2.tbd */; };
-		84F77C1E1B9FE1DA00C97D91 /* OneFootTsunami.atom in Resources */ = {isa = PBXBuildFile; fileRef = 84F77C1D1B9FE1DA00C97D91 /* OneFootTsunami.atom */; };
-		84F77C281B9FE7AF00C97D91 /* scriptingNews.rss in Resources */ = {isa = PBXBuildFile; fileRef = 84F77C271B9FE7AF00C97D91 /* scriptingNews.rss */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,11 +113,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8400AC201E0DA78100AA7C57 /* Subs.opml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Subs.opml; path = Resources/Subs.opml; sourceTree = "<group>"; };
+		54FCE5F321493B5E00FABB65 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSXMLData.h; path = RSXML/RSXMLData.h; sourceTree = "<group>"; };
 		8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSXMLData.m; path = RSXML/RSXMLData.m; sourceTree = "<group>"; };
-		8428BFFF1D726CEB008013E8 /* KatieFloyd.rss */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = KatieFloyd.rss; path = Resources/KatieFloyd.rss; sourceTree = "<group>"; };
-		8428C0031D7359E1008013E8 /* EMarley.rss */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = EMarley.rss; path = Resources/EMarley.rss; sourceTree = "<group>"; };
 		8429D1AA1C839FFC00F97695 /* RSOPMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLDocument.h; sourceTree = "<group>"; };
 		8429D1AB1C839FFC00F97695 /* RSOPMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLDocument.m; sourceTree = "<group>"; };
 		8429D1B41C83A03100F97695 /* RSOPMLItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLItem.h; sourceTree = "<group>"; };
@@ -137,7 +125,6 @@
 		8429D1BC1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLFeedSpecifier.h; sourceTree = "<group>"; };
 		8429D1BD1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLFeedSpecifier.m; sourceTree = "<group>"; };
 		8429D1C21C83BCCB00F97695 /* RSOPMLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLTests.m; sourceTree = "<group>"; };
-		8429D1C41C83D28400F97695 /* DaringFireball.rss */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DaringFireball.rss; path = Resources/DaringFireball.rss; sourceTree = "<group>"; };
 		842D514A1B52E7FC00E63D52 /* RSAtomParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSAtomParser.h; sourceTree = "<group>"; };
 		842D514B1B52E7FC00E63D52 /* RSAtomParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAtomParser.m; sourceTree = "<group>"; };
 		842D51501B52E80100E63D52 /* RSFeedParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSFeedParser.h; sourceTree = "<group>"; };
@@ -157,7 +144,6 @@
 		8475C4071D57AB4C0076751E /* RSHTMLLinkParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = RSHTMLLinkParser.m; path = RSXML/RSHTMLLinkParser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8486F1131BB646140092794F /* NSString+RSXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+RSXML.h"; path = "RSXML/NSString+RSXML.h"; sourceTree = "<group>"; };
 		8486F1141BB646140092794F /* NSString+RSXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+RSXML.m"; path = "RSXML/NSString+RSXML.m"; sourceTree = "<group>"; };
-		8486F1211BB667F80092794F /* manton.rss */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = manton.rss; path = Resources/manton.rss; sourceTree = "<group>"; };
 		84AD0BF31E11A6FB00B38510 /* RSDateParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSDateParser.h; path = RSXML/RSDateParser.h; sourceTree = "<group>"; };
 		84AD0BF41E11A6FB00B38510 /* RSDateParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSDateParser.m; path = RSXML/RSDateParser.m; sourceTree = "<group>"; };
 		84AD0BF81E11A9A700B38510 /* RSXMLInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSXMLInternal.h; path = RSXML/RSXMLInternal.h; sourceTree = "<group>"; };
@@ -167,17 +153,13 @@
 		84AD0C381E11BAA800B38510 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.2.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
 		84AD0C3A1E11C2D500B38510 /* RSEntityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSEntityTests.m; sourceTree = "<group>"; };
 		84AD0C3C1E11D75400B38510 /* RSDateParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDateParserTests.m; sourceTree = "<group>"; };
-		84BA93B21C8D0498005FACD0 /* inessential.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = inessential.html; path = Resources/inessential.html; sourceTree = "<group>"; };
-		84BA93B61C8D07A8005FACD0 /* sixcolors.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = sixcolors.html; path = Resources/sixcolors.html; sourceTree = "<group>"; };
 		84BF3E141C8CDD1A005562D8 /* RSHTMLMetadataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSHTMLMetadataParser.h; path = RSXML/RSHTMLMetadataParser.h; sourceTree = "<group>"; };
 		84BF3E151C8CDD1A005562D8 /* RSHTMLMetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = RSHTMLMetadataParser.m; path = RSXML/RSHTMLMetadataParser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		84BF3E1A1C8CDD6D005562D8 /* RSHTMLMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSHTMLMetadata.h; path = RSXML/RSHTMLMetadata.h; sourceTree = "<group>"; };
 		84BF3E1B1C8CDD6D005562D8 /* RSHTMLMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = RSHTMLMetadata.m; path = RSXML/RSHTMLMetadata.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		84BF3E1E1C8CEB74005562D8 /* furbo.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = furbo.html; path = Resources/furbo.html; sourceTree = "<group>"; };
 		84E4BE431C8B8FE400A90B41 /* RSXMLError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSXMLError.h; path = RSXML/RSXMLError.h; sourceTree = "<group>"; };
 		84E4BE441C8B8FE400A90B41 /* RSXMLError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSXMLError.m; path = RSXML/RSXMLError.m; sourceTree = "<group>"; };
 		84E4BE471C8B989D00A90B41 /* RSHTMLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSHTMLTests.m; sourceTree = "<group>"; };
-		84E4BE4E1C8BA3BF00A90B41 /* DaringFireball.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = DaringFireball.html; path = Resources/DaringFireball.html; sourceTree = "<group>"; };
 		84F22C0D1B52DDEA000060CE /* RSXML.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RSXML.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F22C101B52DDEA000060CE /* RSXML.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RSXML.h; path = RSXML/RSXML.h; sourceTree = "<group>"; };
 		84F22C121B52DDEA000060CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = RSXML/Info.plist; sourceTree = "<group>"; };
@@ -187,8 +169,6 @@
 		84F22C271B52DDFE000060CE /* RSSAXParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSSAXParser.h; path = RSXML/RSSAXParser.h; sourceTree = "<group>"; };
 		84F22C281B52DDFE000060CE /* RSSAXParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSSAXParser.m; path = RSXML/RSSAXParser.m; sourceTree = "<group>"; };
 		84F22C451B52DF90000060CE /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
-		84F77C1D1B9FE1DA00C97D91 /* OneFootTsunami.atom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = OneFootTsunami.atom; path = Resources/OneFootTsunami.atom; sourceTree = "<group>"; };
-		84F77C271B9FE7AF00C97D91 /* scriptingNews.rss */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = scriptingNews.rss; path = Resources/scriptingNews.rss; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -333,17 +313,7 @@
 				84E4BE471C8B989D00A90B41 /* RSHTMLTests.m */,
 				84AD0C3A1E11C2D500B38510 /* RSEntityTests.m */,
 				84AD0C3C1E11D75400B38510 /* RSDateParserTests.m */,
-				84F77C1D1B9FE1DA00C97D91 /* OneFootTsunami.atom */,
-				84F77C271B9FE7AF00C97D91 /* scriptingNews.rss */,
-				8486F1211BB667F80092794F /* manton.rss */,
-				8429D1C41C83D28400F97695 /* DaringFireball.rss */,
-				8428BFFF1D726CEB008013E8 /* KatieFloyd.rss */,
-				8428C0031D7359E1008013E8 /* EMarley.rss */,
-				8400AC201E0DA78100AA7C57 /* Subs.opml */,
-				84E4BE4E1C8BA3BF00A90B41 /* DaringFireball.html */,
-				84BF3E1E1C8CEB74005562D8 /* furbo.html */,
-				84BA93B21C8D0498005FACD0 /* inessential.html */,
-				84BA93B61C8D07A8005FACD0 /* sixcolors.html */,
+				54FCE5F321493B5E00FABB65 /* Resources */,
 				84F22C1E1B52DDEA000060CE /* Info.plist */,
 			);
 			path = RSXMLTests;
@@ -530,17 +500,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84F77C1E1B9FE1DA00C97D91 /* OneFootTsunami.atom in Resources */,
-				8428C0001D726CEB008013E8 /* KatieFloyd.rss in Resources */,
-				84BA93B31C8D0498005FACD0 /* inessential.html in Resources */,
-				84E4BE4F1C8BA3BF00A90B41 /* DaringFireball.html in Resources */,
-				8486F1221BB667F80092794F /* manton.rss in Resources */,
-				84F77C281B9FE7AF00C97D91 /* scriptingNews.rss in Resources */,
-				8429D1C51C83D28400F97695 /* DaringFireball.rss in Resources */,
-				8400AC211E0DA78100AA7C57 /* Subs.opml in Resources */,
-				84BA93B71C8D07A8005FACD0 /* sixcolors.html in Resources */,
-				84BF3E1F1C8CEB74005562D8 /* furbo.html in Resources */,
-				8428C0041D7359E1008013E8 /* EMarley.rss in Resources */,
+				54FCE5F421493B5E00FABB65 /* Resources in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -891,6 +851,7 @@
 				84AD0C0C1E11B7D200B38510 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84F22C071B52DDEA000060CE /* Build configuration list for PBXProject "RSXML" */ = {
 			isa = XCConfigurationList;

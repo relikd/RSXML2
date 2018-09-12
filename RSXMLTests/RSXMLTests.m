@@ -21,7 +21,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"OneFootTsunami" ofType:@"atom"];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"OneFootTsunami" ofType:@"atom" inDirectory:@"Resources"];
 		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://onefoottsunami.com/"];
 	});
@@ -36,7 +36,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"scriptingNews" ofType:@"rss"];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"scriptingNews" ofType:@"rss" inDirectory:@"Resources"];
 		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://scripting.com/"];
 	});
@@ -51,7 +51,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"manton" ofType:@"rss"];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"manton" ofType:@"rss" inDirectory:@"Resources"];
 		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://manton.org/"];
 	});
@@ -66,7 +66,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"DaringFireball" ofType:@"rss"];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"DaringFireball" ofType:@"rss" inDirectory:@"Resources"];
 		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://daringfireball.net/"];
 	});
@@ -81,7 +81,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"KatieFloyd" ofType:@"rss"];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"KatieFloyd" ofType:@"rss" inDirectory:@"Resources"];
 		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://katiefloyd.com/"];
 	});
@@ -96,7 +96,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"EMarley" ofType:@"rss"];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"EMarley" ofType:@"rss" inDirectory:@"Resources"];
 		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"https://medium.com/@emarley"];
 	});
@@ -158,7 +158,7 @@
 	RSXMLData *xmlData = [[self class] eMarleyData];
 	RSParsedFeed *parsedFeed = RSParseFeedSync(xmlData, &error);
 	XCTAssertEqualObjects(parsedFeed.title, @"Stories by Liz Marley on Medium");
-	XCTAssertEqual(parsedFeed.articles.count, 10);
+	XCTAssertEqual(parsedFeed.articles.count, 10u);
 }
 
 
@@ -206,6 +206,35 @@
 			RSCanParseFeed(xmlData);
 		}
 	}];
+}
+
+- (void)testDownloadedFeeds {
+	NSError *error = nil;
+	int i = 0;
+	while (true) {
+		++i;
+		NSString *pth = [NSString stringWithFormat:@"feed_%d", i];
+		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:pth ofType:@"rss" inDirectory:@"Resources"];
+		if (s == nil) {
+			break;
+		}
+		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
+		RSXMLData *xmlData = [[RSXMLData alloc] initWithData:d urlString:pth];
+		RSParsedFeed *parsedFeed = RSParseFeedSync(xmlData, &error);
+		printf("\n\nparsing: %s\n%s\n", pth.UTF8String, parsedFeed.description.UTF8String);
+		XCTAssertNil(error);
+	}
+}
+
+- (void)testSingle {
+	NSError *error = nil;
+	NSString *filename = @"feed_1";
+	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:filename ofType:@"rss" inDirectory:@"Resources"];
+	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
+	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:d urlString:@"single-feed"];
+	RSParsedFeed *parsedFeed = RSParseFeedSync(xmlData, &error);
+	printf("\n\nparsing: %s\n%s\n", filename.UTF8String, parsedFeed.description.UTF8String);
+	XCTAssertNil(error);
 }
 
 @end

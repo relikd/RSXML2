@@ -1,0 +1,5 @@
+# Sample feed
+http://feeds.feedburner.com/simpledesktops
+
+# Add more for automatic download
+# you can group and comment as needed

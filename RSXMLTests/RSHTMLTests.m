@@ -18,7 +18,7 @@
 
 + (RSXMLData *)xmlData:(NSString *)title urlString:(NSString *)urlString {
 
-	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:title ofType:@"html"];
+	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:title ofType:@"html" inDirectory:@"Resources"];
 	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
 	return [[RSXMLData alloc] initWithData:d urlString:urlString];
 }
@@ -137,7 +137,7 @@
 	XCTAssertEqualObjects(feedLink.type, @"application/rss+xml");
 	XCTAssertEqualObjects(feedLink.urlString, @"http://inessential.com/xml/rss.xml");
 
-	XCTAssertEqual(metadata.appleTouchIcons.count, 0);
+	XCTAssertEqual(metadata.appleTouchIcons.count, 0u);
 }
 
 
@@ -164,7 +164,7 @@
 	XCTAssertEqualObjects(feedLink.type, @"application/rss+xml");
 	XCTAssertEqualObjects(feedLink.urlString, @"http://feedpress.me/sixcolors");
 
-	XCTAssertEqual(metadata.appleTouchIcons.count, 6);
+	XCTAssertEqual(metadata.appleTouchIcons.count, 6u);
 	RSHTMLMetadataAppleTouchIcon *icon = metadata.appleTouchIcons[3];
 	XCTAssertEqualObjects(icon.rel, @"apple-touch-icon");
 	XCTAssertEqualObjects(icon.sizes, @"120x120");
@@ -201,7 +201,7 @@
 	}
 	
 	XCTAssertTrue(found, @"Expected link should have been found.");
-	XCTAssertEqual(links.count, 131, @"Expected 131 links.");
+	XCTAssertEqual(links.count, 131u, @"Expected 131 links.");
 }
 
 
