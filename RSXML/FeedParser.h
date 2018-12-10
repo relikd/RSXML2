@@ -18,7 +18,7 @@
 
 - (nonnull instancetype)initWithXMLData:(RSXMLData * _Nonnull)xmlData;
 
-- (nullable RSParsedFeed *)parseFeed:(NSError * _Nullable * _Nullable)error;
+- (nullable RSParsedFeed *)parseFeed;
 
 
 @end

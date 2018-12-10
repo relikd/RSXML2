@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Ranchero Software LLC. All rights reserved.
 //
 
+#import <libxml/xmlerror.h>
 #import "RSFeedParser.h"
 #import "FeedParser.h"
 #import "RSXMLData.h"
@@ -48,9 +49,43 @@ static BOOL dataHasLeftCaret(const char *bytes, NSUInteger numberOfBytes);
 static const NSUInteger maxNumberOfBytesToSearch = 4096;
 static const NSUInteger minNumberOfBytesToSearch = 20;
 
-static Class parserClassForXMLData(RSXMLData *xmlData) {
+typedef enum {
+	RSXMLErrorNoData = 100,
+	RSXMLErrorMissingLeftCaret,
+	RSXMLErrorProbablyHTML,
+	RSXMLErrorContainsXMLErrorsTag,
+	RSXMLErrorNoSuitableParser
+} RSXMLError;
+
+static void setError(NSError **error, RSXMLError code) {
+	if (!error) {
+		return;
+	}
+	NSString *msg = @"";
+	switch (code) { // switch statement will warn if an enum value is missing
+		case RSXMLErrorNoData:
+			msg = @"Couldn't parse feed. No data available.";
+			break;
+		case RSXMLErrorMissingLeftCaret:
+			msg = @"Couldn't parse feed. Missing left caret character ('<').";
+			break;
+		case RSXMLErrorProbablyHTML:
+			msg = @"Couldn't parse feed. Expecting XML data but found html data.";
+			break;
+		case RSXMLErrorContainsXMLErrorsTag:
+			msg = @"Couldn't parse feed. XML contains 'errors' tag.";
+			break;
+		case RSXMLErrorNoSuitableParser:
+			msg = @"Couldn't parse feed. No suitable parser found. XML document not well-formed.";
+			break;
+	}
+	*error = [NSError errorWithDomain:kRSXMLParserErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: msg}];
+}
+
+static Class parserClassForXMLData(RSXMLData *xmlData, NSError **error) {
 	
 	if (!feedMayBeParseable(xmlData)) {
+		setError(error, RSXMLErrorNoData);
 		return nil;
 	}
 	
@@ -66,40 +101,42 @@ static Class parserClassForXMLData(RSXMLData *xmlData) {
 		}
 
 		if (!dataHasLeftCaret(bytes, numberOfBytes)) {
+			setError(error, RSXMLErrorMissingLeftCaret);
 			return nil;
 		}
-
 		if (optimisticCanParseRSSData(bytes, numberOfBytes)) {
 			return [RSRSSParser class];
 		}
 		if (optimisticCanParseAtomData(bytes, numberOfBytes)) {
 			return [RSAtomParser class];
 		}
-		
 		if (optimisticCanParseRDF(bytes, numberOfBytes)) {
-			return nil; //TODO: parse RDF feeds
+			return [RSRSSParser class]; //TODO: parse RDF feeds, using RSS parser so far ...
 		}
-		
 		if (dataIsProbablyHTML(bytes, numberOfBytes)) {
+			setError(error, RSXMLErrorProbablyHTML);
 			return nil;
 		}
 		if (dataIsSomeWeirdException(bytes, numberOfBytes)) {
+			setError(error, RSXMLErrorContainsXMLErrorsTag);
 			return nil;
 		}
 	}
 	
 	for (Class parserClass in parserClasses()) {
 		if ([parserClass canParseFeed:xmlData]) {
-			return [[parserClass alloc] initWithXMLData:xmlData];
+			return parserClass;
+			//return [[parserClass alloc] initWithXMLData:xmlData]; // does not make sense to return instance
 		}
 	}
-	
+	// Try RSS anyway? libxml would return a parsing error
+	setError(error, RSXMLErrorNoSuitableParser);
 	return nil;
 }
 
-static id<FeedParser> parserForXMLData(RSXMLData *xmlData) {
+static id<FeedParser> parserForXMLData(RSXMLData *xmlData, NSError **error) {
 	
-	Class parserClass = parserClassForXMLData(xmlData);
+	Class parserClass = parserClassForXMLData(xmlData, error);
 	if (!parserClass) {
 		return nil;
 	}
@@ -108,7 +145,7 @@ static id<FeedParser> parserForXMLData(RSXMLData *xmlData) {
 
 static BOOL canParseXMLData(RSXMLData *xmlData) {
 	
-	return parserClassForXMLData(xmlData) != nil;
+	return parserClassForXMLData(xmlData, nil) != nil;
 }
 
 static BOOL didFindString(const char *string, const char *bytes, NSUInteger numberOfBytes) {
@@ -210,7 +247,24 @@ void RSParseFeed(RSXMLData *xmlData, RSParsedFeedBlock callback) {
 
 RSParsedFeed *RSParseFeedSync(RSXMLData *xmlData, NSError **error) {
 
-	id<FeedParser> parser = parserForXMLData(xmlData);
-	return [parser parseFeed:error];
+	xmlResetLastError();
+	id<FeedParser> parser = parserForXMLData(xmlData, error);
+	if (error && *error) {
+		//printf("ERROR in parserForXMLData(): %s\n", [[*error localizedDescription] UTF8String]);
+		return nil;
+	}
+	RSParsedFeed *parsedResult = [parser parseFeed];
+	
+	xmlErrorPtr err = xmlGetLastError();
+	if (err && error) {
+		int errCode = err->code;
+		char * msg = err->message;
+		//if (err->level == XML_ERR_FATAL)
+		NSString *errMsg = [[NSString stringWithFormat:@"%s", msg] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		*error = [NSError errorWithDomain:kLIBXMLParserErrorDomain code:errCode userInfo:@{NSLocalizedDescriptionKey: errMsg}];
+		//printf("ERROR in [parseFeed] (%d): %s\n", err->level, [[*error localizedDescription] UTF8String]);
+		xmlResetLastError();
+	}
+	return parsedResult;
 }
 

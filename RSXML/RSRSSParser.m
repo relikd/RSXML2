@@ -101,7 +101,7 @@
 
 #pragma mark - API
 
-- (RSParsedFeed *)parseFeed:(NSError **)error {
+- (RSParsedFeed *)parseFeed {
 	
 	[self parse];
 
