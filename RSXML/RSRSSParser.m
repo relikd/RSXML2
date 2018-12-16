@@ -446,22 +446,16 @@ static const NSInteger kTrueLength = 5;
 }
 
 
-static BOOL equalBytes(const void *bytes1, const void *bytes2, NSUInteger length) {
-
-	return memcmp(bytes1, bytes2, length) == 0;
-}
-
-
 - (NSString *)saxParser:(RSSAXParser *)SAXParser internedStringForValue:(const void *)bytes length:(NSUInteger)length {
 
 	static const NSUInteger falseLength = kFalseLength - 1;
 	static const NSUInteger trueLength = kTrueLength - 1;
 
-	if (length == falseLength && equalBytes(bytes, kFalse, falseLength)) {
+	if (length == falseLength && RSSAXEqualBytes(bytes, kFalse, falseLength)) {
 		return kFalseValue;
 	}
 
-	if (length == trueLength && equalBytes(bytes, kTrue, trueLength)) {
+	if (length == trueLength && RSSAXEqualBytes(bytes, kTrue, trueLength)) {
 		return kTrueValue;
 	}
 

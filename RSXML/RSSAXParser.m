@@ -225,6 +225,11 @@ BOOL RSSAXEqualTags(const xmlChar *localName, const char *tag, NSInteger tagLeng
 	return !strncmp((const char *)localName, tag, (size_t)tagLength);
 }
 
+BOOL RSSAXEqualBytes(const void *bytes1, const void *bytes2, NSUInteger length) {
+	
+	return memcmp(bytes1, bytes2, length) == 0;
+}
+
 
 #pragma mark - Callbacks
 

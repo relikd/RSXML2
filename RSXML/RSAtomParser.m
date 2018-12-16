@@ -552,12 +552,6 @@ static const NSInteger kSelfLength = 5;
 }
 
 
-static BOOL equalBytes(const void *bytes1, const void *bytes2, NSUInteger length) {
-
-	return memcmp(bytes1, bytes2, length) == 0;
-}
-
-
 - (NSString *)saxParser:(RSSAXParser *)SAXParser internedStringForValue:(const void *)bytes length:(NSUInteger)length {
 
 	static const NSUInteger alternateLength = kAlternateLength - 1;
@@ -569,35 +563,35 @@ static BOOL equalBytes(const void *bytes1, const void *bytes2, NSUInteger length
 	static const NSUInteger textLength = kTextLength - 1;
 	static const NSUInteger selfLength = kSelfLength - 1;
 
-	if (length == alternateLength && equalBytes(bytes, kAlternate, alternateLength)) {
+	if (length == alternateLength && RSSAXEqualBytes(bytes, kAlternate, alternateLength)) {
 		return kAlternateValue;
 	}
 
-	if (length == textHTMLLength && equalBytes(bytes, kTextHTML, textHTMLLength)) {
+	if (length == textHTMLLength && RSSAXEqualBytes(bytes, kTextHTML, textHTMLLength)) {
 		return kTextHTMLValue;
 	}
 
-	if (length == relatedLength && equalBytes(bytes, kRelated, relatedLength)) {
+	if (length == relatedLength && RSSAXEqualBytes(bytes, kRelated, relatedLength)) {
 		return kRelatedValue;
 	}
 
-	if (length == shortURLLength && equalBytes(bytes, kShortURL, shortURLLength)) {
+	if (length == shortURLLength && RSSAXEqualBytes(bytes, kShortURL, shortURLLength)) {
 		return kShortURLValue;
 	}
 
-	if (length == htmlLength && equalBytes(bytes, kHTML, htmlLength)) {
+	if (length == htmlLength && RSSAXEqualBytes(bytes, kHTML, htmlLength)) {
 		return kHTMLValue;
 	}
 
-	if (length == enLength && equalBytes(bytes, kEn, enLength)) {
+	if (length == enLength && RSSAXEqualBytes(bytes, kEn, enLength)) {
 		return kEnValue;
 	}
 
-	if (length == textLength && equalBytes(bytes, kText, textLength)) {
+	if (length == textLength && RSSAXEqualBytes(bytes, kText, textLength)) {
 		return kTextValue;
 	}
 
-	if (length == selfLength && equalBytes(bytes, kSelf, selfLength)) {
+	if (length == selfLength && RSSAXEqualBytes(bytes, kSelf, selfLength)) {
 		return kSelfValue;
 	}
 

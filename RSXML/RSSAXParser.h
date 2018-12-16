@@ -44,6 +44,7 @@ void RSSAXInitLibXMLParser(void); // Needed by RSSAXHTMLParser.
 /*For use by delegate.*/
 
 BOOL RSSAXEqualTags(const unsigned char *localName, const char *tag, NSInteger tagLength);
+BOOL RSSAXEqualBytes(const void *bytes1, const void *bytes2, NSUInteger length);
 
 
 @interface RSSAXParser : NSObject

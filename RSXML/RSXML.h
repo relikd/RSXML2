@@ -20,10 +20,7 @@
 #import <RSXML/RSParsedArticle.h>
 
 #import <RSXML/RSOPMLParser.h>
-#import <RSXML/RSOPMLDocument.h>
 #import <RSXML/RSOPMLItem.h>
-#import <RSXML/RSOPMLAttributes.h>
-#import <RSXML/RSOPMLFeedSpecifier.h>
 
 #import <RSXML/RSXMLError.h>
 

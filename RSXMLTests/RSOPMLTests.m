@@ -36,6 +36,8 @@
 	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://example.org/"];
 	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
 	XCTAssertNotNil(parser.error);
+	XCTAssert(parser.error.code == RSXMLErrorFileNotOPML);
+	XCTAssert([parser.error.domain isEqualTo:kRSXMLParserErrorDomain]);
 
 	d = [[NSData alloc] initWithContentsOfFile:@"/System/Library/Kernels/kernel"];
 	xmlData = [[RSXMLData alloc] initWithData:d urlString:@"/System/Library/Kernels/kernel"];
@@ -61,40 +63,37 @@
 	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
 	XCTAssertNotNil(parser);
 
-	RSOPMLDocument *document = parser.OPMLDocument;
+	RSOPMLItem *document = parser.opmlDocument;
 	XCTAssertNotNil(document);
-
-	[self checkStructureForOPMLItem:document];
+	XCTAssert([document.displayName isEqualToString:@"Subs"]);
+	XCTAssert([document.children.firstObject.displayName isEqualToString:@"Daring Fireball"]);
+	XCTAssert([document.children.lastObject.displayName isEqualToString:@"Writers"]);
+	XCTAssert([document.children.lastObject.children.lastObject.displayName isEqualToString:@"Gerrold"]);
+	[self checkStructureForOPMLItem:document isRoot:YES];
+	
+	//NSLog(@"\n%@", [document recursiveDescription]);
 }
 
-- (void)checkStructureForOPMLItem:(RSOPMLItem *)item {
+- (void)checkStructureForOPMLItem:(RSOPMLItem *)item isRoot:(BOOL)root {
 
-	RSOPMLFeedSpecifier *feedSpecifier = item.OPMLFeedSpecifier;
-
-	if (![item isKindOfClass:[RSOPMLDocument class]]) {
-		XCTAssertNotNil(item.attributes.opml_text);
+	if (!root) {
+		XCTAssertNotNil([item attributeForKey:OPMLTextKey]);
+		XCTAssertNotNil([item attributeForKey:OPMLTitleKey]);
 	}
 
 	// If it has no children, it should have a feed specifier. The converse is also true.
 	BOOL isFolder = (item.children.count > 0);
-	if (!isFolder && [item.attributes.opml_title isEqualToString:@"Skip"]) {
+	if (!isFolder && [[item attributeForKey:OPMLTitleKey] isEqualToString:@"Skip"]) {
 		isFolder = YES;
 	}
 
 	if (!isFolder) {
-		XCTAssertNotNil(feedSpecifier.title);
-		XCTAssertNotNil(feedSpecifier.feedURL);
-	}
-	else {
-		XCTAssertNil(feedSpecifier);
-		if (![item isKindOfClass:[RSOPMLDocument class]]) {
-			XCTAssertNotNil(item.attributes.opml_title);
-		}
+		XCTAssertNotNil([item attributeForKey:OPMLHMTLURLKey]);
 	}
 
 	if (item.children.count > 0) {
 		for (RSOPMLItem *oneItem in item.children) {
-			[self checkStructureForOPMLItem:oneItem];
+			[self checkStructureForOPMLItem:oneItem isRoot:NO];
 		}
 	}
 }

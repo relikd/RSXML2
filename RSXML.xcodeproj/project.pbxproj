@@ -10,14 +10,8 @@
 		54FCE5F421493B5E00FABB65 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 54FCE5F321493B5E00FABB65 /* Resources */; };
 		8400B0F01B8C20A9004C4CFF /* RSXMLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8400B0F11B8C20A9004C4CFF /* RSXMLData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */; };
-		8429D1AC1C839FFC00F97695 /* RSOPMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1AA1C839FFC00F97695 /* RSOPMLDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8429D1AD1C839FFC00F97695 /* RSOPMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1AB1C839FFC00F97695 /* RSOPMLDocument.m */; };
 		8429D1B61C83A03100F97695 /* RSOPMLItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1B41C83A03100F97695 /* RSOPMLItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8429D1B71C83A03100F97695 /* RSOPMLItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1B51C83A03100F97695 /* RSOPMLItem.m */; };
-		8429D1BA1C83A31C00F97695 /* RSOPMLAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1B81C83A31C00F97695 /* RSOPMLAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8429D1BB1C83A31C00F97695 /* RSOPMLAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1B91C83A31C00F97695 /* RSOPMLAttributes.m */; };
-		8429D1BE1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1BC1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8429D1BF1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1BD1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m */; };
 		8429D1C31C83BCCB00F97695 /* RSOPMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1C21C83BCCB00F97695 /* RSOPMLTests.m */; };
 		842D514C1B52E7FC00E63D52 /* RSAtomParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D514A1B52E7FC00E63D52 /* RSAtomParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		842D514D1B52E7FC00E63D52 /* RSAtomParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D514B1B52E7FC00E63D52 /* RSAtomParser.m */; };
@@ -55,14 +49,8 @@
 		84AD0C171E11B8CA00B38510 /* RSDateParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0BF41E11A6FB00B38510 /* RSDateParser.m */; };
 		84AD0C181E11B8CF00B38510 /* RSOPMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51781B5311AD00E63D52 /* RSOPMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C191E11B8CF00B38510 /* RSOPMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51791B5311AD00E63D52 /* RSOPMLParser.m */; };
-		84AD0C1A1E11B8CF00B38510 /* RSOPMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1AA1C839FFC00F97695 /* RSOPMLDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C1B1E11B8CF00B38510 /* RSOPMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1AB1C839FFC00F97695 /* RSOPMLDocument.m */; };
 		84AD0C1C1E11B8CF00B38510 /* RSOPMLItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1B41C83A03100F97695 /* RSOPMLItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C1D1E11B8CF00B38510 /* RSOPMLItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1B51C83A03100F97695 /* RSOPMLItem.m */; };
-		84AD0C1E1E11B8CF00B38510 /* RSOPMLFeedSpecifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1BC1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C1F1E11B8CF00B38510 /* RSOPMLFeedSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1BD1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m */; };
-		84AD0C201E11B8CF00B38510 /* RSOPMLAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1B81C83A31C00F97695 /* RSOPMLAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C211E11B8CF00B38510 /* RSOPMLAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1B91C83A31C00F97695 /* RSOPMLAttributes.m */; };
 		84AD0C221E11B8D400B38510 /* RSFeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51501B52E80100E63D52 /* RSFeedParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C231E11B8D400B38510 /* RSFeedParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51511B52E80100E63D52 /* RSFeedParser.m */; };
 		84AD0C241E11B8D400B38510 /* FeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D516D1B5308BD00E63D52 /* FeedParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -116,14 +104,8 @@
 		54FCE5F321493B5E00FABB65 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSXMLData.h; path = RSXML/RSXMLData.h; sourceTree = "<group>"; };
 		8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSXMLData.m; path = RSXML/RSXMLData.m; sourceTree = "<group>"; };
-		8429D1AA1C839FFC00F97695 /* RSOPMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLDocument.h; sourceTree = "<group>"; };
-		8429D1AB1C839FFC00F97695 /* RSOPMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLDocument.m; sourceTree = "<group>"; };
 		8429D1B41C83A03100F97695 /* RSOPMLItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLItem.h; sourceTree = "<group>"; };
 		8429D1B51C83A03100F97695 /* RSOPMLItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLItem.m; sourceTree = "<group>"; };
-		8429D1B81C83A31C00F97695 /* RSOPMLAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLAttributes.h; sourceTree = "<group>"; };
-		8429D1B91C83A31C00F97695 /* RSOPMLAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RSOPMLAttributes.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		8429D1BC1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLFeedSpecifier.h; sourceTree = "<group>"; };
-		8429D1BD1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLFeedSpecifier.m; sourceTree = "<group>"; };
 		8429D1C21C83BCCB00F97695 /* RSOPMLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLTests.m; sourceTree = "<group>"; };
 		842D514A1B52E7FC00E63D52 /* RSAtomParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSAtomParser.h; sourceTree = "<group>"; };
 		842D514B1B52E7FC00E63D52 /* RSAtomParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAtomParser.m; sourceTree = "<group>"; };
@@ -223,14 +205,8 @@
 			children = (
 				842D51781B5311AD00E63D52 /* RSOPMLParser.h */,
 				842D51791B5311AD00E63D52 /* RSOPMLParser.m */,
-				8429D1AA1C839FFC00F97695 /* RSOPMLDocument.h */,
-				8429D1AB1C839FFC00F97695 /* RSOPMLDocument.m */,
 				8429D1B41C83A03100F97695 /* RSOPMLItem.h */,
 				8429D1B51C83A03100F97695 /* RSOPMLItem.m */,
-				8429D1BC1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h */,
-				8429D1BD1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m */,
-				8429D1B81C83A31C00F97695 /* RSOPMLAttributes.h */,
-				8429D1B91C83A31C00F97695 /* RSOPMLAttributes.m */,
 			);
 			name = OPML;
 			path = RSXML;
@@ -332,9 +308,7 @@
 				84AD0C161E11B8CA00B38510 /* RSDateParser.h in Headers */,
 				84AD0C101E11B8CA00B38510 /* RSSAXParser.h in Headers */,
 				84AD0C331E11B8DA00B38510 /* RSHTMLLinkParser.h in Headers */,
-				84AD0C201E11B8CF00B38510 /* RSOPMLAttributes.h in Headers */,
 				84AD0C2F1E11B8DA00B38510 /* RSHTMLMetadataParser.h in Headers */,
-				84AD0C1A1E11B8CF00B38510 /* RSOPMLDocument.h in Headers */,
 				84AD0C251E11B8D400B38510 /* RSAtomParser.h in Headers */,
 				84AD0C121E11B8CA00B38510 /* RSXMLData.h in Headers */,
 				84AD0C311E11B8DA00B38510 /* RSHTMLMetadata.h in Headers */,
@@ -342,7 +316,6 @@
 				84AD0C221E11B8D400B38510 /* RSFeedParser.h in Headers */,
 				84AD0C2D1E11B8DA00B38510 /* RSSAXHTMLParser.h in Headers */,
 				84AD0C0E1E11B8CA00B38510 /* RSXMLError.h in Headers */,
-				84AD0C1E1E11B8CF00B38510 /* RSOPMLFeedSpecifier.h in Headers */,
 				84AD0C2B1E11B8D400B38510 /* RSParsedArticle.h in Headers */,
 				84AD0C291E11B8D400B38510 /* RSParsedFeed.h in Headers */,
 				84AD0C181E11B8CF00B38510 /* RSOPMLParser.h in Headers */,
@@ -361,16 +334,13 @@
 				8400B0F01B8C20A9004C4CFF /* RSXMLData.h in Headers */,
 				842D51631B53058B00E63D52 /* RSParsedArticle.h in Headers */,
 				842D517A1B5311AD00E63D52 /* RSOPMLParser.h in Headers */,
-				8429D1AC1C839FFC00F97695 /* RSOPMLDocument.h in Headers */,
 				84BF3E161C8CDD1A005562D8 /* RSHTMLMetadataParser.h in Headers */,
 				842D51761B530BF200E63D52 /* RSParsedFeed.h in Headers */,
-				8429D1BA1C83A31C00F97695 /* RSOPMLAttributes.h in Headers */,
 				84BF3E1C1C8CDD6D005562D8 /* RSHTMLMetadata.h in Headers */,
 				8429D1B61C83A03100F97695 /* RSOPMLItem.h in Headers */,
 				843819001C8CB00400E2A1DD /* RSSAXHTMLParser.h in Headers */,
 				842D51521B52E80100E63D52 /* RSFeedParser.h in Headers */,
 				84E4BE451C8B8FE400A90B41 /* RSXMLError.h in Headers */,
-				8429D1BE1C83AD0F00F97695 /* RSOPMLFeedSpecifier.h in Headers */,
 				842D516F1B5308BD00E63D52 /* FeedParser.h in Headers */,
 				84F22C111B52DDEA000060CE /* RSXML.h in Headers */,
 				842D514C1B52E7FC00E63D52 /* RSAtomParser.h in Headers */,
@@ -524,11 +494,8 @@
 				84AD0C261E11B8D400B38510 /* RSAtomParser.m in Sources */,
 				84AD0C1D1E11B8CF00B38510 /* RSOPMLItem.m in Sources */,
 				84AD0C131E11B8CA00B38510 /* RSXMLData.m in Sources */,
-				84AD0C211E11B8CF00B38510 /* RSOPMLAttributes.m in Sources */,
 				84AD0C321E11B8DA00B38510 /* RSHTMLMetadata.m in Sources */,
-				84AD0C1F1E11B8CF00B38510 /* RSOPMLFeedSpecifier.m in Sources */,
 				84AD0C111E11B8CA00B38510 /* RSSAXParser.m in Sources */,
-				84AD0C1B1E11B8CF00B38510 /* RSOPMLDocument.m in Sources */,
 				84AD0C0F1E11B8CA00B38510 /* RSXMLError.m in Sources */,
 				84AD0C2E1E11B8DA00B38510 /* RSSAXHTMLParser.m in Sources */,
 			);
@@ -542,14 +509,11 @@
 				842D515B1B52E81B00E63D52 /* RSRSSParser.m in Sources */,
 				842D517B1B5311AD00E63D52 /* RSOPMLParser.m in Sources */,
 				8486F1161BB646140092794F /* NSString+RSXML.m in Sources */,
-				8429D1BB1C83A31C00F97695 /* RSOPMLAttributes.m in Sources */,
 				84AD0BF61E11A6FB00B38510 /* RSDateParser.m in Sources */,
 				84BF3E171C8CDD1A005562D8 /* RSHTMLMetadataParser.m in Sources */,
 				842D51641B53058B00E63D52 /* RSParsedArticle.m in Sources */,
 				84E4BE461C8B8FE400A90B41 /* RSXMLError.m in Sources */,
 				8475C4091D57AB4C0076751E /* RSHTMLLinkParser.m in Sources */,
-				8429D1BF1C83AD0F00F97695 /* RSOPMLFeedSpecifier.m in Sources */,
-				8429D1AD1C839FFC00F97695 /* RSOPMLDocument.m in Sources */,
 				8429D1B71C83A03100F97695 /* RSOPMLItem.m in Sources */,
 				84BF3E1D1C8CDD6D005562D8 /* RSHTMLMetadata.m in Sources */,
 				842D51531B52E80100E63D52 /* RSFeedParser.m in Sources */,

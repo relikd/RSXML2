@@ -10,10 +10,10 @@
 
 
 @class RSXMLData;
-@class RSOPMLDocument;
+@class RSOPMLItem;
 
 
-typedef void (^RSParsedOPMLBlock)(RSOPMLDocument *OPMLDocument, NSError *error);
+typedef void (^RSParsedOPMLBlock)(RSOPMLItem *opmlDocument, NSError *error);
 
 void RSParseOPML(RSXMLData *xmlData, RSParsedOPMLBlock callback); //async; calls back on main thread.
 
@@ -22,7 +22,7 @@ void RSParseOPML(RSXMLData *xmlData, RSParsedOPMLBlock callback); //async; calls
 
 - (instancetype)initWithXMLData:(RSXMLData *)xmlData;
 
-@property (nonatomic, readonly) RSOPMLDocument *OPMLDocument;
+@property (nonatomic, readonly) RSOPMLItem *opmlDocument;
 @property (nonatomic, readonly) NSError *error;
 
 @end

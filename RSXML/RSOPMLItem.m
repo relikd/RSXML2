@@ -1,86 +1,99 @@
-//
-//  RSOPMLItem.m
-//  RSXML
-//
-//  Created by Brent Simmons on 2/28/16.
-//  Copyright © 2016 Ranchero Software, LLC. All rights reserved.
-//
 
 #import "RSOPMLItem.h"
-#import "RSOPMLAttributes.h"
-#import "RSOPMLFeedSpecifier.h"
 #import "RSXMLInternal.h"
 
 
+NSString *OPMLTextKey = @"text";
+NSString *OPMLTitleKey = @"title";
+NSString *OPMLDescriptionKey = @"description";
+NSString *OPMLTypeKey = @"type";
+NSString *OPMLVersionKey = @"version";
+NSString *OPMLHMTLURLKey = @"htmlUrl";
+NSString *OPMLXMLURLKey = @"xmlUrl";
+
+
 @interface RSOPMLItem ()
-
-@property (nonatomic) NSMutableArray *mutableChildren;
-
+@property (nonatomic) NSMutableArray<RSOPMLItem*> *mutableChildren;
+@property (nonatomic) NSMutableDictionary *mutableAttributes;
 @end
 
 
 @implementation RSOPMLItem
 
-@synthesize children = _children;
-@synthesize OPMLFeedSpecifier = _OPMLFeedSpecifier;
-
-
 - (NSArray *)children {
-
 	return [self.mutableChildren copy];
 }
 
-
-- (void)setChildren:(NSArray *)children {
-
-	_children = children;
-	self.mutableChildren = [_children mutableCopy];
+- (void)setChildren:(NSArray<RSOPMLItem*>*)children {
+	self.mutableChildren = [children mutableCopy];
 }
 
-
-- (void)addChild:(RSOPMLItem *)child {
-
-	if (!self.mutableChildren) {
-		self.mutableChildren = [NSMutableArray new];
-	}
-
-	[self.mutableChildren addObject:child];
+- (NSDictionary *)attributes {
+	return [self.mutableAttributes copy];
 }
 
-
-- (RSOPMLFeedSpecifier *)OPMLFeedSpecifier {
-
-	if (_OPMLFeedSpecifier) {
-		return _OPMLFeedSpecifier;
-	}
-
-	NSString *feedURL = self.attributes.opml_xmlUrl;
-	if (RSXMLIsEmpty(feedURL)) {
-		return nil;
-	}
-
-	_OPMLFeedSpecifier = [[RSOPMLFeedSpecifier alloc] initWithTitle:self.attributes.opml_title feedDescription:self.attributes.opml_description homePageURL:self.attributes.opml_htmlUrl feedURL:feedURL];
-
-	return _OPMLFeedSpecifier;
-}
-
-- (NSString *)titleFromAttributes {
-	
-	NSString *title = self.attributes.opml_title;
-	if (title) {
-		return title;
-	}
-	title = self.attributes.opml_text;
-	if (title) {
-		return title;
-	}
-	
-	return nil;
+- (void)setAttributes:(NSDictionary *)attributes {
+	self.mutableAttributes = [attributes mutableCopy];
 }
 
 - (BOOL)isFolder {
-	
 	return self.mutableChildren.count > 0;
+}
+
+- (NSString *)displayName {
+	NSString *title = [self attributeForKey:OPMLTitleKey];
+	if (!title) {
+		title = [self attributeForKey:OPMLTextKey];
+	}
+	return title;
+}
+
+- (void)addChild:(RSOPMLItem *)child {
+	if (!self.mutableChildren) {
+		self.mutableChildren = [NSMutableArray new];
+	}
+	[self.mutableChildren addObject:child];
+}
+
+- (void)setAttribute:(id)value forKey:(NSString *)key {
+	if (!self.mutableAttributes) {
+		self.mutableAttributes = [NSMutableDictionary new];
+	}
+	[self.mutableAttributes setValue:value forKey:key];
+}
+
+- (id)attributeForKey:(NSString *)key {
+	if (self.attributes.count > 0 && !RSXMLStringIsEmpty(key)) {
+		return [self.attributes rsxml_objectForCaseInsensitiveKey:key];
+	}
+	return nil;
+}
+
+#pragma mark - Printing
+
+- (NSString *)description {
+	NSMutableString *str = [NSMutableString stringWithFormat:@"<%@ group: %d", [self class], self.isFolder];
+	for (NSString *key in _mutableAttributes) {
+		[str appendFormat:@", %@: '%@'", key, _mutableAttributes[key]];
+	}
+	[str appendString:@">"];
+	return str;
+}
+
+- (void)appendStringRecursive:(NSMutableString *)str indent:(NSString *)prefix {
+	[str appendFormat:@"%@%@\n", prefix, self];
+	if (self.isFolder) {
+		for (RSOPMLItem *child in self.children) {
+			[child appendStringRecursive:str indent:[prefix stringByAppendingString:@"  "]];
+		}
+		[str appendFormat:@"%@</group>\n", prefix];
+	}
+}
+
+- (NSString *)recursiveDescription {
+	NSMutableString *mStr = [NSMutableString new];
+	[self appendStringRecursive:mStr indent:@""];
+	return mStr;
 }
 
 @end

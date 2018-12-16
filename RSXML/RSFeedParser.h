@@ -16,9 +16,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *kLIBXMLParserErrorDomain = @"LIBXMLParserErrorDomain";
-static NSString *kRSXMLParserErrorDomain = @"RSXMLParserErrorDomain";
-
 BOOL RSCanParseFeed(RSXMLData *xmlData);
 
 
