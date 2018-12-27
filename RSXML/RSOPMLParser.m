@@ -1,172 +1,76 @@
 //
-//  RSOPMLParser.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 7/12/15.
-//  Copyright © 2015 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 #import "RSOPMLParser.h"
-#import <libxml/xmlstring.h>
-#import "RSXMLData.h"
-#import "RSSAXParser.h"
 #import "RSOPMLItem.h"
-#import "RSXMLError.h"
 
-
-void RSParseOPML(RSXMLData *xmlData, RSParsedOPMLBlock callback) {
-
-	NSCParameterAssert(xmlData);
-	NSCParameterAssert(callback);
-
-	dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-
-		@autoreleasepool {
-
-			RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
-
-			RSOPMLItem *document = parser.opmlDocument;
-			NSError *error = parser.error;
-
-			dispatch_async(dispatch_get_main_queue(), ^{
-
-				callback(document, error);
-			});
-		}
-	});
-}
-
-
-@interface RSOPMLParser () <RSSAXParserDelegate>
-
-@property (nonatomic, readwrite) RSOPMLItem *opmlDocument;
-@property (nonatomic, readwrite) NSError *error;
+@interface RSOPMLParser()
+@property (nonatomic, assign) BOOL parsingHead;
+@property (nonatomic) RSOPMLItem *opmlDocument;
 @property (nonatomic) NSMutableArray<RSOPMLItem*> *itemStack;
-
 @end
 
 
 @implementation RSOPMLParser
 
+#pragma mark - RSXMLParserDelegate
 
-#pragma mark - Init
++ (BOOL)isOPMLParser { return YES; }
 
-- (instancetype)initWithXMLData:(RSXMLData *)XMLData {
-
-	self = [super init];
-	if (!self) {
-		return nil;
-	}
-
-	[self parse:XMLData];
-
-	return self;
++ (NSArray<const NSString*>*)parserRequireOrderedTags {
+	return @[@"<opml", @"<outline"];
 }
 
-
-#pragma mark - Private
-
-- (void)parse:(RSXMLData *)XMLData {
-
-	@autoreleasepool {
-
-		if ([self canParseData:XMLData.data]) {
-			RSSAXParser *parser = [[RSSAXParser alloc] initWithDelegate:self];
-			
-			self.itemStack = [NSMutableArray new];
-			self.opmlDocument = [RSOPMLItem new];
-			[self.itemStack addObject:self.opmlDocument];
-			
-			[parser parseData:XMLData.data];
-			[parser finishParsing];
-			
-		} else {
-			
-			NSString *filename = nil;
-			NSURL *url = [NSURL URLWithString:XMLData.urlString];
-			if (url && url.isFileURL) {
-				filename = url.path.lastPathComponent;
-			}
-			if (!filename) {
-				filename = XMLData.urlString;
-			}
-			self.error = RSXMLMakeError(RSXMLErrorFileNotOPML, filename);
-		}
-	}
-}
-
-- (BOOL)canParseData:(NSData *)d {
-
-	// Check for <opml and <outline near the top.
-
-	@autoreleasepool {
-
-		NSString *s = [[NSString alloc] initWithBytesNoCopy:(void *)d.bytes length:d.length encoding:NSUTF8StringEncoding freeWhenDone:NO];
-		if (!s) {
-			NSDictionary *options = @{NSStringEncodingDetectionSuggestedEncodingsKey : @[@(NSUTF8StringEncoding)]};
-			(void)[NSString stringEncodingForData:d encodingOptions:options convertedString:&s usedLossyConversion:nil];
-		}
-		if (!s) {
-			return NO;
-		}
-
-		static const NSInteger numberOfCharactersToSearch = 4096;
-		NSRange rangeToSearch = NSMakeRange(0, numberOfCharactersToSearch);
-		if (s.length < numberOfCharactersToSearch) {
-			rangeToSearch.length = s.length;
-		}
-
-		NSRange opmlRange = [s rangeOfString:@"<opml" options:NSCaseInsensitiveSearch range:rangeToSearch];
-		if (opmlRange.location == NSNotFound) {
-			return NO;
-		}
-
-		NSRange outlineRange = [s rangeOfString:@"<outline" options:NSLiteralSearch range:rangeToSearch];
-		if (outlineRange.location == NSNotFound) {
-			return NO;
-		}
-
-		if (outlineRange.location < opmlRange.location) {
-			return NO;
-		}
-	}
-
+- (BOOL)xmlParserWillStartParsing {
+	self.opmlDocument = [RSOPMLItem new];
+	self.itemStack = [NSMutableArray arrayWithObject:self.opmlDocument];
 	return YES;
 }
 
-
-- (void)popItem {
-
-	NSAssert(self.itemStack.count > 0, nil);
-
-	/*If itemStack is empty, bad things are happening.
-	 But we still shouldn't crash in production.*/
-
-	if (self.itemStack.count > 0) {
-		[self.itemStack removeLastObject];
-	}
+- (id)xmlParserWillReturnDocument {
+	return self.opmlDocument;
 }
 
 
 #pragma mark - RSSAXParserDelegate
 
-static const char *kOutline = "outline";
-static const char kOutlineLength = 8;
-static const char *kHead = "head";
-static const char kHeadLength = 5;
-static BOOL isHead = NO;
 
 - (void)saxParser:(RSSAXParser *)SAXParser XMLStartElement:(const xmlChar *)localName prefix:(const xmlChar *)prefix uri:(const xmlChar *)uri numberOfNamespaces:(NSInteger)numberOfNamespaces namespaces:(const xmlChar **)namespaces numberOfAttributes:(NSInteger)numberOfAttributes numberDefaulted:(int)numberDefaulted attributes:(const xmlChar **)attributes {
 
-	if (RSSAXEqualTags(localName, kOutline, kOutlineLength)) {
+	int len = xmlStrlen(localName);
+
+	if (len == 7 && EqualBytes(localName, "outline", 7)) {
 		RSOPMLItem *item = [RSOPMLItem new];
 		item.attributes = [SAXParser attributesDictionary:attributes numberOfAttributes:numberOfAttributes];
 		
 		[self.itemStack.lastObject addChild:item];
 		[self.itemStack addObject:item];
-	} else if (RSSAXEqualTags(localName, kHead, kHeadLength)) {
-		isHead = YES;
-	} else if (isHead) {
+	}
+	else if (len == 4 && EqualBytes(localName, "head", 4)) {
+		self.parsingHead = YES;
+	}
+	else if (self.parsingHead) {
 		[SAXParser beginStoringCharacters];
 	}
 }
@@ -174,13 +78,17 @@ static BOOL isHead = NO;
 
 - (void)saxParser:(RSSAXParser *)SAXParser XMLEndElement:(const xmlChar *)localName prefix:(const xmlChar *)prefix uri:(const xmlChar *)uri {
 
-	if (RSSAXEqualTags(localName, kOutline, kOutlineLength)) {
-		[self popItem];
-	} else if (RSSAXEqualTags(localName, kHead, kHeadLength)) {
-		isHead = NO;
-	} else if (isHead) {
+	int len = xmlStrlen(localName);
+
+	if (len == 7 && EqualBytes(localName, "outline", 7)) {
+		[self.itemStack removeLastObject]; // safe to be called on empty array
+	}
+	else if (len == 4 && EqualBytes(localName, "head", 4)) {
+		self.parsingHead = NO;
+	}
+	else if (self.parsingHead) { // handle xml tags in head as if they were attributes
 		NSString *key = [NSString stringWithFormat:@"%s", localName];
-		[self.itemStack.lastObject setAttribute:[SAXParser currentString] forKey:key];
+		[self.itemStack.lastObject setAttribute:SAXParser.currentStringWithTrimmedWhitespace forKey:key];
 	}
 }
 
@@ -191,24 +99,24 @@ static BOOL isHead = NO;
 		return nil;
 	}
 
-	size_t nameLength = strlen((const char *)name);
-	switch (nameLength) {
+	int len = xmlStrlen(name);
+	switch (len) {
 		case 4:
-			if (RSSAXEqualTags(name, "text", 5)) return OPMLTextKey;
-			if (RSSAXEqualTags(name, "type", 5)) return OPMLTypeKey;
+			if (EqualBytes(name, "text", 4)) return OPMLTextKey;
+			if (EqualBytes(name, "type", 4)) return OPMLTypeKey;
 			break;
 		case 5:
-			if (RSSAXEqualTags(name, "title", 6)) return OPMLTitleKey;
+			if (EqualBytes(name, "title", 5)) return OPMLTitleKey;
 			break;
 		case 6:
-			if (RSSAXEqualTags(name, "xmlUrl", 7)) return OPMLXMLURLKey;
+			if (EqualBytes(name, "xmlUrl", 6)) return OPMLXMLURLKey;
 			break;
 		case 7:
-			if (RSSAXEqualTags(name, "version", 8)) return OPMLVersionKey;
-			if (RSSAXEqualTags(name, "htmlUrl", 8)) return OPMLHMTLURLKey;
+			if (EqualBytes(name, "version", 7)) return OPMLVersionKey;
+			if (EqualBytes(name, "htmlUrl", 7)) return OPMLHMTLURLKey;
 			break;
 		case 11:
-			if (RSSAXEqualTags(name, "description", 12)) return OPMLDescriptionKey;
+			if (EqualBytes(name, "description", 11)) return OPMLDescriptionKey;
 			break;
 	}
 	return nil;
@@ -220,11 +128,10 @@ static BOOL isHead = NO;
 	if (length < 1) {
 		return @"";
 	} else if (length == 3) {
-		if (RSSAXEqualBytes(bytes, "RSS", 3)) return @"RSS";
-		if (RSSAXEqualBytes(bytes, "rss", 3)) return @"rss";
+		if (EqualBytes(bytes, "RSS", 3)) return @"RSS";
+		if (EqualBytes(bytes, "rss", 3)) return @"rss";
 	}
 	return nil;
 }
-
 
 @end

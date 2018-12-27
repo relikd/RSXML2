@@ -1,28 +1,35 @@
 //
-//  RSFeedParser.h
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 1/4/15.
-//  Copyright (c) 2015 Ranchero Software LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
-#import "FeedParser.h"
+#import "RSXMLParser.h"
 
-// If you have a feed and don’t know or care what it is (RSS or Atom),
-// then call RSParseFeed or RSParseFeedSync.
+@class RSParsedFeed, RSParsedArticle;
 
-@class RSXMLData;
-@class RSParsedFeed;
+@interface RSFeedParser : RSXMLParser<RSParsedFeed*>
+@property (nonatomic, readonly) RSParsedFeed *parsedFeed;
+@property (nonatomic, weak) RSParsedArticle *currentArticle;
 
-NS_ASSUME_NONNULL_BEGIN
-
-BOOL RSCanParseFeed(RSXMLData *xmlData);
-
-
-typedef void (^RSParsedFeedBlock)(RSParsedFeed * _Nullable parsedFeed, NSError * _Nullable error);
-
-// callback is called on main queue.
-void RSParseFeed(RSXMLData *xmlData, RSParsedFeedBlock callback);
-RSParsedFeed * _Nullable RSParseFeedSync(RSXMLData *xmlData, NSError * _Nullable * _Nullable error);
-
-NS_ASSUME_NONNULL_END
+- (NSDate *)dateFromCharacters:(NSData *)data;
+- (NSString *)decodeHTMLEntities:(NSString *)str;
+@end

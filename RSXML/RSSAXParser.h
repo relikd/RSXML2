@@ -1,12 +1,29 @@
 //
-//  RSSAXParser.h
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 3/25/15.
-//  Copyright (c) 2015 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 @import Foundation;
+#import <libxml/xmlstring.h>
 
 /*Thread-safe, not re-entrant.
 
@@ -22,48 +39,39 @@
 
 @protocol RSSAXParserDelegate <NSObject>
 
++ (BOOL)isHTMLParser; // reusing class method of RSXMLParser delegate
+
 @optional
 
-- (void)saxParser:(RSSAXParser *)SAXParser XMLStartElement:(const unsigned char *)localName prefix:(const unsigned char *)prefix uri:(const unsigned char *)uri numberOfNamespaces:(NSInteger)numberOfNamespaces namespaces:(const unsigned char **)namespaces numberOfAttributes:(NSInteger)numberOfAttributes numberDefaulted:(int)numberDefaulted attributes:(const unsigned char **)attributes;
+// Called when parsing HTML
+- (void)saxParser:(RSSAXParser *)SAXParser XMLStartElement:(const xmlChar *)localName attributes:(const xmlChar **)attributes;
+- (void)saxParser:(RSSAXParser *)SAXParser XMLEndElement:(const xmlChar *)localName;
 
-- (void)saxParser:(RSSAXParser *)SAXParser XMLEndElement:(const unsigned char *)localName prefix:(const unsigned char *)prefix uri:(const unsigned char *)uri;
+// Called when parsing XML (Atom, RSS, OPML)
+- (void)saxParser:(RSSAXParser *)SAXParser XMLStartElement:(const xmlChar *)localName prefix:(const xmlChar *)prefix uri:(const xmlChar *)uri numberOfNamespaces:(NSInteger)numberOfNamespaces namespaces:(const xmlChar **)namespaces numberOfAttributes:(NSInteger)numberOfAttributes numberDefaulted:(int)numberDefaulted attributes:(const xmlChar **)attributes;
+- (void)saxParser:(RSSAXParser *)SAXParser XMLEndElement:(const xmlChar *)localName prefix:(const xmlChar *)prefix uri:(const xmlChar *)uri;
 
-- (void)saxParser:(RSSAXParser *)SAXParser XMLCharactersFound:(const unsigned char *)characters length:(NSUInteger)length;
-
-- (void)saxParserDidReachEndOfDocument:(RSSAXParser *)SAXParser; /*If canceled, may not get called (but might).*/
-
-- (NSString *)saxParser:(RSSAXParser *)SAXParser internedStringForName:(const unsigned char *)name prefix:(const unsigned char *)prefix; /*Okay to return nil. Prefix may be nil.*/
-
+// Called regardless of parser type
+- (void)saxParser:(RSSAXParser *)SAXParser XMLCharactersFound:(const xmlChar *)characters length:(NSUInteger)length;
+- (void)saxParserDidReachEndOfDocument:(RSSAXParser *)SAXParser; // If canceled, may not get called (but might).
+- (NSString *)saxParser:(RSSAXParser *)SAXParser internedStringForName:(const xmlChar *)name prefix:(const xmlChar *)prefix; // Okay to return nil. Prefix may be nil.
 - (NSString *)saxParser:(RSSAXParser *)SAXParser internedStringForValue:(const void *)bytes length:(NSUInteger)length;
-
 @end
 
 
-void RSSAXInitLibXMLParser(void); // Needed by RSSAXHTMLParser.
-
-/*For use by delegate.*/
-
-BOOL RSSAXEqualTags(const unsigned char *localName, const char *tag, NSInteger tagLength);
-BOOL RSSAXEqualBytes(const void *bytes1, const void *bytes2, NSUInteger length);
-
 
 @interface RSSAXParser : NSObject
+@property (nonatomic, strong, readonly) NSData *currentCharacters;
+@property (nonatomic, strong, readonly) NSString *currentString;
+@property (nonatomic, strong, readonly) NSString *currentStringWithTrimmedWhitespace;
 
 - (instancetype)initWithDelegate:(id<RSSAXParserDelegate>)delegate;
 
-- (void)parseData:(NSData *)data;
 - (void)parseBytes:(const void *)bytes numberOfBytes:(NSUInteger)numberOfBytes;
-- (void)finishParsing;
 - (void)cancel;
-
-@property (nonatomic, strong, readonly) NSData *currentCharacters; /*nil if not storing characters. UTF-8 encoded.*/
-@property (nonatomic, strong, readonly) NSString *currentString; /*Convenience to get string version of currentCharacters.*/
-@property (nonatomic, strong, readonly) NSString *currentStringWithTrimmedWhitespace;
-
-- (void)beginStoringCharacters; /*Delegate can call from XMLStartElement. Characters will be available in XMLEndElement as currentCharacters property. Storing characters is stopped after each XMLEndElement.*/
-
-/*Delegate can call from within XMLStartElement. Returns nil if numberOfAttributes < 1.*/
+- (void)beginStoringCharacters;
 
 - (NSDictionary *)attributesDictionary:(const unsigned char **)attributes numberOfAttributes:(NSInteger)numberOfAttributes;
+- (NSDictionary *)attributesDictionaryHTML:(const xmlChar **)attributes;
 
 @end

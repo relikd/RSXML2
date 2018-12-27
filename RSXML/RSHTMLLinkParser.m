@@ -1,151 +1,91 @@
 //
-//  RSHTMLLinkParser.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 8/7/16.
-//  Copyright © 2016 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
-#import <libxml/xmlstring.h>
 #import "RSHTMLLinkParser.h"
-#import "RSSAXHTMLParser.h"
-#import "RSSAXParser.h"
-#import "RSXMLData.h"
-#import "RSXMLInternal.h"
+#import "RSHTMLMetadata.h"
+#import "NSDictionary+RSXML.h"
 
-
-@interface RSHTMLLinkParser() <RSSAXHTMLParserDelegate>
-
-@property (nonatomic, readonly) NSMutableArray *links;
-@property (nonatomic, readonly) RSXMLData *xmlData;
-@property (nonatomic, readonly) NSMutableArray *dictionaries;
+@interface RSHTMLLinkParser()
 @property (nonatomic, readonly) NSURL *baseURL;
-
+@property (nonatomic) NSMutableArray<RSHTMLMetadataAnchor*> *mutableLinksList;
+@property (nonatomic) NSMutableString *currentText;
 @end
-
-
-@interface RSHTMLLink()
-
-@property (nonatomic, readwrite) NSString *urlString; //absolute
-@property (nonatomic, readwrite) NSString *text;
-@property (nonatomic, readwrite) NSString *title; //title attribute inside anchor tag
-
-@end
-
 
 @implementation RSHTMLLinkParser
 
+#pragma mark - RSXMLParserDelegate
 
-#pragma mark - Class Methods
++ (BOOL)isHTMLParser { return YES; }
 
-+ (NSArray *)htmlLinksWithData:(RSXMLData *)xmlData {
+- (BOOL)xmlParserWillStartParsing {
+	_baseURL = [NSURL URLWithString:self.documentURI];
+	_mutableLinksList = [NSMutableArray new];
+	return YES;
+}
 
-	RSHTMLLinkParser *parser = [[self alloc] initWithXMLData:xmlData];
-	return parser.links;
+- (id)xmlParserWillReturnDocument {
+	return [_mutableLinksList copy];
 }
 
 
-#pragma mark - Init
+#pragma mark - RSSAXParserDelegate
 
-- (instancetype)initWithXMLData:(RSXMLData *)xmlData {
 
-	NSParameterAssert(xmlData.data);
-	NSParameterAssert(xmlData.urlString);
+- (void)saxParser:(RSSAXParser *)SAXParser XMLStartElement:(const xmlChar *)localName attributes:(const xmlChar **)attributes {
 
-	self = [super init];
-	if (!self) {
-		return nil;
+	if (EqualBytes(localName, "a", 2)) { // 2 because length is not checked
+		NSDictionary *attribs = [SAXParser attributesDictionaryHTML:attributes];
+		if (!attribs || attribs.count == 0) {
+			return;
+		}
+		NSString *href = [attribs rsxml_objectForCaseInsensitiveKey:@"href"];
+		if (!href) {
+			return;
+		}
+		RSHTMLMetadataAnchor *obj = [RSHTMLMetadataAnchor new];
+		[self.mutableLinksList addObject:obj];
+		// set link properties
+		obj.tooltip = [attribs rsxml_objectForCaseInsensitiveKey:@"title"];
+		obj.link = [[NSURL URLWithString:href relativeToURL:self.baseURL] absoluteString];
+		// begin storing data for link description
+		[SAXParser beginStoringCharacters];
+		self.currentText = [NSMutableString new];
 	}
-
-	_links = [NSMutableArray new];
-	_xmlData = xmlData;
-	_dictionaries = [NSMutableArray new];
-	_baseURL = [NSURL URLWithString:xmlData.urlString];
-
-	[self parse];
-
-	return self;
 }
-
-
-#pragma mark - Parse
-
-- (void)parse {
-
-	RSSAXHTMLParser *parser = [[RSSAXHTMLParser alloc] initWithDelegate:self];
-	[parser parseData:self.xmlData.data];
-	[parser finishParsing];
-}
-
-
-- (RSHTMLLink *)currentLink {
-
-	return self.links.lastObject;
-}
-
-
-static NSString *kHrefKey = @"href";
-
-- (NSString *)urlStringFromDictionary:(NSDictionary *)d {
-
-	NSString *href = [d rsxml_objectForCaseInsensitiveKey:kHrefKey];
-	if (!href) {
-		return nil;
-	}
-
-	NSURL *absoluteURL = [NSURL URLWithString:href relativeToURL:self.baseURL];
-	return absoluteURL.absoluteString;
-}
-
-
-static NSString *kTitleKey = @"title";
-
-- (NSString *)titleFromDictionary:(NSDictionary *)d {
-
-	return [d rsxml_objectForCaseInsensitiveKey:kTitleKey];
-}
-
-
-- (void)handleLinkAttributes:(NSDictionary *)d {
-
-	RSHTMLLink *link = self.currentLink;
-	link.urlString = [self urlStringFromDictionary:d];
-	link.title = [self titleFromDictionary:d];
-}
-
-
-static const char *kAnchor = "a";
-static const NSInteger kAnchorLength = 2;
-
-- (void)saxParser:(RSSAXHTMLParser *)SAXParser XMLStartElement:(const xmlChar *)localName attributes:(const xmlChar **)attributes {
-
-	if (!RSSAXEqualTags(localName, kAnchor, kAnchorLength)) {
-		return;
-	}
-
-	RSHTMLLink *link = [RSHTMLLink new];
-	[self.links addObject:link];
-
-	NSDictionary *d = [SAXParser attributesDictionary:attributes];
-	if (!RSXMLIsEmpty(d)) {
-		[self handleLinkAttributes:d];
-	}
-
-	[SAXParser beginStoringCharacters];
-}
-
 
 - (void)saxParser:(RSSAXParser *)SAXParser XMLEndElement:(const xmlChar *)localName {
 
-	if (!RSSAXEqualTags(localName, kAnchor, kAnchorLength)) {
-		return;
+	if (self.currentText != nil) {
+		NSString *str = SAXParser.currentStringWithTrimmedWhitespace;
+		if (str) {
+			[self.currentText appendString:str];
+		}
+		if (EqualBytes(localName, "a", 2)) { // 2 because length is not checked
+			self.mutableLinksList.lastObject.title = self.currentText;
+			self.currentText = nil;
+		}
 	}
-
-	self.currentLink.text = SAXParser.currentStringWithTrimmedWhitespace;
 }
-
-@end
-
-@implementation RSHTMLLink
 
 @end

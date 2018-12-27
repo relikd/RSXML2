@@ -1,128 +1,111 @@
 //
-//  RSHTMLMetadataParser.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 3/6/16.
-//  Copyright © 2016 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
-#import <libxml/xmlstring.h>
 #import "RSHTMLMetadataParser.h"
-#import "RSXMLData.h"
 #import "RSHTMLMetadata.h"
-#import "RSSAXHTMLParser.h"
-#import "RSSAXParser.h"
-#import "RSXMLInternal.h"
+#import "NSString+RSXML.h"
+#import "NSDictionary+RSXML.h"
 
-
-@interface RSHTMLMetadataParser () <RSSAXHTMLParserDelegate>
-
-@property (nonatomic, readonly) RSXMLData *xmlData;
-@property (nonatomic, readwrite) RSHTMLMetadata *metadata;
-@property (nonatomic) NSMutableArray *dictionaries;
-@property (nonatomic) BOOL didFinishParsing;
-
+@interface RSHTMLMetadataParser()
+@property (nonatomic, readonly) NSURL *baseURL;
+@property (nonatomic) NSString *faviconLink;
+@property (nonatomic) NSMutableArray<RSHTMLMetadataIconLink*> *iconLinks;
+@property (nonatomic) NSMutableArray<RSHTMLMetadataFeedLink*> *feedLinks;
 @end
-
 
 @implementation RSHTMLMetadataParser
 
+#pragma mark - RSXMLParserDelegate
 
-#pragma mark - Class Methods
++ (BOOL)isHTMLParser { return YES; }
 
-+ (RSHTMLMetadata *)HTMLMetadataWithXMLData:(RSXMLData *)xmlData {
+- (BOOL)xmlParserWillStartParsing {
+	_baseURL = [NSURL URLWithString:self.documentURI];
+	_iconLinks = [NSMutableArray new];
+	_feedLinks = [NSMutableArray new];
+	return YES;
+}
 
-	RSHTMLMetadataParser *parser = [[self alloc] initWithXMLData:xmlData];
-	return parser.metadata;
+- (id)xmlParserWillReturnDocument {
+	RSHTMLMetadata *metadata = [[RSHTMLMetadata alloc] init];
+	metadata.faviconLink = self.faviconLink;
+	metadata.feedLinks = [self.feedLinks copy];
+	metadata.iconLinks = [self.iconLinks copy];
+	return metadata;
 }
 
 
-#pragma mark - Init
-
-- (instancetype)initWithXMLData:(RSXMLData *)xmlData {
-
-	NSParameterAssert(xmlData.data);
-	NSParameterAssert(xmlData.urlString);
-
-	self = [super init];
-	if (!self) {
-		return nil;
-	}
-
-	_xmlData = xmlData;
-	_dictionaries = [NSMutableArray new];
-
-	[self parse];
-
-	return self;
-}
+#pragma mark - RSSAXParserDelegate
 
 
-#pragma mark - Parse
+- (void)saxParser:(RSSAXParser *)SAXParser XMLStartElement:(const xmlChar *)localName attributes:(const xmlChar **)attributes {
 
-- (void)parse {
-
-	RSSAXHTMLParser *parser = [[RSSAXHTMLParser alloc] initWithDelegate:self];
-	[parser parseData:self.xmlData.data];
-	[parser finishParsing];
-
-	self.metadata = [[RSHTMLMetadata alloc] initWithURLString:self.xmlData.urlString dictionaries:[self.dictionaries copy]];
-}
-
-
-static NSString *kHrefKey = @"href";
-static NSString *kSrcKey = @"src";
-static NSString *kRelKey = @"rel";
-
-- (NSString *)linkForDictionary:(NSDictionary *)d {
-
-	NSString *link = [d rsxml_objectForCaseInsensitiveKey:kHrefKey];
-	if (link) {
-		return link;
-	}
-
-	return [d rsxml_objectForCaseInsensitiveKey:kSrcKey];
-}
-
-
-- (void)handleLinkAttributes:(NSDictionary *)d {
-
-	if (RSXMLStringIsEmpty([d rsxml_objectForCaseInsensitiveKey:kRelKey])) {
+	if (xmlStrlen(localName) != 4) {
 		return;
 	}
-	if (RSXMLStringIsEmpty([self linkForDictionary:d])) {
-		return;
+	else if (EqualBytes(localName, "body", 4)) {
+		[SAXParser cancel]; // we're only interested in head
 	}
-
-	[self.dictionaries addObject:d];
+	else if (EqualBytes(localName, "link", 4)) {
+		[self parseLinkItemWithAttributes:[SAXParser attributesDictionaryHTML:attributes]];
+	}
 }
 
-
-#pragma mark - RSSAXHTMLParserDelegate
-
-static const char *kBody = "body";
-static const NSInteger kBodyLength = 5;
-static const char *kLink = "link";
-static const NSInteger kLinkLength = 5;
-
-- (void)saxParser:(RSSAXHTMLParser *)SAXParser XMLStartElement:(const xmlChar *)localName attributes:(const xmlChar **)attributes {
-
-	if (self.didFinishParsing) {
+- (void)parseLinkItemWithAttributes:(NSDictionary*)attribs {
+	if (!attribs || attribs.count == 0)
 		return;
+	NSString *rel = [attribs rsxml_objectForCaseInsensitiveKey:@"rel"];
+	if (!rel || rel.length == 0)
+		return;
+	NSString *link = [attribs rsxml_objectForCaseInsensitiveKey:@"href"];
+	if (!link) {
+		link = [attribs rsxml_objectForCaseInsensitiveKey:@"src"];
+		if (!link)
+			return;
 	}
 	
-	if (RSSAXEqualTags(localName, kBody, kBodyLength)) {
-		self.didFinishParsing = YES;
-		return;
+	rel = [rel lowercaseString];
+	
+	if ([rel isEqualToString:@"shortcut icon"]) {
+		self.faviconLink = [link absoluteURLWithBase:self.baseURL];
 	}
-
-	if (!RSSAXEqualTags(localName, kLink, kLinkLength)) {
-		return;
+	else if ([rel isEqualToString:@"icon"] || [rel hasPrefix:@"apple-touch-icon"]) { // also matching "apple-touch-icon-precomposed"
+		RSHTMLMetadataIconLink *icon = [RSHTMLMetadataIconLink new];
+		icon.link = [link absoluteURLWithBase:self.baseURL];
+		icon.title = rel;
+		icon.sizes = [attribs rsxml_objectForCaseInsensitiveKey:@"sizes"];
+		[self.iconLinks addObject:icon];
 	}
-
-	NSDictionary *d = [SAXParser attributesDictionary:attributes];
-	if (!RSXMLIsEmpty(d)) {
-		[self handleLinkAttributes:d];
+	else if ([rel isEqualToString:@"alternate"]) {
+		RSFeedType type = RSFeedTypeFromLinkTypeAttribute([attribs rsxml_objectForCaseInsensitiveKey:@"type"]);
+		if (type != RSFeedTypeNone) {
+			RSHTMLMetadataFeedLink *feedLink = [RSHTMLMetadataFeedLink new];
+			feedLink.link = [link absoluteURLWithBase:self.baseURL];
+			feedLink.title = [attribs rsxml_objectForCaseInsensitiveKey:@"title"];
+			feedLink.type = type;
+			[self.feedLinks addObject:feedLink];
+		}
 	}
 }
 

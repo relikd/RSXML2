@@ -1,22 +1,65 @@
 //
-//  NSString+RSXML.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 9/25/15.
-//  Copyright © 2015 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 #import "NSString+RSXML.h"
-
+#import <CommonCrypto/CommonDigest.h>
 
 @interface NSScanner (RSXML)
-
 - (BOOL)rs_scanEntityValue:(NSString * _Nullable * _Nullable)decodedEntity;
-
 @end
 
 
+#pragma mark - NSString
+
+
 @implementation NSString (RSXML)
+
+- (NSData *)rsxml_md5Hash {
+	
+	NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+	unsigned char hash[CC_MD5_DIGEST_LENGTH];
+	CC_MD5(data.bytes, (CC_LONG)data.length, hash);
+	
+	return [NSData dataWithBytes:(const void *)hash length:CC_MD5_DIGEST_LENGTH];
+}
+
+- (NSString *)rsxml_md5HashString {
+	
+	NSData *md5Data = [self rsxml_md5Hash];
+	const Byte *bytes = md5Data.bytes;
+	return [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15]];
+}
+
+- (NSString *)absoluteURLWithBase:(NSURL *)baseURL {
+	if (baseURL && ![[self lowercaseString] hasPrefix:@"http"]) {
+		NSURL *resolvedURL = [NSURL URLWithString:self relativeToURL:baseURL];
+		if (resolvedURL.absoluteString) {
+			return resolvedURL.absoluteString;
+		}
+	}
+	return self;
+}
 
 - (NSString *)rs_stringByDecodingHTMLEntities {
 	
@@ -106,16 +149,18 @@ static NSString *RSXMLStringWithValue(unichar value);
 
 @end
 
+
+#pragma mark - NSScanner
+
+
 @implementation NSScanner (RSXML)
 
 - (BOOL)rs_scanEntityValue:(NSString * _Nullable * _Nullable)decodedEntity {
-	
 	NSString *s = self.string;
 	NSUInteger initialScanLocation = self.scanLocation;
 	static NSUInteger maxEntityLength = 20; // It’s probably smaller, but this is just for sanity.
 	
 	while (true) {
-		
 		unichar ch = [s characterAtIndex:self.scanLocation];
 		if ([NSCharacterSet.whitespaceAndNewlineCharacterSet characterIsMember:ch]) {
 			break;
@@ -138,11 +183,14 @@ static NSString *RSXMLStringWithValue(unichar value);
 			break;
 		}
 	}
-	
 	return NO;
 }
 
 @end
+
+
+#pragma mark - C Functions
+
 
 static NSString *RSXMLStringWithValue(unichar value) {
 	

@@ -1,10 +1,26 @@
 //
-//  RSOPMLTests.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 2/28/16.
-//  Copyright © 2016 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 #import <XCTest/XCTest.h>
 @import RSXML;
@@ -15,63 +31,62 @@
 
 @implementation RSOPMLTests
 
-+ (RSXMLData *)subsData {
++ (NSArray<XCTPerformanceMetric> *)defaultPerformanceMetrics {
+	return @[XCTPerformanceMetric_WallClockTime, @"com.apple.XCTPerformanceMetric_TotalHeapAllocationsKilobytes"];
+}
 
-	static RSXMLData *xmlData = nil;
-
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"Subs" ofType:@"opml" inDirectory:@"Resources"];
-		NSData *d = [[NSData alloc] initWithContentsOfFile:s];
-		xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://example.org/"];
-	});
-
-	return xmlData;
+- (RSXMLData*)xmlFile:(NSString*)name extension:(NSString*)ext {
+	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:ext inDirectory:@"Resources"];
+	if (s == nil) return nil;
+	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
+	return [[RSXMLData alloc] initWithData:d urlString:[NSString stringWithFormat:@"%@.%@", name, ext]];
 }
 
 - (void)testNotOPML {
 
-	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:@"DaringFireball" ofType:@"rss" inDirectory:@"Resources"];
-	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
-	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:d urlString:@"http://example.org/"];
+	NSError *error;
+	RSXMLData *xmlData = [self xmlFile:@"DaringFireball" extension:@"atom"];
+	XCTAssertNotEqualObjects(xmlData.parserClass, [RSOPMLParser class]);
+	XCTAssertNil(xmlData.parserError);
+	
 	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
-	XCTAssertNotNil(parser.error);
-	XCTAssert(parser.error.code == RSXMLErrorFileNotOPML);
-	XCTAssert([parser.error.domain isEqualTo:kRSXMLParserErrorDomain]);
+	RSOPMLItem *document = [parser parseSync:&error];
+	XCTAssertNil(document);
+	XCTAssertNotNil(error);
+	XCTAssertEqual(error.code, RSXMLErrorExpectingOPML);
+	XCTAssertEqualObjects(error.domain, kRSXMLParserErrorDomain);
 
-	d = [[NSData alloc] initWithContentsOfFile:@"/System/Library/Kernels/kernel"];
-	xmlData = [[RSXMLData alloc] initWithData:d urlString:@"/System/Library/Kernels/kernel"];
-	parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
-	XCTAssertNotNil(parser.error);
+	xmlData = [[RSXMLData alloc] initWithData:[[NSData alloc] initWithContentsOfFile:@"/System/Library/Kernels/kernel"]
+									urlString:@"/System/Library/Kernels/kernel"];
+	XCTAssertNotNil(xmlData.parserError);
+	XCTAssert(xmlData.parserError.code == RSXMLErrorMissingLeftCaret);
+	RSXMLParser *parser2 = [xmlData getParser];
+	XCTAssertNil(parser2);
+	XCTAssertNotNil(xmlData.parserError);
+	XCTAssert(xmlData.parserError.code == RSXMLErrorMissingLeftCaret); // error should not be overwritten
+	
 }
-
-
-- (void)testSubsPerformance {
-
-	RSXMLData *xmlData = [[self class] subsData];
-
-	[self measureBlock:^{
-		(void)[[RSOPMLParser alloc] initWithXMLData:xmlData];
-	}];
-}
-
 
 - (void)testSubsStructure {
 
-	RSXMLData *xmlData = [[self class] subsData];
-
-	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
-	XCTAssertNotNil(parser);
-
-	RSOPMLItem *document = parser.opmlDocument;
+	RSXMLData<RSOPMLParser*> *xmlData = [self xmlFile:@"Subs" extension:@"opml"];
+	XCTAssertEqualObjects(xmlData.parserClass, [RSOPMLParser class]);
+	
+	NSError *error;
+	RSOPMLParser *parser = [xmlData getParser];
+	RSOPMLItem *document = [parser parseSync:&error];
 	XCTAssertNotNil(document);
-	XCTAssert([document.displayName isEqualToString:@"Subs"]);
-	XCTAssert([document.children.firstObject.displayName isEqualToString:@"Daring Fireball"]);
-	XCTAssert([document.children.lastObject.displayName isEqualToString:@"Writers"]);
-	XCTAssert([document.children.lastObject.children.lastObject.displayName isEqualToString:@"Gerrold"]);
+	XCTAssertEqualObjects(document.displayName, @"Subs");
+	XCTAssertEqualObjects(document.children.firstObject.displayName, @"Daring Fireball");
+	XCTAssertEqualObjects(document.children.lastObject.displayName, @"Writers");
+	XCTAssertEqualObjects(document.children.lastObject.children.lastObject.displayName, @"Gerrold");
 	[self checkStructureForOPMLItem:document isRoot:YES];
 	
 	//NSLog(@"\n%@", [document recursiveDescription]);
+	
+	[self measureBlock:^{
+		[parser parseSync:nil];
+	}];
 }
 
 - (void)checkStructureForOPMLItem:(RSOPMLItem *)item isRoot:(BOOL)root {
@@ -97,6 +112,5 @@
 		}
 	}
 }
-
 
 @end

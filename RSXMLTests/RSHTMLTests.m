@@ -1,13 +1,29 @@
 //
-//  RSHTMLTests.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 3/5/16.
-//  Copyright © 2016 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
-@import RSXML;
 #import <XCTest/XCTest.h>
+@import RSXML;
 
 @interface RSHTMLTests : XCTestCase
 
@@ -15,169 +31,109 @@
 
 @implementation RSHTMLTests
 
++ (NSArray<XCTPerformanceMetric> *)defaultPerformanceMetrics {
+	return @[XCTPerformanceMetric_WallClockTime, @"com.apple.XCTPerformanceMetric_TotalHeapAllocationsKilobytes"];
+}
 
-+ (RSXMLData *)xmlData:(NSString *)title urlString:(NSString *)urlString {
-
+- (RSXMLData *)xmlData:(NSString *)title urlString:(NSString *)urlString {
 	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:title ofType:@"html" inDirectory:@"Resources"];
-	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
-	return [[RSXMLData alloc] initWithData:d urlString:urlString];
+	return [[RSXMLData alloc] initWithData:[[NSData alloc] initWithContentsOfFile:s] urlString:urlString];
 }
-
-
-+ (RSXMLData *)daringFireballData {
-
-	static RSXMLData *xmlData = nil;
-
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		xmlData = [self xmlData:@"DaringFireball" urlString:@"http://daringfireball.net/"];
-	});
-
-	return xmlData;
-}
-
-
-+ (RSXMLData *)furboData {
-
-	static RSXMLData *xmlData = nil;
-
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		xmlData = [self xmlData:@"furbo" urlString:@"http://furbo.org/"];
-	});
-
-	return xmlData;
-}
-
-
-+ (RSXMLData *)inessentialData {
-
-	static RSXMLData *xmlData = nil;
-
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		xmlData = [self xmlData:@"inessential" urlString:@"http://inessential.com/"];
-	});
-
-	return xmlData;
-}
-
-
-+ (RSXMLData *)sixcolorsData {
-
-	static RSXMLData *xmlData = nil;
-
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		xmlData = [self xmlData:@"sixcolors" urlString:@"https://sixcolors.com/"];
-	});
-
-	return xmlData;
-}
-
 
 - (void)testDaringFireball {
 
-	RSXMLData *xmlData = [[self class] daringFireballData];
-	RSHTMLMetadata *metadata = [RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
-
+	RSXMLData *xmlData = [self xmlData:@"DaringFireball" urlString:@"http://daringfireball.net/"];
+	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
+	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	NSError *error;
+	RSHTMLMetadata *metadata = [parser parseSync:&error];
+	XCTAssertNil(error);
 	XCTAssertEqualObjects(metadata.faviconLink, @"http://daringfireball.net/graphics/favicon.ico?v=005");
 
 	XCTAssertTrue(metadata.feedLinks.count == 1);
 	RSHTMLMetadataFeedLink *feedLink = metadata.feedLinks[0];
 	XCTAssertNil(feedLink.title);
-	XCTAssertEqualObjects(feedLink.type, @"application/atom+xml");
-	XCTAssertEqualObjects(feedLink.urlString, @"http://daringfireball.net/feeds/main");
-}
-
-
-- (void)testDaringFireballPerformance {
-
-	RSXMLData *xmlData = [[self class] daringFireballData];
-
+	XCTAssertEqual(feedLink.type, RSFeedTypeAtom);
+	XCTAssertEqualObjects(feedLink.link, @"http://daringfireball.net/feeds/main");
+	
 	[self measureBlock:^{
-		(void)[RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
+		for (int i = 0; i < 10; i++)
+			[parser parseSync:nil];
 	}];
 }
 
 - (void)testFurbo {
 
-	RSXMLData *xmlData = [[self class] furboData];
-	RSHTMLMetadata *metadata = [RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
-
+	RSXMLData *xmlData = [self xmlData:@"furbo" urlString:@"http://furbo.org/"];
+	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
+	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	NSError *error;
+	RSHTMLMetadata *metadata = [parser parseSync:&error];
+	XCTAssertNil(error);
 	XCTAssertEqualObjects(metadata.faviconLink, @"http://furbo.org/favicon.ico");
 
 	XCTAssertTrue(metadata.feedLinks.count == 1);
 	RSHTMLMetadataFeedLink *feedLink = metadata.feedLinks[0];
 	XCTAssertEqualObjects(feedLink.title, @"Iconfactory News Feed");
-	XCTAssertEqualObjects(feedLink.type, @"application/rss+xml");
-}
-
-
-- (void)testFurboPerformance {
-
-	RSXMLData *xmlData = [[self class] furboData];
-
+	XCTAssertEqual(feedLink.type, RSFeedTypeRSS);
+	
 	[self measureBlock:^{
-		(void)[RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
+		for (int i = 0; i < 10; i++)
+			[parser parseSync:nil];
 	}];
 }
 
-
 - (void)testInessential {
 
-	RSXMLData *xmlData = [[self class] inessentialData];
-	RSHTMLMetadata *metadata = [RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
-
+	RSXMLData *xmlData = [self xmlData:@"inessential" urlString:@"http://inessential.com/"];
+	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
+	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	NSError *error;
+	RSHTMLMetadata *metadata = [parser parseSync:&error];
+	XCTAssertNil(error);
 	XCTAssertNil(metadata.faviconLink);
 
 	XCTAssertTrue(metadata.feedLinks.count == 1);
 	RSHTMLMetadataFeedLink *feedLink = metadata.feedLinks[0];
 	XCTAssertEqualObjects(feedLink.title, @"RSS");
-	XCTAssertEqualObjects(feedLink.type, @"application/rss+xml");
-	XCTAssertEqualObjects(feedLink.urlString, @"http://inessential.com/xml/rss.xml");
+	XCTAssertEqual(feedLink.type, RSFeedTypeRSS);
+	XCTAssertEqualObjects(feedLink.link, @"http://inessential.com/xml/rss.xml");
 
-	XCTAssertEqual(metadata.appleTouchIcons.count, 0u);
-}
-
-
-- (void)testInessentialPerformance {
-
-	RSXMLData *xmlData = [[self class] inessentialData];
-
+	XCTAssertEqual(metadata.iconLinks.count, 0u);
+	
 	[self measureBlock:^{
-		(void)[RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
+		for (int i = 0; i < 10; i++)
+			[parser parseSync:nil];
 	}];
 }
 
-
 - (void)testSixcolors {
 
-	RSXMLData *xmlData = [[self class] sixcolorsData];
-	RSHTMLMetadata *metadata = [RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
+	RSXMLData *xmlData = [self xmlData:@"sixcolors" urlString:@"https://sixcolors.com/"];
+	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
+	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	NSError *error;
+	RSHTMLMetadata *metadata = [parser parseSync:&error];
+	XCTAssertNil(error);
 
 	XCTAssertEqualObjects(metadata.faviconLink, @"https://sixcolors.com/images/favicon.ico");
 
 	XCTAssertTrue(metadata.feedLinks.count == 1);
 	RSHTMLMetadataFeedLink *feedLink = metadata.feedLinks[0];
 	XCTAssertEqualObjects(feedLink.title, @"RSS");
-	XCTAssertEqualObjects(feedLink.type, @"application/rss+xml");
-	XCTAssertEqualObjects(feedLink.urlString, @"http://feedpress.me/sixcolors");
+	XCTAssertEqual(feedLink.type, RSFeedTypeRSS);
+	XCTAssertEqualObjects(feedLink.link, @"http://feedpress.me/sixcolors");
 
-	XCTAssertEqual(metadata.appleTouchIcons.count, 6u);
-	RSHTMLMetadataAppleTouchIcon *icon = metadata.appleTouchIcons[3];
-	XCTAssertEqualObjects(icon.rel, @"apple-touch-icon");
+	XCTAssertEqual(metadata.iconLinks.count, 6u);
+	RSHTMLMetadataIconLink *icon = metadata.iconLinks[3];
+	XCTAssertEqualObjects(icon.title, @"apple-touch-icon");
 	XCTAssertEqualObjects(icon.sizes, @"120x120");
-	XCTAssertEqualObjects(icon.urlString, @"https://sixcolors.com/apple-touch-icon-120.png");
-}
-
-
-- (void)testSixcolorsPerformance {
-
-	RSXMLData *xmlData = [[self class] sixcolorsData];
-
+	XCTAssertEqual([icon getSize].width, 120);
+	XCTAssertEqualObjects(icon.link, @"https://sixcolors.com/apple-touch-icon-120.png");
+	
 	[self measureBlock:^{
-		(void)[RSHTMLMetadataParser HTMLMetadataWithXMLData:xmlData];
+		for (int i = 0; i < 10; i++)
+			[parser parseSync:nil];
 	}];
 }
 
@@ -185,32 +141,35 @@
 
 - (void)testSixColorsLinks {
 
-	RSXMLData *xmlData = [[self class] sixcolorsData];
-	NSArray *links = [RSHTMLLinkParser htmlLinksWithData:xmlData];
-	
-	NSString *linkToFind = @"https://www.theincomparable.com/theincomparable/290/index.php";
-	NSString *textToFind = @"this week’s episode of The Incomparable";
+	RSXMLData *xmlData = [self xmlData:@"sixcolors" urlString:@"https://sixcolors.com/"];
+	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
+	RSHTMLLinkParser *parser = [[RSHTMLLinkParser alloc] initWithXMLData:xmlData];
+	NSError *error;
+	NSArray<RSHTMLMetadataAnchor*> *links = [parser parseSync:&error];
+	XCTAssertNil(error);
 	
 	BOOL found = NO;
-	for (RSHTMLLink *oneLink in links) {
-		
-		if ([oneLink.urlString isEqualToString:linkToFind] && [oneLink.text isEqualToString:textToFind]) {
+	for (RSHTMLMetadataAnchor *oneLink in links) {
+		if ([oneLink.title isEqualToString:@"this week’s episode of The Incomparable"] &&
+			[oneLink.link isEqualToString:@"https://www.theincomparable.com/theincomparable/290/index.php"])
+		{
 			found = YES;
 			break;
 		}
 	}
-	
+	// item No 11 to ensure .text removes <em></em>
+	XCTAssertEqualObjects(links[11].title, @"Podcasting");
+	XCTAssertEqualObjects(links[11].link, @"https://sixcolors.com/topic/podcasting/");
+	// item No. 18 & 19 to ensure '<a>Topics</a>' is skipped
+	XCTAssertEqualObjects(links[18].title, @"Podcasts");
+	XCTAssertEqualObjects(links[18].link, @"https://sixcolors.com/podcasts/");
+	XCTAssertEqualObjects(links[19].title, @"Gift Guide");
+	XCTAssertEqualObjects(links[19].link, @"https://sixcolors.com/topic/giftguide/");
 	XCTAssertTrue(found, @"Expected link should have been found.");
-	XCTAssertEqual(links.count, 131u, @"Expected 131 links.");
-}
-
-
-- (void)testSixColorsLinksPerformance {
-	
-	RSXMLData *xmlData = [[self class] sixcolorsData];
+	XCTAssertEqual(links.count, 130u, @"Expected 130 links.");
 	
 	[self measureBlock:^{
-		(void)[RSHTMLLinkParser htmlLinksWithData:xmlData];
+		[parser parseSync:nil];
 	}];
 }
 

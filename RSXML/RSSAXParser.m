@@ -1,41 +1,56 @@
 //
-//  RSSAXParser.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 3/25/15.
-//  Copyright (c) 2015 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 #import <libxml/tree.h>
 #import <libxml/xmlstring.h>
 #import <libxml/parser.h>
 #import "RSSAXParser.h"
-#import "RSXMLInternal.h"
 
 
 @interface RSSAXParser ()
-
 @property (nonatomic, weak) id<RSSAXParserDelegate> delegate;
 @property (nonatomic, assign) xmlParserCtxtPtr context;
 @property (nonatomic, assign) BOOL storingCharacters;
 @property (nonatomic) NSMutableData *characters;
-@property (nonatomic) BOOL delegateRespondsToInternedStringMethod;
-@property (nonatomic) BOOL delegateRespondsToInternedStringForValueMethod;
-@property (nonatomic) BOOL delegateRespondsToStartElementMethod;
-@property (nonatomic) BOOL delegateRespondsToEndElementMethod;
-@property (nonatomic) BOOL delegateRespondsToCharactersFoundMethod;
-@property (nonatomic) BOOL delegateRespondsToEndOfDocumentMethod;
-
+@property (nonatomic, assign) BOOL isHTMLParser;
+@property (nonatomic, assign) BOOL delegateRespondsToInternedStringMethod;
+@property (nonatomic, assign) BOOL delegateRespondsToInternedStringForValueMethod;
+@property (nonatomic, assign) BOOL delegateRespondsToStartElementMethod;
+@property (nonatomic, assign) BOOL delegateRespondsToEndElementMethod;
+@property (nonatomic, assign) BOOL delegateRespondsToCharactersFoundMethod;
+@property (nonatomic, assign) BOOL delegateRespondsToEndOfDocumentMethod;
 @end
 
 
 @implementation RSSAXParser
 
 + (void)initialize {
-
-	RSSAXInitLibXMLParser();
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		xmlInitParser();
+	});
 }
-
 
 #pragma mark - Init
 
@@ -46,31 +61,22 @@
 		return nil;
 
 	_delegate = delegate;
-
-	if ([_delegate respondsToSelector:@selector(saxParser:internedStringForName:prefix:)]) {
-		_delegateRespondsToInternedStringMethod = YES;
-	}
-	if ([_delegate respondsToSelector:@selector(saxParser:internedStringForValue:length:)]) {
-		_delegateRespondsToInternedStringForValueMethod = YES;
-	}
-	if ([_delegate respondsToSelector:@selector(saxParser:XMLStartElement:prefix:uri:numberOfNamespaces:namespaces:numberOfAttributes:numberDefaulted:attributes:)]) {
-		_delegateRespondsToStartElementMethod = YES;
-	}
-	if ([_delegate respondsToSelector:@selector(saxParser:XMLEndElement:prefix:uri:)]) {
-		_delegateRespondsToEndElementMethod = YES;
-	}
-	if ([_delegate respondsToSelector:@selector(saxParser:XMLCharactersFound:length:)]) {
-		_delegateRespondsToCharactersFoundMethod = YES;
-	}
-	if ([_delegate respondsToSelector:@selector(saxParserDidReachEndOfDocument:)]) {
-		_delegateRespondsToEndOfDocumentMethod = YES;
+	_delegateRespondsToCharactersFoundMethod = [_delegate respondsToSelector:@selector(saxParser:XMLCharactersFound:length:)];
+	_delegateRespondsToEndOfDocumentMethod = [_delegate respondsToSelector:@selector(saxParserDidReachEndOfDocument:)];
+	_delegateRespondsToInternedStringMethod = [_delegate respondsToSelector:@selector(saxParser:internedStringForName:prefix:)];
+	_delegateRespondsToInternedStringForValueMethod = [_delegate respondsToSelector:@selector(saxParser:internedStringForValue:length:)];
+	
+	if ([[_delegate class] respondsToSelector:@selector(isHTMLParser)] && [[_delegate class] isHTMLParser]) {
+		_isHTMLParser = YES;
+		_delegateRespondsToStartElementMethod = [_delegate respondsToSelector:@selector(saxParser:XMLStartElement:attributes:)];
+		_delegateRespondsToEndElementMethod = [_delegate respondsToSelector:@selector(saxParser:XMLEndElement:)];
+	} else {
+		_delegateRespondsToStartElementMethod = [_delegate respondsToSelector:@selector(saxParser:XMLStartElement:prefix:uri:numberOfNamespaces:namespaces:numberOfAttributes:numberDefaulted:attributes:)];
+		_delegateRespondsToEndElementMethod = [_delegate respondsToSelector:@selector(saxParser:XMLEndElement:prefix:uri:)];
 	}
 
 	return self;
 }
-
-
-#pragma mark - Dealloc
 
 - (void)dealloc {
 	if (_context != nil) {
@@ -83,28 +89,39 @@
 
 #pragma mark - API
 
+
 static xmlSAXHandler saxHandlerStruct;
 
-- (void)parseData:(NSData *)data {
-
-	[self parseBytes:data.bytes numberOfBytes:data.length];
-}
-
-
+/**
+ Initialize new xml or html parser context and start processing of data.
+ */
 - (void)parseBytes:(const void *)bytes numberOfBytes:(NSUInteger)numberOfBytes {
 
 	if (self.context == nil) {
-
-		self.context = xmlCreatePushParserCtxt(&saxHandlerStruct, (__bridge void *)self, nil, 0, nil);
-		xmlCtxtUseOptions(self.context, XML_PARSE_RECOVER | XML_PARSE_NOENT);
+		if (self.isHTMLParser) {
+			xmlCharEncoding characterEncoding = xmlDetectCharEncoding(bytes, (int)numberOfBytes);
+			self.context = htmlCreatePushParserCtxt(&saxHandlerStruct, (__bridge void *)self, nil, 0, nil, characterEncoding);
+			htmlCtxtUseOptions(self.context, XML_PARSE_RECOVER | XML_PARSE_NONET | HTML_PARSE_COMPACT);
+		} else {
+			self.context = xmlCreatePushParserCtxt(&saxHandlerStruct, (__bridge void *)self, nil, 0, nil);
+			xmlCtxtUseOptions(self.context, XML_PARSE_RECOVER | XML_PARSE_NOENT);
+		}
 	}
 
 	@autoreleasepool {
-		xmlParseChunk(self.context, (const char *)bytes, (int)numberOfBytes, 0);
+		if (self.isHTMLParser) {
+			htmlParseChunk(self.context, (const char *)bytes, (int)numberOfBytes, 0);
+		} else {
+			xmlParseChunk(self.context, (const char *)bytes, (int)numberOfBytes, 0);
+		}
 	}
+	
+	[self finishParsing];
 }
 
-
+/**
+ Call after @c parseData: or @c parseBytes:numberOfBytes:
+ */
 - (void)finishParsing {
 
 	NSAssert(self.context != nil, nil);
@@ -112,63 +129,70 @@ static xmlSAXHandler saxHandlerStruct;
 		return;
 
 	@autoreleasepool {
-		xmlParseChunk(self.context, nil, 0, 1);
-		xmlFreeParserCtxt(self.context);
+		if (self.isHTMLParser) {
+			htmlParseChunk(self.context, nil, 0, 1);
+			htmlFreeParserCtxt(self.context);
+		} else {
+			xmlParseChunk(self.context, nil, 0, 1);
+			xmlFreeParserCtxt(self.context);
+		}
 		self.context = nil;
 		self.characters = nil;
 	}
 }
 
-
+/// Will stop the sax parser from processing any further. @c saxParserDidReachEndOfDocument: will not be called.
 - (void)cancel {
-
 	@autoreleasepool {
 		xmlStopParser(self.context);
 	}
 }
 
-
+/**
+ Delegate can call from @c XMLStartElement.
+ Characters will be available in @c XMLEndElement as @c currentCharacters property.
+ Storing characters is stopped after each @c XMLEndElement.
+ */
 - (void)beginStoringCharacters {
 	self.storingCharacters = YES;
 	self.characters = [NSMutableData new];
 }
 
-
+/// Will be called after each closing tag and the document end.
 - (void)endStoringCharacters {
 	self.storingCharacters = NO;
 	self.characters = nil;
 }
 
-
+/// @return @c nil if not storing characters. UTF-8 encoded.
 - (NSData *)currentCharacters {
-
 	if (!self.storingCharacters) {
 		return nil;
 	}
-
 	return self.characters;
 }
 
-
+/// Convenience method to get string version of @c currentCharacters.
 - (NSString *)currentString {
-
 	NSData *d = self.currentCharacters;
-	if (RSXMLIsEmpty(d)) {
+	if (!d || d.length == 0) {
 		return nil;
 	}
-
 	return [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
 }
 
-
+/// Trim whitespace and newline characters from @c currentString.
 - (NSString *)currentStringWithTrimmedWhitespace {
-	
 	return [self.currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 
 #pragma mark - Attributes Dictionary
 
+
+/**
+ Delegate can call from within @c XMLStartElement. Returns @c nil if @c numberOfAttributes @c < @c 1.
+ */
 - (NSDictionary *)attributesDictionary:(const xmlChar **)attributes numberOfAttributes:(NSInteger)numberOfAttributes {
 
 	if (numberOfAttributes < 1 || !attributes) {
@@ -178,8 +202,7 @@ static xmlSAXHandler saxHandlerStruct;
 	NSMutableDictionary *d = [NSMutableDictionary new];
 
 	@autoreleasepool {
-		NSInteger i = 0, j = 0;
-		for (i = 0, j = 0; i < numberOfAttributes; i++, j+=5) {
+		for (NSInteger i = 0, j = 0; i < numberOfAttributes; i++, j+=5) {
 
 			NSUInteger lenValue = (NSUInteger)(attributes[j + 4] - attributes[j + 3]);
 			NSString *value = nil;
@@ -210,28 +233,47 @@ static xmlSAXHandler saxHandlerStruct;
 			}
 		}
 	}
+	return d;
+}
 
+/**
+ Delegate can call from within @c XMLStartElement. Returns @c nil if @c numberOfAttributes @c < @c 1.
+ */
+- (NSDictionary *)attributesDictionaryHTML:(const xmlChar **)attributes {
+	
+	if (!attributes) {
+		return nil;
+	}
+	
+	NSMutableDictionary *d = [NSMutableDictionary new];
+	NSInteger ix = 0;
+	NSString *currentKey = nil;
+	while (true) {
+		
+		const xmlChar *oneAttribute = attributes[ix];
+		ix++;
+		
+		if (!currentKey && !oneAttribute) {
+			break;
+		}
+		if (!currentKey) {
+			currentKey = [NSString stringWithUTF8String:(const char *)oneAttribute];
+		}
+		else {
+			NSString *value = nil;
+			if (oneAttribute) {
+				value = [NSString stringWithUTF8String:(const char *)oneAttribute];
+			}
+			d[currentKey] = (value ? value : @"");
+			currentKey = nil;
+		}
+	}
 	return d;
 }
 
 
-#pragma mark - Equal Tags
-
-BOOL RSSAXEqualTags(const xmlChar *localName, const char *tag, NSInteger tagLength) {
-
-	if (!localName) {
-		return NO;
-	}
-	return !strncmp((const char *)localName, tag, (size_t)tagLength);
-}
-
-BOOL RSSAXEqualBytes(const void *bytes1, const void *bytes2, NSUInteger length) {
-	
-	return memcmp(bytes1, bytes2, length) == 0;
-}
-
-
 #pragma mark - Callbacks
+
 
 - (void)xmlEndDocument {
 
@@ -261,10 +303,19 @@ BOOL RSSAXEqualBytes(const void *bytes1, const void *bytes2, NSUInteger length) 
 
 - (void)xmlStartElement:(const xmlChar *)localName prefix:(const xmlChar *)prefix uri:(const xmlChar *)uri numberOfNamespaces:(int)numberOfNamespaces namespaces:(const xmlChar **)namespaces numberOfAttributes:(int)numberOfAttributes numberDefaulted:(int)numberDefaulted attributes:(const xmlChar **)attributes {
 
-	@autoreleasepool {
-		if (self.delegateRespondsToStartElementMethod) {
-
+	if (self.delegateRespondsToStartElementMethod) {
+		@autoreleasepool {
 			[self.delegate saxParser:self XMLStartElement:localName prefix:prefix uri:uri numberOfNamespaces:numberOfNamespaces namespaces:namespaces numberOfAttributes:numberOfAttributes numberDefaulted:numberDefaulted attributes:attributes];
+		}
+	}
+}
+
+
+- (void)xmlStartHTMLElement:(const xmlChar *)localName attributes:(const xmlChar **)attributes {
+
+	if (self.delegateRespondsToStartElementMethod) {
+		@autoreleasepool {
+			[self.delegate saxParser:self XMLStartElement:localName attributes:attributes];
 		}
 	}
 }
@@ -276,33 +327,46 @@ BOOL RSSAXEqualBytes(const void *bytes1, const void *bytes2, NSUInteger length) 
 		if (self.delegateRespondsToEndElementMethod) {
 			[self.delegate saxParser:self XMLEndElement:localName prefix:prefix uri:uri];
 		}
-
 		[self endStoringCharacters];
 	}
 }
 
 
+- (void)xmlEndHTMLElement:(const xmlChar *)localName {
+
+	@autoreleasepool {
+		if (self.delegateRespondsToEndElementMethod) {
+			[self.delegate saxParser:self XMLEndElement:localName];
+		}
+		[self endStoringCharacters];
+	}
+}
+
 @end
 
 
 static void startElementSAX(void *context, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI, int nb_namespaces, const xmlChar **namespaces, int nb_attributes, int nb_defaulted, const xmlChar **attributes) {
-
 	[(__bridge RSSAXParser *)context xmlStartElement:localname prefix:prefix uri:URI numberOfNamespaces:nb_namespaces namespaces:namespaces numberOfAttributes:nb_attributes numberDefaulted:nb_defaulted attributes:attributes];
 }
-
 
 static void	endElementSAX(void *context, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 	[(__bridge RSSAXParser *)context xmlEndElement:localname prefix:prefix uri:URI];
 }
 
-
 static void	charactersFoundSAX(void *context, const xmlChar *ch, int len) {
 	[(__bridge RSSAXParser *)context xmlCharactersFound:ch length:(NSUInteger)len];
 }
 
-
 static void endDocumentSAX(void *context) {
 	[(__bridge RSSAXParser *)context xmlEndDocument];
+}
+
+static void startElementSAX_HTML(void *context, const xmlChar *localname, const xmlChar **attributes) {
+	[(__bridge RSSAXParser *)context xmlStartHTMLElement:localname attributes:attributes];
+}
+
+static void	endElementSAX_HTML(void *context, const xmlChar *localname) {
+	[(__bridge RSSAXParser *)context xmlEndHTMLElement:localname];
 }
 
 
@@ -321,8 +385,8 @@ static xmlSAXHandler saxHandlerStruct = {
 	nil,					/* setDocumentLocator */
 	nil,					/* startDocument */
 	endDocumentSAX,			/* endDocument */
-	nil,					/* startElement*/
-	nil,					/* endElement */
+	startElementSAX_HTML,	/* startElement*/
+	endElementSAX_HTML,		/* endElement */
 	nil,					/* reference */
 	charactersFoundSAX,		/* characters */
 	nil,					/* ignorableWhitespace */
@@ -340,13 +404,3 @@ static xmlSAXHandler saxHandlerStruct = {
 	endElementSAX,			/* endElementNs */
 	nil						/* serror */
 };
-
-
-void RSSAXInitLibXMLParser(void) {
-
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		xmlInitParser();
-	});
-}
-

@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		54702A9821D407A00050A741 /* RSXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 54702A9621D4079F0050A741 /* RSXMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54702A9921D407A00050A741 /* RSXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 54702A9621D4079F0050A741 /* RSXMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54702A9A21D407A00050A741 /* RSXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 54702A9721D407A00050A741 /* RSXMLParser.m */; };
+		54702A9B21D407A00050A741 /* RSXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 54702A9721D407A00050A741 /* RSXMLParser.m */; };
+		54C707DB21D42B710029BFF1 /* NSDictionary+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C707D921D42B710029BFF1 /* NSDictionary+RSXML.m */; };
+		54C707DC21D42B710029BFF1 /* NSDictionary+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C707D921D42B710029BFF1 /* NSDictionary+RSXML.m */; };
+		54C707DD21D42B710029BFF1 /* NSDictionary+RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 54C707DA21D42B710029BFF1 /* NSDictionary+RSXML.h */; };
+		54C707DE21D42B710029BFF1 /* NSDictionary+RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 54C707DA21D42B710029BFF1 /* NSDictionary+RSXML.h */; };
 		54FCE5F421493B5E00FABB65 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 54FCE5F321493B5E00FABB65 /* Resources */; };
 		8400B0F01B8C20A9004C4CFF /* RSXMLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8400B0F11B8C20A9004C4CFF /* RSXMLData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */; };
@@ -21,21 +29,16 @@
 		842D515B1B52E81B00E63D52 /* RSRSSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51591B52E81B00E63D52 /* RSRSSParser.m */; };
 		842D51631B53058B00E63D52 /* RSParsedArticle.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51611B53058B00E63D52 /* RSParsedArticle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		842D51641B53058B00E63D52 /* RSParsedArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51621B53058B00E63D52 /* RSParsedArticle.m */; };
-		842D516F1B5308BD00E63D52 /* FeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D516D1B5308BD00E63D52 /* FeedParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		842D51761B530BF200E63D52 /* RSParsedFeed.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51741B530BF200E63D52 /* RSParsedFeed.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		842D51771B530BF200E63D52 /* RSParsedFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51751B530BF200E63D52 /* RSParsedFeed.m */; };
 		842D517A1B5311AD00E63D52 /* RSOPMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51781B5311AD00E63D52 /* RSOPMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		842D517B1B5311AD00E63D52 /* RSOPMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51791B5311AD00E63D52 /* RSOPMLParser.m */; };
-		843819001C8CB00400E2A1DD /* RSSAXHTMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 843818FE1C8CB00400E2A1DD /* RSSAXHTMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		843819011C8CB00400E2A1DD /* RSSAXHTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 843818FF1C8CB00400E2A1DD /* RSSAXHTMLParser.m */; };
 		8475C4081D57AB4C0076751E /* RSHTMLLinkParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 8475C4061D57AB4C0076751E /* RSHTMLLinkParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8475C4091D57AB4C0076751E /* RSHTMLLinkParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475C4071D57AB4C0076751E /* RSHTMLLinkParser.m */; };
 		8486F1151BB646140092794F /* NSString+RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 8486F1131BB646140092794F /* NSString+RSXML.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8486F1161BB646140092794F /* NSString+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8486F1141BB646140092794F /* NSString+RSXML.m */; };
 		84AD0BF51E11A6FB00B38510 /* RSDateParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AD0BF31E11A6FB00B38510 /* RSDateParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0BF61E11A6FB00B38510 /* RSDateParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0BF41E11A6FB00B38510 /* RSDateParser.m */; };
-		84AD0BFA1E11A9A700B38510 /* RSXMLInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AD0BF81E11A9A700B38510 /* RSXMLInternal.h */; };
-		84AD0BFB1E11A9A700B38510 /* RSXMLInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0BF91E11A9A700B38510 /* RSXMLInternal.m */; };
 		84AD0C0D1E11B8BE00B38510 /* RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 84F22C101B52DDEA000060CE /* RSXML.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C0E1E11B8CA00B38510 /* RSXMLError.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E4BE431C8B8FE400A90B41 /* RSXMLError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C0F1E11B8CA00B38510 /* RSXMLError.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E4BE441C8B8FE400A90B41 /* RSXMLError.m */; };
@@ -53,7 +56,6 @@
 		84AD0C1D1E11B8CF00B38510 /* RSOPMLItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1B51C83A03100F97695 /* RSOPMLItem.m */; };
 		84AD0C221E11B8D400B38510 /* RSFeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51501B52E80100E63D52 /* RSFeedParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C231E11B8D400B38510 /* RSFeedParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51511B52E80100E63D52 /* RSFeedParser.m */; };
-		84AD0C241E11B8D400B38510 /* FeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D516D1B5308BD00E63D52 /* FeedParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C251E11B8D400B38510 /* RSAtomParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D514A1B52E7FC00E63D52 /* RSAtomParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C261E11B8D400B38510 /* RSAtomParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D514B1B52E7FC00E63D52 /* RSAtomParser.m */; };
 		84AD0C271E11B8D400B38510 /* RSRSSParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51581B52E81B00E63D52 /* RSRSSParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -62,16 +64,12 @@
 		84AD0C2A1E11B8D400B38510 /* RSParsedFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51751B530BF200E63D52 /* RSParsedFeed.m */; };
 		84AD0C2B1E11B8D400B38510 /* RSParsedArticle.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51611B53058B00E63D52 /* RSParsedArticle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C2C1E11B8D400B38510 /* RSParsedArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51621B53058B00E63D52 /* RSParsedArticle.m */; };
-		84AD0C2D1E11B8DA00B38510 /* RSSAXHTMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 843818FE1C8CB00400E2A1DD /* RSSAXHTMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C2E1E11B8DA00B38510 /* RSSAXHTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 843818FF1C8CB00400E2A1DD /* RSSAXHTMLParser.m */; };
 		84AD0C2F1E11B8DA00B38510 /* RSHTMLMetadataParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BF3E141C8CDD1A005562D8 /* RSHTMLMetadataParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C301E11B8DA00B38510 /* RSHTMLMetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BF3E151C8CDD1A005562D8 /* RSHTMLMetadataParser.m */; };
 		84AD0C311E11B8DA00B38510 /* RSHTMLMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BF3E1A1C8CDD6D005562D8 /* RSHTMLMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C321E11B8DA00B38510 /* RSHTMLMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BF3E1B1C8CDD6D005562D8 /* RSHTMLMetadata.m */; };
 		84AD0C331E11B8DA00B38510 /* RSHTMLLinkParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 8475C4061D57AB4C0076751E /* RSHTMLLinkParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0C341E11B8DA00B38510 /* RSHTMLLinkParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475C4071D57AB4C0076751E /* RSHTMLLinkParser.m */; };
-		84AD0C351E11B8DD00B38510 /* RSXMLInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AD0BF81E11A9A700B38510 /* RSXMLInternal.h */; };
-		84AD0C361E11B8DD00B38510 /* RSXMLInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0BF91E11A9A700B38510 /* RSXMLInternal.m */; };
 		84AD0C391E11BAA800B38510 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84AD0C381E11BAA800B38510 /* libxml2.2.tbd */; };
 		84AD0C3B1E11C2D500B38510 /* RSEntityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0C3A1E11C2D500B38510 /* RSEntityTests.m */; };
 		84AD0C3D1E11D75400B38510 /* RSDateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0C3C1E11D75400B38510 /* RSDateParserTests.m */; };
@@ -101,9 +99,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		54702A9621D4079F0050A741 /* RSXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSXMLParser.h; sourceTree = "<group>"; };
+		54702A9721D407A00050A741 /* RSXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSXMLParser.m; sourceTree = "<group>"; };
+		54C707D921D42B710029BFF1 /* NSDictionary+RSXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+RSXML.m"; sourceTree = "<group>"; };
+		54C707DA21D42B710029BFF1 /* NSDictionary+RSXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+RSXML.h"; sourceTree = "<group>"; };
 		54FCE5F321493B5E00FABB65 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
-		8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSXMLData.h; path = RSXML/RSXMLData.h; sourceTree = "<group>"; };
-		8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSXMLData.m; path = RSXML/RSXMLData.m; sourceTree = "<group>"; };
+		8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSXMLData.h; sourceTree = "<group>"; };
+		8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSXMLData.m; sourceTree = "<group>"; };
 		8429D1B41C83A03100F97695 /* RSOPMLItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLItem.h; sourceTree = "<group>"; };
 		8429D1B51C83A03100F97695 /* RSOPMLItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLItem.m; sourceTree = "<group>"; };
 		8429D1C21C83BCCB00F97695 /* RSOPMLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLTests.m; sourceTree = "<group>"; };
@@ -115,21 +117,16 @@
 		842D51591B52E81B00E63D52 /* RSRSSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RSRSSParser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		842D51611B53058B00E63D52 /* RSParsedArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSParsedArticle.h; sourceTree = "<group>"; };
 		842D51621B53058B00E63D52 /* RSParsedArticle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSParsedArticle.m; sourceTree = "<group>"; };
-		842D516D1B5308BD00E63D52 /* FeedParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedParser.h; sourceTree = "<group>"; };
 		842D51741B530BF200E63D52 /* RSParsedFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSParsedFeed.h; sourceTree = "<group>"; };
 		842D51751B530BF200E63D52 /* RSParsedFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSParsedFeed.m; sourceTree = "<group>"; };
 		842D51781B5311AD00E63D52 /* RSOPMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOPMLParser.h; sourceTree = "<group>"; };
 		842D51791B5311AD00E63D52 /* RSOPMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOPMLParser.m; sourceTree = "<group>"; };
-		843818FE1C8CB00400E2A1DD /* RSSAXHTMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSSAXHTMLParser.h; path = RSXML/RSSAXHTMLParser.h; sourceTree = "<group>"; };
-		843818FF1C8CB00400E2A1DD /* RSSAXHTMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSSAXHTMLParser.m; path = RSXML/RSSAXHTMLParser.m; sourceTree = "<group>"; };
 		8475C4061D57AB4C0076751E /* RSHTMLLinkParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSHTMLLinkParser.h; path = RSXML/RSHTMLLinkParser.h; sourceTree = "<group>"; };
 		8475C4071D57AB4C0076751E /* RSHTMLLinkParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = RSHTMLLinkParser.m; path = RSXML/RSHTMLLinkParser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		8486F1131BB646140092794F /* NSString+RSXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+RSXML.h"; path = "RSXML/NSString+RSXML.h"; sourceTree = "<group>"; };
-		8486F1141BB646140092794F /* NSString+RSXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+RSXML.m"; path = "RSXML/NSString+RSXML.m"; sourceTree = "<group>"; };
-		84AD0BF31E11A6FB00B38510 /* RSDateParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSDateParser.h; path = RSXML/RSDateParser.h; sourceTree = "<group>"; };
-		84AD0BF41E11A6FB00B38510 /* RSDateParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSDateParser.m; path = RSXML/RSDateParser.m; sourceTree = "<group>"; };
-		84AD0BF81E11A9A700B38510 /* RSXMLInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSXMLInternal.h; path = RSXML/RSXMLInternal.h; sourceTree = "<group>"; };
-		84AD0BF91E11A9A700B38510 /* RSXMLInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSXMLInternal.m; path = RSXML/RSXMLInternal.m; sourceTree = "<group>"; };
+		8486F1131BB646140092794F /* NSString+RSXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RSXML.h"; sourceTree = "<group>"; };
+		8486F1141BB646140092794F /* NSString+RSXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RSXML.m"; sourceTree = "<group>"; };
+		84AD0BF31E11A6FB00B38510 /* RSDateParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSDateParser.h; sourceTree = "<group>"; };
+		84AD0BF41E11A6FB00B38510 /* RSDateParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDateParser.m; sourceTree = "<group>"; };
 		84AD0C051E11B7D200B38510 /* RSXML.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RSXML.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84AD0C081E11B7D200B38510 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84AD0C381E11BAA800B38510 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.2.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
@@ -139,8 +136,8 @@
 		84BF3E151C8CDD1A005562D8 /* RSHTMLMetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = RSHTMLMetadataParser.m; path = RSXML/RSHTMLMetadataParser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		84BF3E1A1C8CDD6D005562D8 /* RSHTMLMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSHTMLMetadata.h; path = RSXML/RSHTMLMetadata.h; sourceTree = "<group>"; };
 		84BF3E1B1C8CDD6D005562D8 /* RSHTMLMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = RSHTMLMetadata.m; path = RSXML/RSHTMLMetadata.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		84E4BE431C8B8FE400A90B41 /* RSXMLError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSXMLError.h; path = RSXML/RSXMLError.h; sourceTree = "<group>"; };
-		84E4BE441C8B8FE400A90B41 /* RSXMLError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSXMLError.m; path = RSXML/RSXMLError.m; sourceTree = "<group>"; };
+		84E4BE431C8B8FE400A90B41 /* RSXMLError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSXMLError.h; sourceTree = "<group>"; };
+		84E4BE441C8B8FE400A90B41 /* RSXMLError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSXMLError.m; sourceTree = "<group>"; };
 		84E4BE471C8B989D00A90B41 /* RSHTMLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSHTMLTests.m; sourceTree = "<group>"; };
 		84F22C0D1B52DDEA000060CE /* RSXML.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RSXML.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F22C101B52DDEA000060CE /* RSXML.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RSXML.h; path = RSXML/RSXML.h; sourceTree = "<group>"; };
@@ -148,8 +145,8 @@
 		84F22C171B52DDEA000060CE /* RSXMLTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RSXMLTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F22C1C1B52DDEA000060CE /* RSXMLTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSXMLTests.m; sourceTree = "<group>"; };
 		84F22C1E1B52DDEA000060CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		84F22C271B52DDFE000060CE /* RSSAXParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSSAXParser.h; path = RSXML/RSSAXParser.h; sourceTree = "<group>"; };
-		84F22C281B52DDFE000060CE /* RSSAXParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSSAXParser.m; path = RSXML/RSSAXParser.m; sourceTree = "<group>"; };
+		84F22C271B52DDFE000060CE /* RSSAXParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSAXParser.h; sourceTree = "<group>"; };
+		84F22C281B52DDFE000060CE /* RSSAXParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSAXParser.m; sourceTree = "<group>"; };
 		84F22C451B52DF90000060CE /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -181,12 +178,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		54702A9521D407520050A741 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				84F22C271B52DDFE000060CE /* RSSAXParser.h */,
+				84F22C281B52DDFE000060CE /* RSSAXParser.m */,
+				84E4BE431C8B8FE400A90B41 /* RSXMLError.h */,
+				84E4BE441C8B8FE400A90B41 /* RSXMLError.m */,
+				84AD0BF31E11A6FB00B38510 /* RSDateParser.h */,
+				84AD0BF41E11A6FB00B38510 /* RSDateParser.m */,
+				8486F1131BB646140092794F /* NSString+RSXML.h */,
+				8486F1141BB646140092794F /* NSString+RSXML.m */,
+				54C707DA21D42B710029BFF1 /* NSDictionary+RSXML.h */,
+				54C707D921D42B710029BFF1 /* NSDictionary+RSXML.m */,
+				8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */,
+				8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */,
+				54702A9621D4079F0050A741 /* RSXMLParser.h */,
+				54702A9721D407A00050A741 /* RSXMLParser.m */,
+			);
+			name = General;
+			path = RSXML;
+			sourceTree = "<group>";
+		};
 		842D515E1B52E83100E63D52 /* Feeds */ = {
 			isa = PBXGroup;
 			children = (
 				842D51501B52E80100E63D52 /* RSFeedParser.h */,
 				842D51511B52E80100E63D52 /* RSFeedParser.m */,
-				842D516D1B5308BD00E63D52 /* FeedParser.h */,
 				842D514A1B52E7FC00E63D52 /* RSAtomParser.h */,
 				842D514B1B52E7FC00E63D52 /* RSAtomParser.m */,
 				842D51581B52E81B00E63D52 /* RSRSSParser.h */,
@@ -231,14 +249,12 @@
 		84E4BE4D1C8B98E400A90B41 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
-				843818FE1C8CB00400E2A1DD /* RSSAXHTMLParser.h */,
-				843818FF1C8CB00400E2A1DD /* RSSAXHTMLParser.m */,
 				84BF3E141C8CDD1A005562D8 /* RSHTMLMetadataParser.h */,
 				84BF3E151C8CDD1A005562D8 /* RSHTMLMetadataParser.m */,
-				84BF3E1A1C8CDD6D005562D8 /* RSHTMLMetadata.h */,
-				84BF3E1B1C8CDD6D005562D8 /* RSHTMLMetadata.m */,
 				8475C4061D57AB4C0076751E /* RSHTMLLinkParser.h */,
 				8475C4071D57AB4C0076751E /* RSHTMLLinkParser.m */,
+				84BF3E1A1C8CDD6D005562D8 /* RSHTMLMetadata.h */,
+				84BF3E1B1C8CDD6D005562D8 /* RSHTMLMetadata.m */,
 			);
 			name = HTML;
 			sourceTree = "<group>";
@@ -247,21 +263,10 @@
 			isa = PBXGroup;
 			children = (
 				84F22C101B52DDEA000060CE /* RSXML.h */,
-				84E4BE431C8B8FE400A90B41 /* RSXMLError.h */,
-				84E4BE441C8B8FE400A90B41 /* RSXMLError.m */,
-				84F22C271B52DDFE000060CE /* RSSAXParser.h */,
-				84F22C281B52DDFE000060CE /* RSSAXParser.m */,
-				8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */,
-				8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */,
-				8486F1131BB646140092794F /* NSString+RSXML.h */,
-				8486F1141BB646140092794F /* NSString+RSXML.m */,
-				84AD0BF31E11A6FB00B38510 /* RSDateParser.h */,
-				84AD0BF41E11A6FB00B38510 /* RSDateParser.m */,
+				54702A9521D407520050A741 /* General */,
 				842D517C1B5311B000E63D52 /* OPML */,
 				842D515E1B52E83100E63D52 /* Feeds */,
 				84E4BE4D1C8B98E400A90B41 /* HTML */,
-				84AD0BF81E11A9A700B38510 /* RSXMLInternal.h */,
-				84AD0BF91E11A9A700B38510 /* RSXMLInternal.m */,
 				84F22C121B52DDEA000060CE /* Info.plist */,
 				84F22C1B1B52DDEA000060CE /* RSXMLTests */,
 				84AD0C061E11B7D200B38510 /* RSXMLiOS */,
@@ -302,20 +307,19 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84AD0C351E11B8DD00B38510 /* RSXMLInternal.h in Headers */,
 				84AD0C1C1E11B8CF00B38510 /* RSOPMLItem.h in Headers */,
 				84AD0C271E11B8D400B38510 /* RSRSSParser.h in Headers */,
 				84AD0C161E11B8CA00B38510 /* RSDateParser.h in Headers */,
+				54702A9921D407A00050A741 /* RSXMLParser.h in Headers */,
 				84AD0C101E11B8CA00B38510 /* RSSAXParser.h in Headers */,
 				84AD0C331E11B8DA00B38510 /* RSHTMLLinkParser.h in Headers */,
 				84AD0C2F1E11B8DA00B38510 /* RSHTMLMetadataParser.h in Headers */,
 				84AD0C251E11B8D400B38510 /* RSAtomParser.h in Headers */,
 				84AD0C121E11B8CA00B38510 /* RSXMLData.h in Headers */,
 				84AD0C311E11B8DA00B38510 /* RSHTMLMetadata.h in Headers */,
-				84AD0C241E11B8D400B38510 /* FeedParser.h in Headers */,
 				84AD0C221E11B8D400B38510 /* RSFeedParser.h in Headers */,
-				84AD0C2D1E11B8DA00B38510 /* RSSAXHTMLParser.h in Headers */,
 				84AD0C0E1E11B8CA00B38510 /* RSXMLError.h in Headers */,
+				54C707DE21D42B710029BFF1 /* NSDictionary+RSXML.h in Headers */,
 				84AD0C2B1E11B8D400B38510 /* RSParsedArticle.h in Headers */,
 				84AD0C291E11B8D400B38510 /* RSParsedFeed.h in Headers */,
 				84AD0C181E11B8CF00B38510 /* RSOPMLParser.h in Headers */,
@@ -331,6 +335,7 @@
 				8486F1151BB646140092794F /* NSString+RSXML.h in Headers */,
 				8475C4081D57AB4C0076751E /* RSHTMLLinkParser.h in Headers */,
 				84AD0BF51E11A6FB00B38510 /* RSDateParser.h in Headers */,
+				54702A9821D407A00050A741 /* RSXMLParser.h in Headers */,
 				8400B0F01B8C20A9004C4CFF /* RSXMLData.h in Headers */,
 				842D51631B53058B00E63D52 /* RSParsedArticle.h in Headers */,
 				842D517A1B5311AD00E63D52 /* RSOPMLParser.h in Headers */,
@@ -338,15 +343,13 @@
 				842D51761B530BF200E63D52 /* RSParsedFeed.h in Headers */,
 				84BF3E1C1C8CDD6D005562D8 /* RSHTMLMetadata.h in Headers */,
 				8429D1B61C83A03100F97695 /* RSOPMLItem.h in Headers */,
-				843819001C8CB00400E2A1DD /* RSSAXHTMLParser.h in Headers */,
 				842D51521B52E80100E63D52 /* RSFeedParser.h in Headers */,
+				54C707DD21D42B710029BFF1 /* NSDictionary+RSXML.h in Headers */,
 				84E4BE451C8B8FE400A90B41 /* RSXMLError.h in Headers */,
-				842D516F1B5308BD00E63D52 /* FeedParser.h in Headers */,
 				84F22C111B52DDEA000060CE /* RSXML.h in Headers */,
 				842D514C1B52E7FC00E63D52 /* RSAtomParser.h in Headers */,
 				842D515A1B52E81B00E63D52 /* RSRSSParser.h in Headers */,
 				84F22C291B52DDFE000060CE /* RSSAXParser.h in Headers */,
-				84AD0BFA1E11A9A700B38510 /* RSXMLInternal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,7 +485,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				84AD0C231E11B8D400B38510 /* RSFeedParser.m in Sources */,
-				84AD0C361E11B8DD00B38510 /* RSXMLInternal.m in Sources */,
 				84AD0C171E11B8CA00B38510 /* RSDateParser.m in Sources */,
 				84AD0C191E11B8CF00B38510 /* RSOPMLParser.m in Sources */,
 				84AD0C341E11B8DA00B38510 /* RSHTMLLinkParser.m in Sources */,
@@ -493,11 +495,12 @@
 				84AD0C2A1E11B8D400B38510 /* RSParsedFeed.m in Sources */,
 				84AD0C261E11B8D400B38510 /* RSAtomParser.m in Sources */,
 				84AD0C1D1E11B8CF00B38510 /* RSOPMLItem.m in Sources */,
+				54702A9B21D407A00050A741 /* RSXMLParser.m in Sources */,
 				84AD0C131E11B8CA00B38510 /* RSXMLData.m in Sources */,
 				84AD0C321E11B8DA00B38510 /* RSHTMLMetadata.m in Sources */,
+				54C707DC21D42B710029BFF1 /* NSDictionary+RSXML.m in Sources */,
 				84AD0C111E11B8CA00B38510 /* RSSAXParser.m in Sources */,
 				84AD0C0F1E11B8CA00B38510 /* RSXMLError.m in Sources */,
-				84AD0C2E1E11B8DA00B38510 /* RSSAXHTMLParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,12 +519,12 @@
 				8475C4091D57AB4C0076751E /* RSHTMLLinkParser.m in Sources */,
 				8429D1B71C83A03100F97695 /* RSOPMLItem.m in Sources */,
 				84BF3E1D1C8CDD6D005562D8 /* RSHTMLMetadata.m in Sources */,
+				54702A9A21D407A00050A741 /* RSXMLParser.m in Sources */,
 				842D51531B52E80100E63D52 /* RSFeedParser.m in Sources */,
 				84F22C2A1B52DDFE000060CE /* RSSAXParser.m in Sources */,
+				54C707DB21D42B710029BFF1 /* NSDictionary+RSXML.m in Sources */,
 				8400B0F11B8C20A9004C4CFF /* RSXMLData.m in Sources */,
 				842D51771B530BF200E63D52 /* RSParsedFeed.m in Sources */,
-				843819011C8CB00400E2A1DD /* RSSAXHTMLParser.m in Sources */,
-				84AD0BFB1E11A9A700B38510 /* RSXMLInternal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

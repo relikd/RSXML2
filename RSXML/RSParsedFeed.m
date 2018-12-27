@@ -1,33 +1,65 @@
 //
-//  RSParsedFeed.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 7/12/15.
-//  Copyright © 2015 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 #import "RSParsedFeed.h"
+#import "RSParsedArticle.h"
+
+@interface RSParsedFeed()
+@property (nonatomic) NSMutableArray <RSParsedArticle *> *mutableArticles;
+@end
 
 @implementation RSParsedFeed
 
-- (instancetype)initWithURLString:(NSString *)urlString title:(NSString *)title link:(NSString *)link articles:(NSArray *)articles {
+- (instancetype)initWithURLString:(NSString *)urlString {
 	
 	self = [super init];
-	if (!self) {
-		return nil;
+	if (self) {
+		_urlString = urlString;
+		_mutableArticles = [NSMutableArray new];
+		_dateParsed = [NSDate date];
 	}
-	
-	_urlString = urlString;
-	_title = title;
-	_link = link;
-	_articles = articles;
-	
 	return self;
 }
 
+- (NSArray<RSParsedArticle *> *)articles {
+	return _mutableArticles;
+}
+
+/**
+ Append new @c RSParsedArticle object to @c .articles and return newly inserted instance.
+ */
+- (RSParsedArticle *)appendNewArticle {
+	RSParsedArticle *article = [[RSParsedArticle alloc] initWithFeedURL:self.urlString dateParsed:_dateParsed];
+	[_mutableArticles addObject:article];
+	return article;
+}
+
+#pragma mark - Printing
+
 - (NSString*)description {
 	return [NSString stringWithFormat:@"{%@ (%@), title: '%@', subtitle: '%@', entries: %@}",
-			[self class], _link, _title, _subtitle, _articles];
+			[self class], _link, _title, _subtitle, _mutableArticles];
 }
 
 @end

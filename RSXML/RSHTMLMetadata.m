@@ -1,245 +1,98 @@
 //
-//  RSHTMLMetadata.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 3/6/16.
-//  Copyright © 2016 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 #import "RSHTMLMetadata.h"
-#import "RSXMLInternal.h"
 
-static NSString *urlStringFromDictionary(NSDictionary *d);
-static NSString *absoluteURLStringWithRelativeURLString(NSString *relativeURLString, NSString *baseURLString);
-static NSString *absoluteURLStringWithDictionary(NSDictionary *d, NSString *baseURLString);
-static NSArray *objectsOfClassWithDictionaries(Class class, NSArray *dictionaries, NSString *baseURLString);
-static NSString *relValue(NSDictionary *d);
-static BOOL typeIsFeedType(NSString *type);
+RSFeedType RSFeedTypeFromLinkTypeAttribute(NSString * typeStr) {
+	if (typeStr || typeStr.length > 0) {
+		typeStr = [typeStr lowercaseString];
+		if ([typeStr hasSuffix:@"/rss+xml"]) {
+			return RSFeedTypeRSS;
+		} else if ([typeStr hasSuffix:@"/atom+xml"]) {
+			return RSFeedTypeAtom;
+		}
+	}
+	return RSFeedTypeNone;
+}
 
-static NSString *kShortcutIconRelValue = @"shortcut icon";
-static NSString *kHrefKey = @"href";
-static NSString *kSrcKey = @"src";
-static NSString *kAppleTouchIconValue = @"apple-touch-icon";
-static NSString *kAppleTouchIconPrecomposedValue = @"apple-touch-icon-precomposed";
-static NSString *kSizesKey = @"sizes";
-static NSString *kTitleKey = @"title";
-static NSString *kRelKey = @"rel";
-static NSString *kAlternateKey = @"alternate";
-static NSString *kRSSSuffix = @"/rss+xml";
-static NSString *kAtomSuffix = @"/atom+xml";
-static NSString *kTypeKey = @"type";
 
-@interface RSHTMLMetadataAppleTouchIcon ()
-
-- (instancetype)initWithDictionary:(NSDictionary *)d baseURLString:(NSString *)baseURLString;
-
+@implementation RSHTMLMetadataLink
+- (NSString*)description { return self.link; }
 @end
 
 
-@interface RSHTMLMetadataFeedLink ()
+@implementation RSHTMLMetadataIconLink
 
-- (instancetype)initWithDictionary:(NSDictionary *)d baseURLString:(NSString *)baseURLString;
-
-@end
-
-
-@implementation RSHTMLMetadata
-
-
-#pragma mark - Init
-
-- (instancetype)initWithURLString:(NSString *)urlString dictionaries:(NSArray <NSDictionary *> *)dictionaries {
-
-	self = [super init];
-	if (!self) {
-		return nil;
-	}
-
-	_baseURLString = urlString;
-	_dictionaries = dictionaries;
-	_faviconLink = [self resolvedLinkFromFirstDictionaryWithMatchingRel:kShortcutIconRelValue];
-
-	NSArray *appleTouchIconDictionaries = [self appleTouchIconDictionaries];
-	_appleTouchIcons = objectsOfClassWithDictionaries([RSHTMLMetadataAppleTouchIcon class], appleTouchIconDictionaries, urlString);
-
-	NSArray *feedLinkDictionaries = [self feedLinkDictionaries];
-	_feedLinks = objectsOfClassWithDictionaries([RSHTMLMetadataFeedLink class], feedLinkDictionaries, urlString);
-
-	return self;
-}
-
-
-#pragma mark - Private
-
-- (NSDictionary *)firstDictionaryWithMatchingRel:(NSString *)valueToMatch {
-
-	// Case-insensitive.
-
-	for (NSDictionary *oneDictionary in self.dictionaries) {
-
-		NSString *oneRelValue = relValue(oneDictionary);
-		if (oneRelValue && [oneRelValue compare:valueToMatch options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-			return oneDictionary;
+- (CGSize)getSize {
+	if (self.sizes && self.sizes.length > 0) {
+		NSArray<NSString*> *parts = [self.sizes componentsSeparatedByString:@"x"];
+		if (parts.count == 2) {
+			return CGSizeMake([parts.firstObject intValue], [parts.lastObject intValue]);
 		}
 	}
-
-	return nil;
+	return CGSizeZero;
 }
 
-
-- (NSArray *)appleTouchIconDictionaries {
-
-	NSMutableArray *dictionaries = [NSMutableArray new];
-
-	for (NSDictionary *oneDictionary in self.dictionaries) {
-
-		NSString *oneRelValue = relValue(oneDictionary).lowercaseString;
-		if ([oneRelValue isEqualToString:kAppleTouchIconValue] || [oneRelValue isEqualToString:kAppleTouchIconPrecomposedValue]) {
-			[dictionaries addObject:oneDictionary];
-		}
-	}
-
-	return dictionaries;
+- (NSString*)description {
+	return [NSString stringWithFormat:@"%@ [%@] (%@)", self.title, self.sizes, self.link];
 }
-
-
-- (NSArray *)feedLinkDictionaries {
-
-	NSMutableArray *dictionaries = [NSMutableArray new];
-
-	for (NSDictionary *oneDictionary in self.dictionaries) {
-
-		NSString *oneRelValue = relValue(oneDictionary).lowercaseString;
-		if (![oneRelValue isEqualToString:kAlternateKey]) {
-			continue;
-		}
-
-		NSString *oneType = [oneDictionary rsxml_objectForCaseInsensitiveKey:kTypeKey];
-		if (!typeIsFeedType(oneType)) {
-			continue;
-		}
-
-		if (RSXMLStringIsEmpty(urlStringFromDictionary(oneDictionary))) {
-			continue;
-		}
-
-		[dictionaries addObject:oneDictionary];
-	}
-
-	return dictionaries;
-}
-
-
-- (NSString *)resolvedLinkFromFirstDictionaryWithMatchingRel:(NSString *)relValue {
-
-	NSDictionary *d = [self firstDictionaryWithMatchingRel:relValue];
-	return absoluteURLStringWithDictionary(d, self.baseURLString);
-}
-
-
-@end
-
-
-static NSString *relValue(NSDictionary *d) {
-
-	return [d rsxml_objectForCaseInsensitiveKey:kRelKey];
-}
-
-
-static NSString *urlStringFromDictionary(NSDictionary *d) {
-
-	NSString *urlString = [d rsxml_objectForCaseInsensitiveKey:kHrefKey];
-	if (urlString) {
-		return urlString;
-	}
-
-	return [d rsxml_objectForCaseInsensitiveKey:kSrcKey];
-}
-
-
-static NSString *absoluteURLStringWithRelativeURLString(NSString *relativeURLString, NSString *baseURLString) {
-
-	NSURL *url = [NSURL URLWithString:baseURLString];
-	if (!url) {
-		return nil;
-	}
-
-	NSURL *absoluteURL = [NSURL URLWithString:relativeURLString relativeToURL:url];
-	return absoluteURL.absoluteString;
-}
-
-
-static NSString *absoluteURLStringWithDictionary(NSDictionary *d, NSString *baseURLString) {
-
-	NSString *urlString = urlStringFromDictionary(d);
-	if (RSXMLStringIsEmpty(urlString)) {
-		return nil;
-	}
-	return absoluteURLStringWithRelativeURLString(urlString, baseURLString);
-}
-
-
-static NSArray *objectsOfClassWithDictionaries(Class class, NSArray *dictionaries, NSString *baseURLString) {
-
-	NSMutableArray *objects = [NSMutableArray new];
-
-	for (NSDictionary *oneDictionary in dictionaries) {
-
-		id oneObject = [[class alloc] initWithDictionary:oneDictionary baseURLString:baseURLString];
-		if (oneObject) {
-			[objects addObject:oneObject];
-		}
-	}
-
-	return [objects copy];
-}
-
-
-static BOOL typeIsFeedType(NSString *type) {
-
-	type = type.lowercaseString;
-	return [type hasSuffix:kRSSSuffix] || [type hasSuffix:kAtomSuffix];
-}
-
-
-@implementation RSHTMLMetadataAppleTouchIcon
-
-
-- (instancetype)initWithDictionary:(NSDictionary *)d baseURLString:(NSString *)baseURLString {
-
-	self = [super init];
-	if (!self) {
-		return nil;
-	}
-
-	_urlString = absoluteURLStringWithDictionary(d, baseURLString);
-	_sizes = [d rsxml_objectForCaseInsensitiveKey:kSizesKey];
-	_rel = [d rsxml_objectForCaseInsensitiveKey:kRelKey];
-
-	return self;
-}
-
 
 @end
 
 
 @implementation RSHTMLMetadataFeedLink
 
-
-- (instancetype)initWithDictionary:(NSDictionary *)d baseURLString:(NSString *)baseURLString {
-
-	self = [super init];
-	if (!self) {
-		return nil;
+- (NSString*)description {
+	NSString *prefix;
+	switch (_type) {
+		case RSFeedTypeNone: prefix = @"None"; break;
+		case RSFeedTypeRSS:  prefix = @"RSS"; break;
+		case RSFeedTypeAtom: prefix = @"Atom"; break;
 	}
-
-	_urlString = absoluteURLStringWithDictionary(d, baseURLString);
-	_title = [d rsxml_objectForCaseInsensitiveKey:kTitleKey];
-	_type = [d rsxml_objectForCaseInsensitiveKey:kTypeKey];
-
-	return self;
+	return [NSString stringWithFormat:@"[%@] %@ (%@)", prefix, self.title, self.link];
 }
-
 
 @end
 
+
+@implementation RSHTMLMetadataAnchor
+
+- (NSString*)description {
+	if (!_tooltip) {
+		return [NSString stringWithFormat:@"%@ (%@)", self.title, self.link];
+	}
+	return [NSString stringWithFormat:@"%@ [%@] (%@)", self.title, self.tooltip, self.link];
+}
+
+@end
+
+
+@implementation RSHTMLMetadata
+
+- (NSString*)description {
+	return [NSString stringWithFormat:@"favicon: %@\nFeed links: %@\nIcons: %@\n",
+			self.faviconLink, self.feedLinks, self.iconLinks];
+}
+
+@end

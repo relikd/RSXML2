@@ -1,229 +1,58 @@
 //
-//  FeedParser.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 1/4/15.
-//  Copyright (c) 2015 Ranchero Software LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
-#import "RSXMLError.h"
 #import "RSFeedParser.h"
-#import "FeedParser.h"
-#import "RSXMLData.h"
-#import "RSRSSParser.h"
-#import "RSAtomParser.h"
+#import "RSParsedFeed.h"
+#import "RSParsedArticle.h"
+#import "RSDateParser.h"
+#import "NSString+RSXML.h"
 
-static NSArray *parserClasses(void) {
-	
-	static NSArray *gParserClasses = nil;
-	
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		
-		gParserClasses = @[[RSRSSParser class], [RSAtomParser class]];
-	});
-	
-	return gParserClasses;
-}
+@implementation RSFeedParser
 
-static BOOL feedMayBeParseable(RSXMLData *xmlData) {
-	
-	/*Sanity checks.*/
-	
-	if (!xmlData.data) {
-		return NO;
-	}
+#pragma mark - RSXMLParserDelegate
 
-	/*TODO: check size, type, etc.*/
-	
++ (BOOL)isFeedParser { return YES; }
+
+- (BOOL)xmlParserWillStartParsing {
+	_parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.documentURI];
 	return YES;
 }
 
-static BOOL optimisticCanParseRSSData(const char *bytes, NSUInteger numberOfBytes);
-static BOOL optimisticCanParseAtomData(const char *bytes, NSUInteger numberOfBytes);
-static BOOL optimisticCanParseRDF(const char *bytes, NSUInteger numberOfBytes);
-static BOOL dataIsProbablyHTML(const char *bytes, NSUInteger numberOfBytes);
-static BOOL dataIsSomeWeirdException(const char *bytes, NSUInteger numberOfBytes);
-static BOOL dataHasLeftCaret(const char *bytes, NSUInteger numberOfBytes);
-
-static const NSUInteger maxNumberOfBytesToSearch = 4096;
-static const NSUInteger minNumberOfBytesToSearch = 20;
-
-static Class parserClassForXMLData(RSXMLData *xmlData, NSError **error) {
-	
-	if (!feedMayBeParseable(xmlData)) {
-		RSXMLSetError(error, RSXMLErrorNoData, nil);
-		return nil;
-	}
-	
-	// TODO: check for things like images and movies and return nil.
-	
-	const char *bytes = xmlData.data.bytes;
-	NSUInteger numberOfBytes = xmlData.data.length;
-	
-	if (numberOfBytes > minNumberOfBytesToSearch) {
-		
-		if (numberOfBytes > maxNumberOfBytesToSearch) {
-			numberOfBytes = maxNumberOfBytesToSearch;
-		}
-
-		if (!dataHasLeftCaret(bytes, numberOfBytes)) {
-			RSXMLSetError(error, RSXMLErrorMissingLeftCaret, nil);
-			return nil;
-		}
-		if (optimisticCanParseRSSData(bytes, numberOfBytes)) {
-			return [RSRSSParser class];
-		}
-		if (optimisticCanParseAtomData(bytes, numberOfBytes)) {
-			return [RSAtomParser class];
-		}
-		if (optimisticCanParseRDF(bytes, numberOfBytes)) {
-			return [RSRSSParser class]; //TODO: parse RDF feeds, using RSS parser so far ...
-		}
-		if (dataIsProbablyHTML(bytes, numberOfBytes)) {
-			RSXMLSetError(error, RSXMLErrorProbablyHTML, nil);
-			return nil;
-		}
-		if (dataIsSomeWeirdException(bytes, numberOfBytes)) {
-			RSXMLSetError(error, RSXMLErrorContainsXMLErrorsTag, nil);
-			return nil;
-		}
-	}
-	
-	for (Class parserClass in parserClasses()) {
-		if ([parserClass canParseFeed:xmlData]) {
-			return parserClass;
-			//return [[parserClass alloc] initWithXMLData:xmlData]; // does not make sense to return instance
-		}
-	}
-	// Try RSS anyway? libxml would return a parsing error
-	RSXMLSetError(error, RSXMLErrorNoSuitableParser, nil);
-	return nil;
+- (id)xmlParserWillReturnDocument {
+	// Optimization: make articles do calculations on this background thread.
+	[_parsedFeed.articles makeObjectsPerformSelector:@selector(calculateArticleID)];
+	return _parsedFeed;
 }
 
-static id<FeedParser> parserForXMLData(RSXMLData *xmlData, NSError **error) {
-	
-	Class parserClass = parserClassForXMLData(xmlData, error);
-	if (!parserClass) {
-		return nil;
-	}
-	return [[parserClass alloc] initWithXMLData:xmlData];
+/// @return @c NSDate by parsing RFC 822 and 8601 date strings.
+- (NSDate *)dateFromCharacters:(NSData *)data {
+	return RSDateWithBytes(data.bytes, data.length);
 }
 
-static BOOL canParseXMLData(RSXMLData *xmlData) {
-	
-	return parserClassForXMLData(xmlData, nil) != nil;
+/// @return currentString by removing HTML encoded entities.
+- (NSString *)decodeHTMLEntities:(NSString *)str {
+	return [str rs_stringByDecodingHTMLEntities];
 }
 
-static BOOL didFindString(const char *string, const char *bytes, NSUInteger numberOfBytes) {
-	
-	char *foundString = strnstr(bytes, string, numberOfBytes);
-	return foundString != NULL;
-}
-
-static BOOL dataHasLeftCaret(const char *bytes, NSUInteger numberOfBytes) {
-
-	return didFindString("<", bytes, numberOfBytes);
-}
-
-static BOOL dataIsProbablyHTML(const char *bytes, NSUInteger numberOfBytes) {
-	
-	// Won’t catch every single case, which is fine.
-	
-	if (didFindString("<html", bytes, numberOfBytes)) {
-		return YES;
-	}
-	if (didFindString("<body", bytes, numberOfBytes)) {
-		return YES;
-	}
-	if (didFindString("doctype html", bytes, numberOfBytes)) {
-		return YES;
-	}
-	if (didFindString("DOCTYPE html", bytes, numberOfBytes)) {
-		return YES;
-	}
-	if (didFindString("DOCTYPE HTML", bytes, numberOfBytes)) {
-		return YES;
-	}
-	if (didFindString("<meta", bytes, numberOfBytes)) {
-		return YES;
-	}
-	if (didFindString("<HTML", bytes, numberOfBytes)) {
-		return YES;
-	}
-	
-	return NO;
-}
-
-static BOOL dataIsSomeWeirdException(const char *bytes, NSUInteger numberOfBytes) {
-
-	if (didFindString("<errors xmlns='http://schemas.google", bytes, numberOfBytes)) {
-		return YES;
-	}
-
-	return NO;
-}
-
-static BOOL optimisticCanParseRDF(const char *bytes, NSUInteger numberOfBytes) {
-	
-	return didFindString("<rdf:RDF", bytes, numberOfBytes);
-}
-
-static BOOL optimisticCanParseRSSData(const char *bytes, NSUInteger numberOfBytes) {
-	
-	if (!didFindString("<rss", bytes, numberOfBytes)) {
-		return NO;
-	}
-	return didFindString("<channel", bytes, numberOfBytes);
-}
-
-static BOOL optimisticCanParseAtomData(const char *bytes, NSUInteger numberOfBytes) {
-	
-	return didFindString("<feed", bytes, numberOfBytes);
-}
-
-static void callCallback(RSParsedFeedBlock callback, RSParsedFeed *parsedFeed, NSError *error) {
-	
-	dispatch_async(dispatch_get_main_queue(), ^{
-		
-		@autoreleasepool {
-			if (callback) {
-				callback(parsedFeed, error);
-			}
-		}
-	});
-}
-
-
-#pragma mark - API
-
-BOOL RSCanParseFeed(RSXMLData *xmlData) {
-
-	return canParseXMLData(xmlData);
-}
-
-void RSParseFeed(RSXMLData *xmlData, RSParsedFeedBlock callback) {
-
-	dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-
-		NSError *error = nil;
-		RSParsedFeed *parsedFeed = RSParseFeedSync(xmlData, &error);
-		callCallback(callback, parsedFeed, error);
-	});
-}
-
-RSParsedFeed *RSParseFeedSync(RSXMLData *xmlData, NSError **error) {
-
-	xmlResetLastError();
-	id<FeedParser> parser = parserForXMLData(xmlData, error);
-	if (error && *error) {
-		return nil;
-	}
-	RSParsedFeed *parsedResult = [parser parseFeed];
-	if (error) {
-		*error = RSXMLMakeErrorFromLIBXMLError(xmlGetLastError());
-		xmlResetLastError();
-	}
-	return parsedResult;
-}
-
+@end

@@ -1,350 +1,51 @@
 //
-//  RSRSSParser.m
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 1/6/15.
-//  Copyright (c) 2015 Ranchero Software LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
-#import <libxml/xmlstring.h>
 #import "RSRSSParser.h"
-#import "RSSAXParser.h"
 #import "RSParsedFeed.h"
 #import "RSParsedArticle.h"
-#import "RSXMLData.h"
-#import "RSXMLInternal.h"
 #import "NSString+RSXML.h"
-#import "RSDateParser.h"
+#import "NSDictionary+RSXML.h"
 
-
-@interface RSRSSParser () <RSSAXParserDelegate>
-
-@property (nonatomic) NSData *feedData;
-@property (nonatomic) NSString *urlString;
-@property (nonatomic) NSDictionary *currentAttributes;
-@property (nonatomic) RSSAXParser *parser;
-@property (nonatomic) NSMutableArray *articles;
-@property (nonatomic) BOOL parsingArticle;
-@property (nonatomic, readonly) RSParsedArticle *currentArticle;
-@property (nonatomic) BOOL parsingChannelImage;
-@property (nonatomic, readonly) NSDate *currentDate;
-@property (nonatomic) BOOL endRSSFound;
-@property (nonatomic) NSString *feedLink;
-@property (nonatomic) NSString *feedTitle;
-@property (nonatomic) NSString *feedSubtitle;
-@property (nonatomic) NSDate *dateParsed;
-
-@end
-
-
-@implementation RSRSSParser
-
-#pragma mark - Class Methods
-
-+ (BOOL)canParseFeed:(RSXMLData *)xmlData {
-
-	// Checking for '<rss' and '<channel>' within first n characters should do it.
-	// TODO: handle RSS 1.0
-
-	@autoreleasepool {
-
-		NSData *feedData = xmlData.data;
-		NSString *s = [[NSString alloc] initWithBytesNoCopy:(void *)feedData.bytes length:feedData.length encoding:NSUTF8StringEncoding freeWhenDone:NO];
-		if (!s) {
-			s = [[NSString alloc] initWithData:feedData encoding:NSUTF8StringEncoding];
-		}
-		if (!s) {
-			s = [[NSString alloc] initWithData:feedData encoding:NSUnicodeStringEncoding];
-		}
-		if (!s) {
-			return NO;
-		}
-
-		static const NSInteger numberOfCharactersToSearch = 4096;
-		NSRange rangeToSearch = NSMakeRange(0, numberOfCharactersToSearch);
-		if (s.length < numberOfCharactersToSearch) {
-			rangeToSearch.length = s.length;
-		}
-
-		NSRange rssRange = [s rangeOfString:@"<rss" options:NSLiteralSearch range:rangeToSearch];
-		NSRange channelRange = [s rangeOfString:@"<channel>" options:NSLiteralSearch range:rangeToSearch];
-		if (rssRange.length < 1 || channelRange.length < 1) {
-			return NO;
-		}
-
-		if (rssRange.location > channelRange.location) {
-			return NO; // Wrong order.
-		}
-	}
-	
-	return YES;
-}
-
-
-#pragma mark - Init
-
-- (instancetype)initWithXMLData:(RSXMLData *)xmlData {
-	
-	self = [super init];
-	if (!self) {
-		return nil;
-	}
-	
-	_feedData = xmlData.data;
-	_urlString = xmlData.urlString;
-	_parser = [[RSSAXParser alloc] initWithDelegate:self];
-	_articles = [NSMutableArray new];
-
-	return self;
-}
-
-
-#pragma mark - API
-
-- (RSParsedFeed *)parseFeed {
-	
-	[self parse];
-
-	RSParsedFeed *parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.urlString title:self.feedTitle link:self.feedLink articles:self.articles];
-	parsedFeed.subtitle = self.feedSubtitle;
-
-	return parsedFeed;
-}
-
-
-#pragma mark - Constants
-
-static NSString *kIsPermaLinkKey = @"isPermaLink";
-static NSString *kURLKey = @"url";
-static NSString *kLengthKey = @"length";
-static NSString *kTypeKey = @"type";
-static NSString *kFalseValue = @"false";
-static NSString *kTrueValue = @"true";
-static NSString *kContentEncodedKey = @"content:encoded";
-static NSString *kDCDateKey = @"dc:date";
-static NSString *kDCCreatorKey = @"dc:creator";
 static NSString *kRDFAboutKey = @"rdf:about";
 
-static const char *kItem = "item";
-static const NSInteger kItemLength = 5;
+@interface RSRSSParser () <RSSAXParserDelegate>
+@property (nonatomic) BOOL parsingArticle;
+@property (nonatomic) BOOL parsingChannelImage;
+@property (nonatomic) BOOL guidIsPermalink;
+@property (nonatomic) BOOL endRSSFound;
+@property (nonatomic) NSURL *baseURL;
+@end
 
-static const char *kImage = "image";
-static const NSInteger kImageLength = 6;
+// TODO: handle RSS 1.0
+@implementation RSRSSParser
 
-static const char *kLink = "link";
-static const NSInteger kLinkLength = 5;
+#pragma mark - RSXMLParserDelegate
 
-static const char *kTitle = "title";
-static const NSInteger kTitleLength = 6;
-
-static const char *kDC = "dc";
-static const NSInteger kDCLength = 3;
-
-static const char *kCreator = "creator";
-static const NSInteger kCreatorLength = 8;
-
-static const char *kDate = "date";
-static const NSInteger kDateLength = 5;
-
-static const char *kContent = "content";
-static const NSInteger kContentLength = 8;
-
-static const char *kEncoded = "encoded";
-static const NSInteger kEncodedLength = 8;
-
-static const char *kGuid = "guid";
-static const NSInteger kGuidLength = 5;
-
-static const char *kPubDate = "pubDate";
-static const NSInteger kPubDateLength = 8;
-
-static const char *kAuthor = "author";
-static const NSInteger kAuthorLength = 7;
-
-static const char *kDescription = "description";
-static const NSInteger kDescriptionLength = 12;
-
-static const char *kRSS = "rss";
-static const NSInteger kRSSLength = 4;
-
-static const char *kURL = "url";
-static const NSInteger kURLLength = 4;
-
-static const char *kLength = "length";
-static const NSInteger kLengthLength = 7;
-
-static const char *kType = "type";
-static const NSInteger kTypeLength = 5;
-
-static const char *kIsPermaLink = "isPermaLink";
-static const NSInteger kIsPermaLinkLength = 12;
-
-static const char *kRDF = "rdf";
-static const NSInteger kRDFlength = 4;
-
-static const char *kAbout = "about";
-static const NSInteger kAboutLength = 6;
-
-static const char *kFalse = "false";
-static const NSInteger kFalseLength = 6;
-
-static const char *kTrue = "true";
-static const NSInteger kTrueLength = 5;
-
-
-#pragma mark - Parsing
-
-- (void)parse {
-
-	self.dateParsed = [NSDate date];
-
-	@autoreleasepool {
-		[self.parser parseData:self.feedData];
-		[self.parser finishParsing];
-	}
-	
-	// Optimization: make articles do calculations on this background thread.
-	[self.articles makeObjectsPerformSelector:@selector(calculateArticleID)];
++ (NSArray<const NSString *> *)parserRequireOrderedTags {
+	return @[@"<rss", @"<channel>"];
 }
-
-
-- (void)addArticle {
-
-	RSParsedArticle *article = [[RSParsedArticle alloc] initWithFeedURL:self.urlString];
-	article.dateParsed = self.dateParsed;
-	
-	[self.articles addObject:article];
-}
-
-
-- (RSParsedArticle *)currentArticle {
-
-	return self.articles.lastObject;
-}
-
-
-- (void)addFeedElement:(const xmlChar *)localName prefix:(const xmlChar *)prefix {
-
-	if (prefix != NULL) {
-		return;
-	}
-
-	if (RSSAXEqualTags(localName, kLink, kLinkLength)) {
-		if (!self.feedLink) {
-			self.feedLink = self.parser.currentStringWithTrimmedWhitespace;
-		}
-	}
-
-	else if (RSSAXEqualTags(localName, kTitle, kTitleLength)) {
-		self.feedTitle = self.parser.currentStringWithTrimmedWhitespace;
-	}
-	
-	else if (RSSAXEqualTags(localName, kDescription, kDescriptionLength)) {
-		self.feedSubtitle = self.parser.currentStringWithTrimmedWhitespace;
-	}
-}
-
-
-- (void)addDCElement:(const xmlChar *)localName {
-
-	if (RSSAXEqualTags(localName, kCreator, kCreatorLength)) {
-
-		self.currentArticle.author = self.parser.currentStringWithTrimmedWhitespace;
-	}
-	else if (RSSAXEqualTags(localName, kDate, kDateLength)) {
-
-		self.currentArticle.datePublished = self.currentDate;
-	}
-}
-
-
-- (void)addGuid {
-
-	self.currentArticle.guid = self.parser.currentStringWithTrimmedWhitespace;
-
-	NSString *isPermaLinkValue = [self.currentAttributes rsxml_objectForCaseInsensitiveKey:@"ispermalink"];
-	if (!isPermaLinkValue || ![isPermaLinkValue isEqualToString:@"false"]) {
-		self.currentArticle.permalink = [self urlString:self.currentArticle.guid];
-	}
-}
-
-
-- (NSString *)urlString:(NSString *)s {
-
-	/*Resolve against home page URL (if available) or feed URL.*/
-
-	if ([[s lowercaseString] hasPrefix:@"http"]) {
-		return s;
-	}
-
-	if (!self.feedLink) {
-		//TODO: get feed URL and use that to resolve URL.*/
-		return s;
-	}
-
-	NSURL *baseURL = [NSURL URLWithString:self.feedLink];
-	if (!baseURL) {
-		return s;
-	}
-
-	NSURL *resolvedURL = [NSURL URLWithString:s relativeToURL:baseURL];
-	if (resolvedURL.absoluteString) {
-		return resolvedURL.absoluteString;
-	}
-
-	return s;
-}
-
-
-- (NSString *)currentStringWithHTMLEntitiesDecoded {
-
-	return [self.parser.currentStringWithTrimmedWhitespace rs_stringByDecodingHTMLEntities];
-}
-
-- (void)addArticleElement:(const xmlChar *)localName prefix:(const xmlChar *)prefix {
-
-	if (RSSAXEqualTags(prefix, kDC, kDCLength)) {
-
-		[self addDCElement:localName];
-		return;
-	}
-
-	if (RSSAXEqualTags(prefix, kContent, kContentLength) && RSSAXEqualTags(localName, kEncoded, kEncodedLength)) {
-
-		self.currentArticle.body = [self currentStringWithHTMLEntitiesDecoded];
-		return;
-	}
-
-	if (prefix != NULL) {
-		return;
-	}
-
-	if (RSSAXEqualTags(localName, kGuid, kGuidLength)) {
-		[self addGuid];
-	}
-	else if (RSSAXEqualTags(localName, kPubDate, kPubDateLength)) {
-		self.currentArticle.datePublished = self.currentDate;
-	}
-	else if (RSSAXEqualTags(localName, kAuthor, kAuthorLength)) {
-		self.currentArticle.author = self.parser.currentStringWithTrimmedWhitespace;
-	}
-	else if (RSSAXEqualTags(localName, kLink, kLinkLength)) {
-		self.currentArticle.link = [self urlString:self.parser.currentStringWithTrimmedWhitespace];
-	}
-	else if (RSSAXEqualTags(localName, kDescription, kDescriptionLength)) {
-		self.currentArticle.abstract = [self currentStringWithHTMLEntitiesDecoded];
-	}
-	else if (RSSAXEqualTags(localName, kTitle, kTitleLength)) {
-		self.currentArticle.title = [self currentStringWithHTMLEntitiesDecoded];
-	}
-}
-
-
-- (NSDate *)currentDate {
-
-	return RSDateWithBytes(self.parser.currentCharacters.bytes, self.parser.currentCharacters.length);
-}
-
 
 #pragma mark - RSSAXParserDelegate
 
@@ -354,31 +55,61 @@ static const NSInteger kTrueLength = 5;
 		return;
 	}
 
-	NSDictionary *xmlAttributes = nil;
-	if (RSSAXEqualTags(localName, kItem, kItemLength) || RSSAXEqualTags(localName, kGuid, kGuidLength)) {
-		xmlAttributes = [self.parser attributesDictionary:attributes numberOfAttributes:numberOfAttributes];
-	}
-	if (self.currentAttributes != xmlAttributes) {
-		self.currentAttributes = xmlAttributes;
-	}
+	int len = xmlStrlen(localName);
 
-	if (!prefix && RSSAXEqualTags(localName, kItem, kItemLength)) {
-
-		[self addArticle];
-		self.parsingArticle = YES;
-
-		if (xmlAttributes && xmlAttributes[kRDFAboutKey]) { /*RSS 1.0 guid*/
-			self.currentArticle.guid = xmlAttributes[kRDFAboutKey];
-			self.currentArticle.permalink = self.currentArticle.guid;
+	if (prefix != NULL) {
+		if (!self.parsingArticle || self.parsingChannelImage) {
+			return;
 		}
+		if (len != 4 && len != 7) {
+			return;
+		}
+		int prefLen = xmlStrlen(prefix);
+		if (prefLen == 2 && EqualBytes(prefix, "dc", 2)) {
+			if (EqualBytes(localName, "date", 4) || EqualBytes(localName, "creator", 7)) {
+				[SAXParser beginStoringCharacters];
+			}
+		}
+		else if (len == 7 && prefLen == 7 && EqualBytes(prefix, "content", 7) && EqualBytes(localName, "encoded", 7)) {
+			[SAXParser beginStoringCharacters];
+		}
+		return;
+	}
+	// else: localname without prefix
+	switch (len) {
+		case 4:
+			if (EqualBytes(localName, "item", 4)) {
+				self.parsingArticle = YES;
+				self.currentArticle = [self.parsedFeed appendNewArticle];
+				
+				NSDictionary *attribs = [SAXParser attributesDictionary:attributes numberOfAttributes:numberOfAttributes];
+				if (attribs) {
+					NSString *about = attribs[kRDFAboutKey]; // RSS 1.0 guid
+					if (about) {
+						self.currentArticle.guid = about;
+						self.currentArticle.permalink = about;
+					}
+				}
+			}
+			else if (EqualBytes(localName, "guid", 4)) {
+				NSDictionary *attribs = [SAXParser attributesDictionary:attributes numberOfAttributes:numberOfAttributes];
+				NSString *isPermaLinkValue = [attribs rsxml_objectForCaseInsensitiveKey:@"isPermaLink"];
+				if (!isPermaLinkValue || ![isPermaLinkValue isEqualToString:@"false"]) {
+					self.guidIsPermalink = YES;
+				} else {
+					self.guidIsPermalink = NO;
+				}
+			}
+			break;
+		case 5:
+			if (EqualBytes(localName, "image", 5)) {
+				self.parsingChannelImage = YES;
+			}
+			break;
 	}
 
-	else if (!prefix && RSSAXEqualTags(localName, kImage, kImageLength)) {
-		self.parsingChannelImage = YES;
-	}
-
-	if (!self.parsingChannelImage) {
-		[self.parser beginStoringCharacters];
+	if (self.parsingArticle || !self.parsingChannelImage) {
+		[SAXParser beginStoringCharacters];
 	}
 }
 
@@ -388,77 +119,132 @@ static const NSInteger kTrueLength = 5;
 	if (self.endRSSFound) {
 		return;
 	}
+	
+	int len = xmlStrlen(localName);
 
-	if (RSSAXEqualTags(localName, kRSS, kRSSLength)) {
-		self.endRSSFound = YES;
+	// Meta parsing
+	     if (len == 3 && EqualBytes(localName, "rss", 3))   { self.endRSSFound = YES; }
+	else if (len == 4 && EqualBytes(localName, "item", 4))  { self.parsingArticle = NO; }
+	else if (len == 5 && EqualBytes(localName, "image", 5)) { self.parsingChannelImage = NO; }
+	// Always exit if prefix is set
+	else if (prefix != NULL)
+	{
+		if (!self.parsingArticle) {
+			// Feed parsing
+			return;
+		}
+		int prefLen = xmlStrlen(prefix);
+		// Article parsing
+		switch (len) {
+			case 4:
+				if (prefLen == 2 && EqualBytes(prefix, "dc", 2) && EqualBytes(localName, "date", 4))
+					self.currentArticle.datePublished = [self dateFromCharacters:SAXParser.currentCharacters];
+				return;
+			case 7:
+				if (prefLen == 2 && EqualBytes(prefix, "dc", 2) && EqualBytes(localName, "creator", 7)) {
+					self.currentArticle.author = SAXParser.currentStringWithTrimmedWhitespace;
+				}
+				else if (prefLen == 7 && EqualBytes(prefix, "content", 7) && EqualBytes(localName, "encoded", 7)) {
+					self.currentArticle.body = [self decodeHTMLEntities:SAXParser.currentStringWithTrimmedWhitespace];
+				}
+				return;
+		}
 	}
-
-	else if (RSSAXEqualTags(localName, kImage, kImageLength)) {
-		self.parsingChannelImage = NO;
+	// Article parsing
+	else if (self.parsingArticle)
+	{
+		switch (len) {
+			case 4:
+				if (EqualBytes(localName, "link", 4)) {
+					self.currentArticle.link = [SAXParser.currentStringWithTrimmedWhitespace absoluteURLWithBase:self.baseURL];
+				}
+				else if (EqualBytes(localName, "guid", 4)) {
+					self.currentArticle.guid = SAXParser.currentStringWithTrimmedWhitespace;
+					if (self.guidIsPermalink) {
+						self.currentArticle.permalink = [self.currentArticle.guid absoluteURLWithBase:self.baseURL];
+					}
+				}
+				return;
+			case 5:
+				if (EqualBytes(localName, "title", 5))
+					self.currentArticle.title = [self decodeHTMLEntities:SAXParser.currentStringWithTrimmedWhitespace];
+				return;
+			case 6:
+				if (EqualBytes(localName, "author", 6))
+					self.currentArticle.author = SAXParser.currentStringWithTrimmedWhitespace;
+				return;
+			case 7:
+				if (EqualBytes(localName, "pubDate", 7))
+					self.currentArticle.datePublished = [self dateFromCharacters:SAXParser.currentCharacters];
+				return;
+			case 11:
+				if (EqualBytes(localName, "description", 11))
+					self.currentArticle.abstract = [self decodeHTMLEntities:SAXParser.currentStringWithTrimmedWhitespace];
+				return;
+		}
 	}
-
-	else if (RSSAXEqualTags(localName, kItem, kItemLength)) {
-		self.parsingArticle = NO;
-	}
-
-	else if (self.parsingArticle) {
-		[self addArticleElement:localName prefix:prefix];
-	}
-
-	else if (!self.parsingChannelImage) {
-		[self addFeedElement:localName prefix:prefix];
+	// Feed parsing
+	else if (!self.parsingChannelImage)
+	{
+		switch (len) {
+			case 4:
+				if (EqualBytes(localName, "link", 4)) {
+					self.parsedFeed.link = SAXParser.currentStringWithTrimmedWhitespace;
+					self.baseURL = [NSURL URLWithString:self.parsedFeed.link];
+				}
+				return;
+			case 5:
+				if (EqualBytes(localName, "title", 5))
+					self.parsedFeed.title = SAXParser.currentStringWithTrimmedWhitespace;
+				return;
+			case 11:
+				if (EqualBytes(localName, "description", 11))
+					self.parsedFeed.subtitle = SAXParser.currentStringWithTrimmedWhitespace;
+				return;
+		}
 	}
 }
 
 
 - (NSString *)saxParser:(RSSAXParser *)SAXParser internedStringForName:(const xmlChar *)name prefix:(const xmlChar *)prefix {
 
-	if (RSSAXEqualTags(prefix, kRDF, kRDFlength)) {
-
-		if (RSSAXEqualTags(name, kAbout, kAboutLength)) {
-			return kRDFAboutKey;
-		}
-
-		return nil;
-	}
+	int len = xmlStrlen(name);
 
 	if (prefix) {
+		if (len == 5 && EqualBytes(prefix, "rdf", 4) && EqualBytes(name, "about", 5)) { // 4 because prefix length is not checked
+			return kRDFAboutKey;
+		}
 		return nil;
 	}
 
-	if (RSSAXEqualTags(name, kIsPermaLink, kIsPermaLinkLength)) {
-		return kIsPermaLinkKey;
+	switch (len) {
+		case 3:
+			if (EqualBytes(name, "url", 3)) { return @"url"; }
+			break;
+		case 4:
+			if (EqualBytes(name, "type", 4)) { return @"type"; }
+			break;
+		case 6:
+			if (EqualBytes(name, "length", 6)) { return @"length"; }
+			break;
+		case 11:
+			if (EqualBytes(name, "isPermaLink", 11)) { return @"isPermaLink"; }
+			break;
 	}
-
-	if (RSSAXEqualTags(name, kURL, kURLLength)) {
-		return kURLKey;
-	}
-
-	if (RSSAXEqualTags(name, kLength, kLengthLength)) {
-		return kLengthKey;
-	}
-
-	if (RSSAXEqualTags(name, kType, kTypeLength)) {
-		return kTypeKey;
-	}
-
 	return nil;
 }
 
 
 - (NSString *)saxParser:(RSSAXParser *)SAXParser internedStringForValue:(const void *)bytes length:(NSUInteger)length {
 
-	static const NSUInteger falseLength = kFalseLength - 1;
-	static const NSUInteger trueLength = kTrueLength - 1;
-
-	if (length == falseLength && RSSAXEqualBytes(bytes, kFalse, falseLength)) {
-		return kFalseValue;
+	switch (length) {
+		case 4:
+			if (EqualBytes(bytes, "true", 4)) { return @"true"; }
+			break;
+		case 5:
+			if (EqualBytes(bytes, "false", 5)) { return @"false"; }
+			break;
 	}
-
-	if (length == trueLength && RSSAXEqualBytes(bytes, kTrue, trueLength)) {
-		return kTrueValue;
-	}
-
 	return nil;
 }
 

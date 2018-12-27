@@ -1,45 +1,64 @@
 //
-//  RSHTMLMetadata.h
-//  RSXML
+//  MIT License (MIT)
 //
-//  Created by Brent Simmons on 3/6/16.
-//  Copyright © 2016 Ranchero Software, LLC. All rights reserved.
+//  Copyright (c) 2016 Brent Simmons
+//  Copyright (c) 2018 Oleg Geier
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to
+//  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//  of the Software, and to permit persons to whom the Software is furnished to do
+//  so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 @import Foundation;
 
-@class RSHTMLMetadataFeedLink;
-@class RSHTMLMetadataAppleTouchIcon;
+typedef enum {
+	RSFeedTypeNone,
+	RSFeedTypeRSS,
+	RSFeedTypeAtom
+} RSFeedType;
 
+RSFeedType RSFeedTypeFromLinkTypeAttribute(NSString * typeStr);
+
+
+@class RSHTMLMetadataIconLink, RSHTMLMetadataFeedLink;
 
 @interface RSHTMLMetadata : NSObject
-
-- (instancetype)initWithURLString:(NSString *)urlString dictionaries:(NSArray <NSDictionary *> *)dictionaries;
-
-@property (nonatomic, readonly) NSString *baseURLString;
-@property (nonatomic, readonly) NSArray <NSDictionary *> *dictionaries;
-
-@property (nonatomic, readonly) NSString *faviconLink;
-@property (nonatomic, readonly) NSArray <RSHTMLMetadataAppleTouchIcon *> *appleTouchIcons;
-@property (nonatomic, readonly) NSArray <RSHTMLMetadataFeedLink *> *feedLinks;
-
+@property (nonatomic, copy, nullable) NSString *faviconLink;
+@property (nonatomic, nonnull) NSArray <RSHTMLMetadataIconLink *> *iconLinks;
+@property (nonatomic, nonnull) NSArray <RSHTMLMetadataFeedLink *> *feedLinks;
 @end
 
 
-@interface RSHTMLMetadataAppleTouchIcon : NSObject
-
-@property (nonatomic, readonly) NSString *rel;
-@property (nonatomic, readonly) NSString *sizes;
-@property (nonatomic, readonly) NSString *urlString; // Absolute.
-
+@interface RSHTMLMetadataLink : NSObject
+@property (nonatomic, copy, nonnull) NSString *link; // absolute
+@property (nonatomic, copy, nullable) NSString *title;
 @end
 
 
-@interface RSHTMLMetadataFeedLink : NSObject
-
-@property (nonatomic, readonly) NSString *title;
-@property (nonatomic, readonly) NSString *type;
-@property (nonatomic, readonly) NSString *urlString; // Absolute.
-
+@interface RSHTMLMetadataIconLink : RSHTMLMetadataLink
+@property (nonatomic, copy, nullable) NSString *sizes;
+- (CGSize)getSize;
 @end
 
+
+@interface RSHTMLMetadataFeedLink : RSHTMLMetadataLink // title: 'icon' or 'apple-touch-icon*'
+@property (nonatomic, assign) RSFeedType type;
+@end
+
+
+@interface RSHTMLMetadataAnchor : RSHTMLMetadataLink // title: anchor text-value
+@property (nonatomic, copy, nullable) NSString *tooltip;
+@end

@@ -1,7 +1,7 @@
 //
 //  MIT License (MIT)
 //
-//  Copyright (c) 2018 Oleg Geier
+//  Copyright (c) 2016 Brent Simmons
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -21,29 +21,21 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-@import Foundation;
+#import "NSDictionary+RSXML.h"
 
-// OPML allows for arbitrary attributes.
-// These are the common attributes in OPML files used as RSS subscription lists.
+@implementation NSDictionary (RSXML)
 
-extern NSString *OPMLTextKey; //text
-extern NSString *OPMLTitleKey; //title
-extern NSString *OPMLDescriptionKey; //description
-extern NSString *OPMLTypeKey; //type
-extern NSString *OPMLVersionKey; //version
-extern NSString *OPMLHMTLURLKey; //htmlUrl
-extern NSString *OPMLXMLURLKey; //xmlUrl
+- (nullable id)rsxml_objectForCaseInsensitiveKey:(NSString *)key {
+	id obj = self[key];
+	if (obj) {
+		return obj;
+	}
+	for (NSString *oneKey in self.allKeys) {
+		if ([oneKey isKindOfClass:[NSString class]] && [key caseInsensitiveCompare:oneKey] == NSOrderedSame) {
+			return self[oneKey];
+		}
+	}
+	return nil;
+}
 
-
-@interface RSOPMLItem : NSObject
-@property (nonatomic) NSArray<RSOPMLItem*> *children;
-@property (nonatomic) NSDictionary *attributes;
-@property (nonatomic, readonly) BOOL isFolder; // true if children.count > 0
-@property (nonatomic, readonly) NSString *displayName; //May be nil.
-
-- (void)addChild:(RSOPMLItem *)child;
-- (void)setAttribute:(id)value forKey:(NSString *)key;
-- (id)attributeForKey:(NSString *)key;
-
-- (NSString *)recursiveDescription;
 @end
