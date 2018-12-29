@@ -22,7 +22,6 @@
 //  SOFTWARE.
 
 @import Foundation;
-#import <libxml/xmlerror.h>
 
 extern NSErrorDomain const kLIBXMLParserErrorDomain;
 extern NSErrorDomain const kRSXMLParserErrorDomain;
@@ -44,4 +43,3 @@ typedef NS_ERROR_ENUM(kRSXMLParserErrorDomain, RSXMLError) {
 
 NSError * RSXMLMakeError(RSXMLError code);
 NSError * RSXMLMakeErrorWrongParser(RSXMLError code, RSXMLError expected);
-NSError * RSXMLMakeErrorFromLIBXMLError(xmlErrorPtr err);

@@ -22,6 +22,8 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
+#import <libxml/xmlstring.h>
+
 #import "RSHTMLMetadataParser.h"
 #import "RSHTMLMetadata.h"
 #import "NSString+RSXML.h"

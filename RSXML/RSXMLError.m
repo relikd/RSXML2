@@ -65,14 +65,3 @@ NSError * RSXMLMakeErrorWrongParser(RSXMLError code, RSXMLError expected) {
 	return [NSError errorWithDomain:kRSXMLParserErrorDomain code:code
 						   userInfo:@{NSLocalizedDescriptionKey: getErrorMessageForRSXMLError(code, expected)}];
 }
-
-NSError * RSXMLMakeErrorFromLIBXMLError(xmlErrorPtr err) {
-	if (err && err->level == XML_ERR_FATAL) {
-		int errCode = err->code;
-		char * msg = err->message;
-		//if (err->level == XML_ERR_FATAL)
-		NSString *errMsg = [[NSString stringWithFormat:@"%s", msg] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		return [NSError errorWithDomain:kLIBXMLParserErrorDomain code:errCode userInfo:@{NSLocalizedDescriptionKey: errMsg}];
-	}
-	return nil;
-}

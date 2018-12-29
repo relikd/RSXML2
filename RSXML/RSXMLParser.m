@@ -21,6 +21,8 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
+#import <libxml/xmlerror.h>
+
 #import "RSXMLParser.h"
 #import "RSXMLData.h"
 #import "RSXMLError.h"
@@ -76,7 +78,14 @@
 		xmlResetLastError();
 		[_parser parseBytes:_xmlData.bytes numberOfBytes:_xmlData.length];
 		if (error) {
-			*error = RSXMLMakeErrorFromLIBXMLError(xmlGetLastError());
+			xmlErrorPtr err = xmlGetLastError();
+			if (err && err->level == XML_ERR_FATAL) {
+				int errCode = err->code;
+				char * msg = err->message;
+				NSString *errMsg = [[NSString stringWithFormat:@"%s", msg] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+				*error = [NSError errorWithDomain:kLIBXMLParserErrorDomain code:errCode userInfo:@{NSLocalizedDescriptionKey: errMsg}];
+			}
+//			*error = RSXMLMakeErrorFromLIBXMLError();
 			xmlResetLastError();
 		}
 	}
