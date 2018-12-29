@@ -27,7 +27,7 @@ In the previous version, the test case for parsing a non-opml file (with `RSOPML
 ```
 RSXMLData *xmlData = [[RSXMLData alloc] initWithData:d urlString:@"https://www.example.org"];
 // TODO: check xmlData.parserError
-RSFeedParser *parser = [[RSFeedParser alloc] initWithXMLData:xmlData];
+RSFeedParser *parser = [RSFeedParser parserWithXMLData:xmlData];
 // TODO: check [parser canParse]
 // TODO: alternatively check error after parseSync:
 NSError *parseError;

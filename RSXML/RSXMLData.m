@@ -201,7 +201,7 @@ static const NSInteger numberOfCharactersToSearch = 4096;
 
 /// @return Kind of @c RSXMLParser or @c nil if no suitable parser found.
 - (id)getParser {
-	return [[_parserClass alloc] initWithXMLData:self];
+	return [_parserClass parserWithXMLData:self];
 }
 
 /// @return @c YES if any parser, regardless of type, is suitable.

@@ -95,8 +95,9 @@
 	RSXMLData *xmlData = [self xmlFile:@"OneFootTsunami" extension:@"atom"];
 	XCTAssertEqual(xmlData.parserClass, [RSAtomParser class]);
 	
+	RSFeedParser *parser = [RSFeedParser parserWithXMLData:xmlData];
 	NSError *error = nil;
-	RSParsedFeed *parsedFeed = [[xmlData getParser] parseSync:&error];
+	RSParsedFeed *parsedFeed = [parser parseSync:&error];
 	XCTAssertEqualObjects(parsedFeed.title, @"One Foot Tsunami");
 	XCTAssertEqualObjects(parsedFeed.subtitle, @"Slightly less disappointing than it sounds");
 	XCTAssertEqualObjects(parsedFeed.link, @"http://onefoottsunami.com");

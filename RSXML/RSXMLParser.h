@@ -51,8 +51,6 @@
 + (BOOL)isOPMLParser;
 /// @return @c YES if parser supports parsing HTML files.
 + (BOOL)isHTMLParser;
-/// Keeps an internal pointer to the @c RSXMLData and initializes a new @c RSSAXParser.
-- (instancetype)initWithXMLData:(RSXMLData * _Nonnull)xmlData;
 /// Will be called after the parsing is finished. @return Reference to parsed object.
 - (id)xmlParserWillReturnDocument;
 @end
@@ -60,6 +58,8 @@
 
 @interface RSXMLParser<__covariant T> : NSObject <RSXMLParserDelegate, RSSAXParserDelegate>
 @property (nonatomic, readonly, nonnull, copy) NSString *documentURI;
+
++ (instancetype)parserWithXMLData:(RSXMLData * _Nonnull)xmlData;
 
 - (T _Nullable)parseSync:(NSError ** _Nullable)error;
 - (void)parseAsync:(void(^)(T _Nullable parsedDocument, NSError * _Nullable error))block;

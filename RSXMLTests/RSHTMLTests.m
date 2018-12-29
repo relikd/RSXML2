@@ -44,7 +44,7 @@
 
 	RSXMLData *xmlData = [self xmlData:@"DaringFireball" urlString:@"http://daringfireball.net/"];
 	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
-	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	RSHTMLMetadataParser *parser = [RSHTMLMetadataParser parserWithXMLData:xmlData];
 	NSError *error;
 	RSHTMLMetadata *metadata = [parser parseSync:&error];
 	XCTAssertNil(error);
@@ -66,7 +66,7 @@
 
 	RSXMLData *xmlData = [self xmlData:@"furbo" urlString:@"http://furbo.org/"];
 	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
-	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	RSHTMLMetadataParser *parser = [RSHTMLMetadataParser parserWithXMLData:xmlData];
 	NSError *error;
 	RSHTMLMetadata *metadata = [parser parseSync:&error];
 	XCTAssertNil(error);
@@ -87,7 +87,7 @@
 
 	RSXMLData *xmlData = [self xmlData:@"inessential" urlString:@"http://inessential.com/"];
 	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
-	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	RSHTMLMetadataParser *parser = [RSHTMLMetadataParser parserWithXMLData:xmlData];
 	NSError *error;
 	RSHTMLMetadata *metadata = [parser parseSync:&error];
 	XCTAssertNil(error);
@@ -111,7 +111,7 @@
 
 	RSXMLData *xmlData = [self xmlData:@"sixcolors" urlString:@"https://sixcolors.com/"];
 	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
-	RSHTMLMetadataParser *parser = [[RSHTMLMetadataParser alloc] initWithXMLData:xmlData];
+	RSHTMLMetadataParser *parser = [RSHTMLMetadataParser parserWithXMLData:xmlData];
 	NSError *error;
 	RSHTMLMetadata *metadata = [parser parseSync:&error];
 	XCTAssertNil(error);
@@ -143,7 +143,7 @@
 
 	RSXMLData *xmlData = [self xmlData:@"sixcolors" urlString:@"https://sixcolors.com/"];
 	XCTAssertTrue([xmlData.parserClass isHTMLParser]);
-	RSHTMLLinkParser *parser = [[RSHTMLLinkParser alloc] initWithXMLData:xmlData];
+	RSHTMLLinkParser *parser = [RSHTMLLinkParser parserWithXMLData:xmlData];
 	NSError *error;
 	NSArray<RSHTMLMetadataAnchor*> *links = [parser parseSync:&error];
 	XCTAssertNil(error);

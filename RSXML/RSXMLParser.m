@@ -43,6 +43,18 @@
 
 /**
  Designated initializer. Runs a check whether it matches the detected parser in @c RSXMLData.
+ Keeps an internal pointer to the @c RSXMLData and initializes a new @c RSSAXParser.
+ */
++ (instancetype)parserWithXMLData:(nonnull RSXMLData *)xmlData {
+	if ([xmlData.parserClass isSubclassOfClass:[super class]]) {
+		return [[xmlData.parserClass alloc] initWithXMLData:xmlData];
+	}
+	return [[super alloc] initWithXMLData:xmlData];
+}
+
+/**
+ Internal initializer. Use the class initializer to automatically initialize to proper subclass.
+ Keeps an internal pointer to the @c RSXMLData and initializes a new @c RSSAXParser.
  */
 - (instancetype)initWithXMLData:(nonnull RSXMLData *)xmlData {
 	self = [super init];
@@ -85,7 +97,6 @@
 				NSString *errMsg = [[NSString stringWithFormat:@"%s", msg] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 				*error = [NSError errorWithDomain:kLIBXMLParserErrorDomain code:errCode userInfo:@{NSLocalizedDescriptionKey: errMsg}];
 			}
-//			*error = RSXMLMakeErrorFromLIBXMLError();
 			xmlResetLastError();
 		}
 	}

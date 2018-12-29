@@ -61,7 +61,7 @@
 	NSData *importData = [exportString dataUsingEncoding:NSUTF8StringEncoding];
 	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:importData urlString:@"none"];
 	XCTAssertEqual(xmlData.parserClass, [RSOPMLParser class]);
-	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
+	RSOPMLParser *parser = [RSOPMLParser parserWithXMLData:xmlData];
 	XCTAssertNotNil(parser);
 	NSError *error;
 	RSOPMLItem *document = [parser parseSync:&error];
@@ -81,7 +81,7 @@
 	XCTAssertNotEqualObjects(xmlData.parserClass, [RSOPMLParser class]);
 	XCTAssertNil(xmlData.parserError);
 	
-	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
+	RSOPMLParser *parser = [RSOPMLParser parserWithXMLData:xmlData];
 	RSOPMLItem *document = [parser parseSync:&error];
 	XCTAssertNil(document);
 	XCTAssertNotNil(error);
