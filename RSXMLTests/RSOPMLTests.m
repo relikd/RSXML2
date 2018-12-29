@@ -42,6 +42,38 @@
 	return [[RSXMLData alloc] initWithData:d urlString:[NSString stringWithFormat:@"%@.%@", name, ext]];
 }
 
+- (void)testOPMLExport {
+	RSOPMLItem *doc = [RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Greetings from CCC",
+													   @"dateCreated" : @"2018-12-27 23:12:04 +0100",
+													   @"ownerName" : @"RSXML Parser"}];
+	[doc addChild:[RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Feed Title 1",
+												   OPMLHMTLURLKey : @"http://www.feed1.com/",
+												   OPMLXMLURLKey : @"http://www.feed1.com/feed.rss",
+												   OPMLTypeKey : @"rss"}]];
+	[doc addChild:[RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Feed Title 2",
+												   OPMLHMTLURLKey : @"http://www.feed2.com/",
+												   OPMLXMLURLKey : @"http://www.feed2.com/feed.atom",
+												   OPMLTypeKey : @"rss"}]];
+	
+	NSString *exportString = [doc exportOPMLAsString];
+	NSLog(@"%@", exportString);
+	
+	NSData *importData = [exportString dataUsingEncoding:NSUTF8StringEncoding];
+	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:importData urlString:@"none"];
+	XCTAssertEqual(xmlData.parserClass, [RSOPMLParser class]);
+	RSOPMLParser *parser = [[RSOPMLParser alloc] initWithXMLData:xmlData];
+	XCTAssertNotNil(parser);
+	NSError *error;
+	RSOPMLItem *document = [parser parseSync:&error];
+	XCTAssertNil(error);
+	XCTAssertEqual(document.children.count, 2u);
+	XCTAssertEqualObjects(document.displayName, @"Greetings from CCC");
+	XCTAssertEqualObjects(document.children.firstObject.displayName, @"Feed Title 1");
+	XCTAssertEqualObjects([document.children.lastObject attributeForKey:OPMLXMLURLKey], @"http://www.feed2.com/feed.atom");
+	
+	NSLog(@"%@", [document recursiveDescription]);
+}
+
 - (void)testNotOPML {
 
 	NSError *error;

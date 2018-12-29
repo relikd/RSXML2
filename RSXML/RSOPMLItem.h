@@ -41,9 +41,12 @@ extern NSString *OPMLXMLURLKey; //xmlUrl
 @property (nonatomic, readonly) BOOL isFolder; // true if children.count > 0
 @property (nonatomic, readonly) NSString *displayName; //May be nil.
 
++ (instancetype)itemWithAttributes:(NSDictionary *)attribs;
+
 - (void)addChild:(RSOPMLItem *)child;
 - (void)setAttribute:(id)value forKey:(NSString *)key;
 - (id)attributeForKey:(NSString *)key;
 
 - (NSString *)recursiveDescription;
+- (NSString *)exportOPMLAsString;
 @end

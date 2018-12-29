@@ -42,26 +42,38 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 
 @implementation RSOPMLItem
 
++ (instancetype)itemWithAttributes:(NSDictionary *)attribs {
+	RSOPMLItem *item = [[super alloc] init];
+	[item setAttributes:attribs];
+	return item;
+}
+
+/// @return A copy of the internal array.
 - (NSArray *)children {
 	return [self.mutableChildren copy];
 }
 
+/// Replace internal array with new one.
 - (void)setChildren:(NSArray<RSOPMLItem*>*)children {
 	self.mutableChildren = [children mutableCopy];
 }
 
+/// @return A copy of the internal dictionary.
 - (NSDictionary *)attributes {
 	return [self.mutableAttributes copy];
 }
 
+/// Replace internal dictionary with new one.
 - (void)setAttributes:(NSDictionary *)attributes {
 	self.mutableAttributes = [attributes mutableCopy];
 }
 
+/// @return @c YES if @c children.count @c > @c 0.
 - (BOOL)isFolder {
 	return self.mutableChildren.count > 0;
 }
 
+/// @return Value for @c OPMLTitleKey. If not set, use @c OPMLTextKey, else return @c nil.
 - (NSString *)displayName {
 	NSString *title = [self attributeForKey:OPMLTitleKey];
 	if (!title) {
@@ -70,6 +82,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	return title;
 }
 
+/// Appends one child to the internal children array (creates new empty array if necessary).
 - (void)addChild:(RSOPMLItem *)child {
 	if (!self.mutableChildren) {
 		self.mutableChildren = [NSMutableArray new];
@@ -77,6 +90,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	[self.mutableChildren addObject:child];
 }
 
+/// Sets a value in the internal dictionary (creates new empty dictionary if necessary).
 - (void)setAttribute:(id)value forKey:(NSString *)key {
 	if (!self.mutableAttributes) {
 		self.mutableAttributes = [NSMutableDictionary new];
@@ -84,6 +98,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	[self.mutableAttributes setValue:value forKey:key];
 }
 
+/// @return Value for key (case-independent).
 - (id)attributeForKey:(NSString *)key {
 	if (self.mutableAttributes.count > 0 && key && key.length > 0) {
 		return [self.mutableAttributes rsxml_objectForCaseInsensitiveKey:key];
@@ -102,6 +117,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	return str;
 }
 
+/// Used by @c recursiveDescription.
 - (void)appendStringRecursive:(NSMutableString *)str indent:(NSString *)prefix {
 	[str appendFormat:@"%@%@\n", prefix, self];
 	if (self.isFolder) {
@@ -112,10 +128,65 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	}
 }
 
+/// Print object description for debugging purposes.
 - (NSString *)recursiveDescription {
 	NSMutableString *mStr = [NSMutableString new];
 	[self appendStringRecursive:mStr indent:@""];
 	return mStr;
+}
+
+/// @return Nicely formatted string that can be used to export as @c .opml file.
+- (NSString *)exportOPMLAsString {
+	NSMutableString *str = [NSMutableString new];
+	[str appendString:
+	 @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	 @"<opml version=\"1.0\">\n"
+	 @"    <head>\n"];
+	[self appendHeaderTagsToString:str prefix:@"        "];
+	[str appendString:
+	 @"    </head>\n"
+	 @"    <body>\n"];
+	for (RSOPMLItem *child in _mutableChildren) {
+		[child appendChildAttributesToString:str prefix:@"        "];
+	}
+	[str appendString:
+	 @"    </body>\n"
+	 @"</opml>"];
+	return str;
+}
+
+/**
+ The header attributes are added as separate tags. Quite opposite to outline items.
+ @note Used by @c exportOPMLAsString.
+ */
+- (void)appendHeaderTagsToString:(NSMutableString *)str prefix:(NSString *)prefix {
+	for (NSString *key in _mutableAttributes) {
+		[str appendFormat:@"%1$@<%2$@>%3$@</%2$@>\n", prefix, key, _mutableAttributes[key]];
+	}
+}
+
+/**
+ Create outline items for this @c RSOPMLItem and all children recursively.
+ @note Used by @c exportOPMLAsString.
+ */
+- (void)appendChildAttributesToString:(NSMutableString *)str prefix:(NSString *)prefix {
+	NSString *name = [self displayName];
+	[str appendFormat:@"%1$@<outline title=\"%2$@\" text=\"%2$@\"", prefix, name]; // name comes first
+	for (NSString *key in _mutableAttributes) {
+		if ([key isEqualToString:OPMLTitleKey] || [key isEqualToString:OPMLTextKey]) {
+			continue;
+		}
+		[str appendFormat:@" %@=\"%@\"", key, _mutableAttributes[key]];
+	}
+	[str appendString:@">"];
+	if (_mutableChildren.count > 0) {
+		[str appendString:@"\n"];
+		for (RSOPMLItem *child in _mutableChildren) {
+			[child appendChildAttributesToString:str prefix:[prefix stringByAppendingString:@"    "]];
+		}
+		[str appendString:prefix];
+	}
+	[str appendString:@"</outline>\n"];
 }
 
 @end
