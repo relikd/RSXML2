@@ -223,12 +223,8 @@ static NSString *kRelatedValue = @"related";
 			else if (EqualBytes(localName, "source", 6)) {
 				self.parsingSource = NO;
 			}
-			return;
-		case 8:
-			if (!self.parsingArticle && !self.parsingSource && self.parsedFeed.subtitle.length == 0) {
-				if (EqualBytes(localName, "subtitle", 8)) {
-					self.parsedFeed.subtitle = SAXParser.currentStringWithTrimmedWhitespace;
-				}
+			else if (isArticle && EqualBytes(localName, "issued", 6)) { // Atom 0.3 date
+				self.currentArticle.datePublished = [self dateFromCharacters:SAXParser.currentCharacters];;
 			}
 			return;
 		case 7:
@@ -242,6 +238,16 @@ static NSString *kRelatedValue = @"related";
 				else if (EqualBytes(localName, "updated", 7)) {
 					self.currentArticle.dateModified = [self dateFromCharacters:SAXParser.currentCharacters];
 				}
+			}
+			return;
+		case 8:
+			if (!self.parsingArticle && !self.parsingSource && self.parsedFeed.subtitle.length == 0) {
+				if (EqualBytes(localName, "subtitle", 8)) {
+					self.parsedFeed.subtitle = SAXParser.currentStringWithTrimmedWhitespace;
+				}
+			}
+			else if (isArticle && EqualBytes(localName, "modified", 8)) { // Atom 0.3 date
+				self.currentArticle.dateModified = [self dateFromCharacters:SAXParser.currentCharacters];;
 			}
 			return;
 		case 9:

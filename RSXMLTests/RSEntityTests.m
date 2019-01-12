@@ -58,37 +58,32 @@
 }
 
 - (void)testNotEntities {
-	
 	NSString *s = @"&&\t\nFoo & Bar &0; Baz & 1238 4948 More things &foobar;&";
-	NSString *result = [s rs_stringByDecodingHTMLEntities];
-	XCTAssertEqualObjects(result, s);
+	XCTAssertEqualObjects([s rs_stringByDecodingHTMLEntities], s);
 }
 
 - (void)testURLs {
-	
-	NSString *urlString = @"http://www.nytimes.com/2015/09/05/us/at-west-point-annual-pillow-fight-becomes-weaponized.html?mwrsm=Email&#038;_r=1&#038;pagewanted=all";
+	NSString *s = @"http://www.nytimes.com/2015/09/05/us/at-west-point-annual-pillow-fight-becomes-weaponized.html?mwrsm=Email&#038;_r=1&#038;pagewanted=all";
 	NSString *expectedResult = @"http://www.nytimes.com/2015/09/05/us/at-west-point-annual-pillow-fight-becomes-weaponized.html?mwrsm=Email&_r=1&pagewanted=all";
-	
-	NSString *result = [urlString rs_stringByDecodingHTMLEntities];
-	XCTAssertEqualObjects(result, expectedResult);
+	XCTAssertEqualObjects([s rs_stringByDecodingHTMLEntities], expectedResult);
 }
 
 - (void)testEntityPlusWhitespace {
-	
 	NSString *s = @"&infin; Permalink";
 	NSString *expectedResult = @"∞ Permalink";
-	
-	NSString *result = [s rs_stringByDecodingHTMLEntities];
-	XCTAssertEqualObjects(result, expectedResult);
+	XCTAssertEqualObjects([s rs_stringByDecodingHTMLEntities], expectedResult);
 }
 
 - (void)testNonBreakingSpace {
-	
 	NSString *s = @"&nbsp;&#160; -- just some spaces";
 	NSString *expectedResult = [NSString stringWithFormat:@"%C%C -- just some spaces", 160, 160];
-	
-	NSString *result = [s rs_stringByDecodingHTMLEntities];
-	XCTAssertEqualObjects(result, expectedResult);
+	XCTAssertEqualObjects([s rs_stringByDecodingHTMLEntities], expectedResult);
+}
+
+- (void)test39encoding {
+	NSString *s = @"These are the times that try men&#39;s souls.";
+	NSString *expectedResult = @"These are the times that try men's souls.";
+	XCTAssertEqualObjects([s rs_stringByDecodingHTMLEntities], expectedResult);
 }
 
 @end

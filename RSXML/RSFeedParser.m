@@ -52,7 +52,7 @@
 
 /// @return currentString by removing HTML encoded entities.
 - (NSString *)decodeHTMLEntities:(NSString *)str {
-	return [str rs_stringByDecodingHTMLEntities];
+	return [str rsxml_stringByDecodingHTMLEntities];
 }
 
 @end

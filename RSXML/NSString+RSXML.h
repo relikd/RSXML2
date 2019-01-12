@@ -26,7 +26,7 @@
 
 @interface NSString (RSXML)
 
-- (NSString *)rs_stringByDecodingHTMLEntities;
+- (NSString *)rsxml_stringByDecodingHTMLEntities;
 - (nonnull NSString *)rsxml_md5HashString;
 - (nullable NSString *)absoluteURLWithBase:(nonnull NSURL *)baseURL;
 

@@ -61,7 +61,7 @@
 	return self;
 }
 
-- (NSString *)rs_stringByDecodingHTMLEntities {
+- (NSString *)rsxml_stringByDecodingHTMLEntities {
 	
 	@autoreleasepool {
 		
@@ -315,7 +315,7 @@ static NSDictionary *RSEntitiesDictionary(void) {
 		  @"#255": @"ÿ",
 		  @"#32": @" ",
 		  @"#34": @"\"",
-		  @"#39": @"",
+		  @"#39": @"'",
 		  @"#8194": @" ",
 		  @"#8195": @" ",
 		  @"#8211": @"-",
