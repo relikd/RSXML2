@@ -118,9 +118,9 @@
 	});
 }
 
-/// @return @c YES if @c .xmlInputError is not @c nil.
+/// @return @c YES if @c .xmlInputError is @c nil.
 - (BOOL)canParse {
-	return (self.xmlInputError != nil);
+	return (self.xmlInputError == nil);
 }
 
 
@@ -150,10 +150,10 @@
 	if (!xmlParserClass)
 		return NO;
 	if (xmlParserClass != [self class]) { // && !_xmlInputError
-		RSXMLError current = [self getExpectedErrorForClass:[self class]];
-		RSXMLError expected = [self getExpectedErrorForClass:xmlParserClass];
+		RSXMLError current = [self getExpectedErrorForClass:xmlParserClass];
+		RSXMLError expected = [self getExpectedErrorForClass:[self class]];
 		if (current != expected) {
-			_xmlInputError =  RSXMLMakeErrorWrongParser(current, expected);
+			_xmlInputError =  RSXMLMakeErrorWrongParser(expected, current);
 			return NO;
 		}
 	}

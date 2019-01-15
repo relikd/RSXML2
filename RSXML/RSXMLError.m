@@ -36,8 +36,8 @@ const char * parserDescriptionForError(RSXMLError code) {
 	}
 }
 
-NSString * getErrorMessageForRSXMLError(RSXMLError code, RSXMLError expected);
-NSString * getErrorMessageForRSXMLError(RSXMLError code, RSXMLError expected) {
+NSString * getErrorMessageForRSXMLError(RSXMLError code, RSXMLError other);
+NSString * getErrorMessageForRSXMLError(RSXMLError code, RSXMLError other) {
 	switch (code) { // switch statement will warn if an enum value is missing
 		case RSXMLErrorNoData:
 			return @"Can't parse data. Empty data.";
@@ -53,7 +53,7 @@ NSString * getErrorMessageForRSXMLError(RSXMLError code, RSXMLError expected) {
 		case RSXMLErrorExpectingOPML:
 		case RSXMLErrorExpectingFeed:
 			return [NSString stringWithFormat:@"Can't parse XML. %s expected, but %s found.",
-					parserDescriptionForError(code), parserDescriptionForError(expected)];
+					parserDescriptionForError(code), parserDescriptionForError(other)];
 	}
 }
 
@@ -61,7 +61,7 @@ NSError * RSXMLMakeError(RSXMLError code) {
 	return RSXMLMakeErrorWrongParser(code, RSXMLErrorNoData);
 }
 
-NSError * RSXMLMakeErrorWrongParser(RSXMLError code, RSXMLError expected) {
-	return [NSError errorWithDomain:kRSXMLParserErrorDomain code:code
-						   userInfo:@{NSLocalizedDescriptionKey: getErrorMessageForRSXMLError(code, expected)}];
+NSError * RSXMLMakeErrorWrongParser(RSXMLError expected, RSXMLError other) {
+	return [NSError errorWithDomain:kRSXMLParserErrorDomain code:expected
+						   userInfo:@{NSLocalizedDescriptionKey: getErrorMessageForRSXMLError(expected, other)}];
 }

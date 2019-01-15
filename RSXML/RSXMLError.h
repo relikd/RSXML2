@@ -42,4 +42,4 @@ typedef NS_ERROR_ENUM(kRSXMLParserErrorDomain, RSXMLError) {
 };
 
 NSError * RSXMLMakeError(RSXMLError code);
-NSError * RSXMLMakeErrorWrongParser(RSXMLError code, RSXMLError expected);
+NSError * RSXMLMakeErrorWrongParser(RSXMLError expected, RSXMLError other);

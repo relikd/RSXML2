@@ -95,9 +95,8 @@
 	RSXMLData *xmlData = [self xmlFile:@"OneFootTsunami" extension:@"atom"];
 	XCTAssertEqual(xmlData.parserClass, [RSAtomParser class]);
 	
-	RSFeedParser *parser = [RSFeedParser parserWithXMLData:xmlData];
 	NSError *error = nil;
-	RSParsedFeed *parsedFeed = [parser parseSync:&error];
+	RSParsedFeed *parsedFeed = [[xmlData getParser] parseSync:&error];
 	XCTAssertEqualObjects(parsedFeed.title, @"One Foot Tsunami");
 	XCTAssertEqualObjects(parsedFeed.subtitle, @"Slightly less disappointing than it sounds");
 	XCTAssertEqualObjects(parsedFeed.link, @"http://onefoottsunami.com");
@@ -237,6 +236,35 @@
 #pragma mark - Variety Test & Other
 
 
+- (void)testCorrectParserSelection {
+	RSXMLData *xmlData = [self xmlFile:@"OneFootTsunami" extension:@"atom"];
+	RSFeedParser *rightParser = [RSFeedParser parserWithXMLData:xmlData];
+	RSOPMLParser *wrongParser = [RSOPMLParser parserWithXMLData:xmlData];
+	XCTAssertTrue([rightParser canParse]);
+	XCTAssertFalse([wrongParser canParse]);
+	NSError *error;
+	[rightParser parseSync:&error];
+	XCTAssertNil(error);
+	[wrongParser parseSync:&error];
+	XCTAssertNotNil(error);
+	XCTAssertEqual(error.code, RSXMLErrorExpectingOPML);
+	XCTAssertEqualObjects(error, RSXMLMakeErrorWrongParser(RSXMLErrorExpectingOPML, RSXMLErrorExpectingFeed));
+	XCTAssertEqualObjects(error.localizedDescription, @"Can't parse XML. OPML data expected, but RSS or Atom feed found.");
+}
+
+- (void)testDetermineParserClassPerformance {
+	
+	RSXMLData *xmlData = [self xmlFile:@"DaringFireball" extension:@"atom"];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+	[self measureBlock:^{
+		for (NSInteger i = 0; i < 100; i++) {
+			[xmlData performSelector:@selector(determineParserClass)];
+		}
+	}];
+#pragma clang diagnostic pop
+}
+
 - (void)testDownloadedFeeds {
 	NSError *error = nil;
 	int i = 0;
@@ -266,19 +294,6 @@
 	RSParsedFeed *parsedFeed = [[xmlData getParser] parseSync:&error];
 	printf("\n\nparsing: %s\n%s\n", xmlData.urlString.UTF8String, parsedFeed.description.UTF8String);
 	XCTAssertNil(error);
-}
-
-- (void)testDetermineParserClassPerformance {
-	
-	RSXMLData *xmlData = [self xmlFile:@"DaringFireball" extension:@"atom"];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-	[self measureBlock:^{
-		for (NSInteger i = 0; i < 100; i++) {
-			[xmlData performSelector:@selector(determineParserClass)];
-		}
-	}];
-#pragma clang diagnostic pop
 }
 
 @end
