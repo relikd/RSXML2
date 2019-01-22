@@ -46,16 +46,17 @@
 	RSOPMLItem *doc = [RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Greetings from CCC",
 													   @"dateCreated" : @"2018-12-27 23:12:04 +0100",
 													   @"ownerName" : @"RSXML Parser"}];
-	[doc addChild:[RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Feed Title 1",
+	[doc addChild:[RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Feed \"Title\" 1",
 												   OPMLHMTLURLKey : @"http://www.feed1.com/",
 												   OPMLXMLURLKey : @"http://www.feed1.com/feed.rss",
 												   OPMLTypeKey : @"rss"}]];
-	[doc addChild:[RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Feed Title 2",
+	[doc addChild:[RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Feed 'Title' 2",
 												   OPMLHMTLURLKey : @"http://www.feed2.com/",
 												   OPMLXMLURLKey : @"http://www.feed2.com/feed.atom",
 												   OPMLTypeKey : @"rss"}]];
 	
-	NSString *exportString = [doc exportOPMLAsString];
+	NSXMLDocument *xml = [doc exportXML];
+	NSString *exportString = [xml XMLStringWithOptions:NSXMLNodePrettyPrint];
 	NSLog(@"%@", exportString);
 	
 	NSData *importData = [exportString dataUsingEncoding:NSUTF8StringEncoding];
@@ -68,7 +69,8 @@
 	XCTAssertNil(error);
 	XCTAssertEqual(document.children.count, 2u);
 	XCTAssertEqualObjects(document.displayName, @"Greetings from CCC");
-	XCTAssertEqualObjects(document.children.firstObject.displayName, @"Feed Title 1");
+	XCTAssertEqualObjects(document.children.firstObject.displayName, @"Feed \"Title\" 1");
+	XCTAssertEqualObjects(document.children.lastObject.displayName, @"Feed 'Title' 2");
 	XCTAssertEqualObjects([document.children.lastObject attributeForKey:OPMLXMLURLKey], @"http://www.feed2.com/feed.atom");
 	
 	NSLog(@"%@", [document recursiveDescription]);

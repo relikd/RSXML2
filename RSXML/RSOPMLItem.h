@@ -48,5 +48,5 @@ extern NSString *OPMLXMLURLKey; //xmlUrl
 - (id)attributeForKey:(NSString *)key;
 
 - (NSString *)recursiveDescription;
-- (NSString *)exportOPMLAsString;
+- (NSXMLDocument *)exportXML;
 @end

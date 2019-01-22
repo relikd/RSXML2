@@ -135,58 +135,41 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	return mStr;
 }
 
-/// @return Nicely formatted string that can be used to export as @c .opml file.
-- (NSString *)exportOPMLAsString {
-	NSMutableString *str = [NSMutableString new];
-	[str appendString:
-	 @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	 @"<opml version=\"1.0\">\n"
-	 @"    <head>\n"];
-	[self appendHeaderTagsToString:str prefix:@"        "];
-	[str appendString:
-	 @"    </head>\n"
-	 @"    <body>\n"];
+/// Can be used to export directly to @c .opml file.
+- (NSXMLDocument *)exportXML {
+	NSXMLElement *head = [NSXMLElement elementWithName:@"head"];
+	for (NSString *key in _mutableAttributes) {
+		NSString *val = [NSString stringWithFormat:@"%@", _mutableAttributes[key]];
+		[head addChild:[NSXMLElement elementWithName:key stringValue:val]];
+	}
+	
+	NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
 	for (RSOPMLItem *child in _mutableChildren) {
-		[child appendChildAttributesToString:str prefix:@"        "];
+		[child appendChildToNode:body];
 	}
-	[str appendString:
-	 @"    </body>\n"
-	 @"</opml>"];
-	return str;
+	
+	NSXMLElement *opml = [NSXMLElement elementWithName:@"opml"];
+	[opml addAttribute:[NSXMLNode attributeWithName:@"version" stringValue:@"1.0"]];
+	[opml addChild:head];
+	[opml addChild:body];
+	
+	NSXMLDocument *xml = [NSXMLDocument documentWithRootElement:opml];
+	xml.version = @"1.0";
+	xml.characterEncoding = @"UTF-8";
+	return xml;
 }
 
-/**
- The header attributes are added as separate tags. Quite opposite to outline items.
- @note Used by @c exportOPMLAsString.
- */
-- (void)appendHeaderTagsToString:(NSMutableString *)str prefix:(NSString *)prefix {
-	for (NSString *key in _mutableAttributes) {
-		[str appendFormat:@"%1$@<%2$@>%3$@</%2$@>\n", prefix, key, _mutableAttributes[key]];
-	}
-}
-
-/**
- Create outline items for this @c RSOPMLItem and all children recursively.
- @note Used by @c exportOPMLAsString.
- */
-- (void)appendChildAttributesToString:(NSMutableString *)str prefix:(NSString *)prefix {
+/// Recursively add XMLNode children.
+- (void)appendChildToNode:(NSXMLElement *)parent {
+	NSXMLElement *outline = [NSXMLElement elementWithName:@"outline"];
+	[parent addChild:outline];
 	NSString *name = [self displayName];
-	[str appendFormat:@"%1$@<outline title=\"%2$@\" text=\"%2$@\"", prefix, name]; // name comes first
-	for (NSString *key in _mutableAttributes) {
-		if ([key isEqualToString:OPMLTitleKey] || [key isEqualToString:OPMLTextKey]) {
-			continue;
-		}
-		[str appendFormat:@" %@=\"%@\"", key, _mutableAttributes[key]];
+	[outline addAttribute:[NSXMLNode attributeWithName:OPMLTitleKey stringValue:name]];
+	[outline addAttribute:[NSXMLNode attributeWithName:OPMLTextKey stringValue:name]];
+	[outline setAttributesAsDictionary:_mutableAttributes];
+	for (RSOPMLItem *child in _mutableChildren) {
+		[child appendChildToNode:outline];
 	}
-	[str appendString:@">"];
-	if (_mutableChildren.count > 0) {
-		[str appendString:@"\n"];
-		for (RSOPMLItem *child in _mutableChildren) {
-			[child appendChildAttributesToString:str prefix:[prefix stringByAppendingString:@"    "]];
-		}
-		[str appendString:prefix];
-	}
-	[str appendString:@"</outline>\n"];
 }
 
 @end
