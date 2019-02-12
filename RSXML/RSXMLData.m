@@ -33,7 +33,7 @@
 @implementation RSXMLData
 
 static const NSUInteger minNumberOfBytesToSearch = 20;
-static const NSInteger numberOfCharactersToSearch = 4096;
+static const NSUInteger numberOfCharactersToSearch = 4096;
 
 - (instancetype)initWithData:(NSData *)data urlString:(NSString *)urlString {
 	self = [super init];
@@ -157,18 +157,14 @@ static const NSInteger numberOfCharactersToSearch = 4096;
 			_parserError = RSXMLMakeError(RSXMLErrorNoSuitableParser);
 			return nil;
 		}
-		
-		NSRange rangeToSearch = NSMakeRange(0, numberOfCharactersToSearch);
-		if (s.length < numberOfCharactersToSearch) {
-			rangeToSearch.length = s.length;
-		}
-		
+
+		NSRange wholeRange = NSMakeRange(0, s.length);
 		for (Class parserClass in [self listOfParserClasses]) {
 			NSArray<const NSString *> *tags = [parserClass parserRequireOrderedTags];
 			
 			NSUInteger oldPos = 0;
 			for (NSString *tag in tags) {
-				NSUInteger newPos = [s rangeOfString:tag options:NSCaseInsensitiveSearch range:rangeToSearch].location;
+				NSUInteger newPos = [s rangeOfString:tag options:NSCaseInsensitiveSearch range:wholeRange].location;
 				if (newPos == NSNotFound || newPos < oldPos) {
 					oldPos = NSNotFound;
 					break;
