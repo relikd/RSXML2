@@ -265,6 +265,28 @@
 #pragma clang diagnostic pop
 }
 
+- (void)testLowerAsciiCharacters {
+	NSError *error = nil;
+	RSXMLData *xmlData = [self xmlFile:@"lower-ascii" extension:@"rss"];
+	RSXMLParser *parser = [xmlData getParser];
+	RSParsedFeed *parsedFeed = [parser parseSync:&error];
+	XCTAssertNotNil(error);
+	XCTAssertEqual(parsedFeed.articles.count, 2);
+	parser.dontStopOnLowerAsciiBytes = YES;
+	parsedFeed = [parser parseSync:&error];
+	XCTAssertNil(error);
+	XCTAssertEqual(parsedFeed.articles.count, 5);
+}
+
+- (void)testBrokenXML {
+	NSError *error = nil;
+	RSXMLData *xmlData = [self xmlFile:@"broken" extension:@"rss"];
+	[[xmlData getParser] parseSync:&error];
+	XCTAssertNotNil(error);
+	XCTAssertEqual(error.code, 76);
+	XCTAssertEqualObjects(error.localizedDescription, @"Opening and ending tag mismatch: channel line 0 and rss");
+}
+
 - (void)testDownloadedFeeds {
 	NSError *error = nil;
 	int i = 0;

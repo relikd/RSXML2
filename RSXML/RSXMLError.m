@@ -23,7 +23,6 @@
 
 #import "RSXMLError.h"
 
-const NSErrorDomain kLIBXMLParserErrorDomain = @"LIBXMLParserErrorDomain";
 const NSErrorDomain kRSXMLParserErrorDomain = @"RSXMLParserErrorDomain";
 
 const char * parserDescriptionForError(RSXMLError code);

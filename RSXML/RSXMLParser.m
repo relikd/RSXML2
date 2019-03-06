@@ -21,8 +21,6 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <libxml/xmlerror.h>
-
 #import "RSXMLParser.h"
 #import "RSXMLData.h"
 #import "RSXMLError.h"
@@ -72,6 +70,22 @@
 }
 
 /**
+ XML allows only specific lower ascii characters (<0x20), namely 0x9, 0xA, and 0xD.
+ See: https://www.w3.org/TR/xml/#charsets
+ */
+- (void)replaceLowerAsciiBytesWithSpace {
+	[_xmlData enumerateByteRangesUsingBlock:^(const void * bytes, NSRange byteRange, BOOL * stop) {
+		NSUInteger max = byteRange.location + byteRange.length;
+		for (NSUInteger i = byteRange.location; i < max; i++) {
+			unsigned char c = ((unsigned char*)bytes)[i];
+			if (c < 0x20 && c != 0x9 && c != 0xA && c != 0xD) {
+				((unsigned char*)bytes)[i] = ' '; // replace lower ascii with blank
+			}
+		}
+	}];
+}
+
+/**
  Parse the XML data on whatever thread this method is called.
  
  @param error Sets @c error if parser gets unrecognized data or libxml runs into a parsing error.
@@ -82,24 +96,16 @@
 		if (error) *error = _xmlInputError;
 		return nil;
 	}
-	
+	if (_dontStopOnLowerAsciiBytes) {
+		[self replaceLowerAsciiBytesWithSpace];
+	}
 	if ([self respondsToSelector:@selector(xmlParserWillStartParsing)] && ![self xmlParserWillStartParsing])
 		return nil;
 
 	@autoreleasepool {
-		xmlResetLastError();
 		[_parser parseBytes:_xmlData.bytes numberOfBytes:_xmlData.length];
-		if (error) {
-			xmlErrorPtr err = xmlGetLastError();
-			if (err && err->level == XML_ERR_FATAL) {
-				int errCode = err->code;
-				char * msg = err->message;
-				NSString *errMsg = [[NSString stringWithFormat:@"%s", msg] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-				*error = [NSError errorWithDomain:kLIBXMLParserErrorDomain code:errCode userInfo:@{NSLocalizedDescriptionKey: errMsg}];
-			}
-			xmlResetLastError();
-		}
 	}
+	if (error) *error = _parser.parsingError;
 	return [self xmlParserWillReturnDocument];
 }
 

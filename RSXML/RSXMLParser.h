@@ -58,6 +58,7 @@
 
 @interface RSXMLParser<__covariant T> : NSObject <RSXMLParserDelegate, RSSAXParserDelegate>
 @property (nonatomic, readonly, nonnull, copy) NSString *documentURI;
+@property (nonatomic, assign) BOOL dontStopOnLowerAsciiBytes;
 
 + (instancetype)parserWithXMLData:(RSXMLData * _Nonnull)xmlData;
 

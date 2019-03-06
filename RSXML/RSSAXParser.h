@@ -61,6 +61,7 @@
 
 
 @interface RSSAXParser : NSObject
+@property (nonatomic, strong, readonly) NSError *parsingError;
 @property (nonatomic, strong, readonly) NSData *currentCharacters;
 @property (nonatomic, strong, readonly) NSString *currentString;
 @property (nonatomic, strong, readonly) NSString *currentStringWithTrimmedWhitespace;

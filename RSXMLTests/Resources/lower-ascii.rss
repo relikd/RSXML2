@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0">
+<channel>
+	<title>Feed Title</title>
+<item>
+		<title>1</title>
+		<link>http://someurl.com/1/</link>
+		<description><![CDATA[Description of first]]></description>
+</item>
+<item>
+		<title>2</title>
+		<link>http://someurl.com/2/</link>
+		<description><![CDATA[Description with  NULL values]]></description>
+</item>
+<item>
+		<title>3</title>
+		<link>http://someurl.com/3/</link>
+		<description><![CDATA[Description of third]]></description>
+</item>
+<item>
+		<title>4</title>
+		<link>http://someurl.com/4/</link>
+		<description><![CDATA[Description of fourth]]></description>
+</item>
+<item>
+		<title>5</title>
+		<link>http://someurl.com/5/</link>
+		<description><![CDATA[Description of fifth]]></description>
+</item>
+	</channel>
+</rss>

@@ -27,6 +27,8 @@
 #import <libxml/parser.h>
 #import "RSSAXParser.h"
 
+const NSErrorDomain kLIBXMLParserErrorDomain = @"LIBXMLParserErrorDomain";
+
 
 @interface RSSAXParser ()
 @property (nonatomic, weak) id<RSSAXParserDelegate> delegate;
@@ -96,6 +98,8 @@ static xmlSAXHandler saxHandlerStruct;
  Initialize new xml or html parser context and start processing of data.
  */
 - (void)parseBytes:(const void *)bytes numberOfBytes:(NSUInteger)numberOfBytes {
+
+	_parsingError = nil;
 
 	if (self.context == nil) {
 		if (self.isHTMLParser) {
@@ -342,6 +346,11 @@ static xmlSAXHandler saxHandlerStruct;
 	}
 }
 
+- (void)xmlParsingErrorOccured:(NSError*)error {
+	if (!self.parsingError) // grep first encountered error
+		_parsingError = error;
+}
+
 @end
 
 
@@ -369,6 +378,20 @@ static void	endElementSAX_HTML(void *context, const xmlChar *localname) {
 	[(__bridge RSSAXParser *)context xmlEndHTMLElement:localname];
 }
 
+static void errorOccuredSAX(void *context, const char *format, ...) {
+	xmlErrorPtr err = xmlGetLastError();
+	if (err && err->level == XML_ERR_FATAL) {
+		int errCode = err->code;
+		char * msg = err->message;
+		NSString *errMsg = [[NSString stringWithFormat:@"%s", msg] stringByTrimmingCharactersInSet:
+							[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		NSError *error = [NSError errorWithDomain:kLIBXMLParserErrorDomain code:errCode
+										 userInfo:@{ NSLocalizedDescriptionKey: errMsg }];
+		[(__bridge RSSAXParser *)context xmlParsingErrorOccured:error];
+	}
+	xmlResetLastError();
+}
+
 
 static xmlSAXHandler saxHandlerStruct = {
 	nil,					/* internalSubset */
@@ -393,7 +416,7 @@ static xmlSAXHandler saxHandlerStruct = {
 	nil,					/* processingInstruction */
 	nil,					/* comment */
 	nil,					/* warning */
-	nil,					/* error */
+	errorOccuredSAX,		/* error */
 	nil,					/* fatalError //: unused error() get all the errors */
 	nil,					/* getParameterEntity */
 	nil,					/* cdataBlock */
