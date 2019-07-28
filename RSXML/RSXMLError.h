@@ -41,5 +41,5 @@ typedef NS_ERROR_ENUM(kRSXMLParserErrorDomain, RSXMLError) {
 	RSXMLErrorExpectingOPML        = 230
 };
 
-NSError * RSXMLMakeError(RSXMLError code);
-NSError * RSXMLMakeErrorWrongParser(RSXMLError expected, RSXMLError other);
+NSError * RSXMLMakeError(RSXMLError code, NSURL *uri);
+NSError * RSXMLMakeErrorWrongParser(RSXMLError expected, RSXMLError other, NSURL *uri);

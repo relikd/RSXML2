@@ -63,7 +63,7 @@
 	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:ext inDirectory:@"Resources"];
 	if (s == nil) return nil;
 	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
-	return [[RSXMLData alloc] initWithData:d urlString:[NSString stringWithFormat:@"%@.%@", name, ext]];
+	return [[RSXMLData alloc] initWithData:d url:[NSURL fileURLWithPath:s]];
 }
 
 - (RSFeedParser*)parserForFile:(NSString*)name extension:(NSString*)ext expect:(Class)cls {
@@ -248,7 +248,7 @@
 	[wrongParser parseSync:&error];
 	XCTAssertNotNil(error);
 	XCTAssertEqual(error.code, RSXMLErrorExpectingOPML);
-	XCTAssertEqualObjects(error, RSXMLMakeErrorWrongParser(RSXMLErrorExpectingOPML, RSXMLErrorExpectingFeed));
+	XCTAssertEqualObjects(error, RSXMLMakeErrorWrongParser(RSXMLErrorExpectingOPML, RSXMLErrorExpectingFeed, xmlData.url));
 	XCTAssertEqualObjects(error.localizedDescription, @"Can't parse XML. OPML data expected, but RSS or Atom feed found.");
 }
 
@@ -314,7 +314,7 @@
 	NSError *error = nil;
 	RSXMLData *xmlData = [self xmlFile:@"feed_1" extension:@"rss"];
 	RSParsedFeed *parsedFeed = [[xmlData getParser] parseSync:&error];
-	printf("\n\nparsing: %s\n%s\n", xmlData.urlString.UTF8String, parsedFeed.description.UTF8String);
+	printf("\n\nparsing: %s\n%s\n", xmlData.url.path.UTF8String, parsedFeed.description.UTF8String);
 	XCTAssertNil(error);
 }
 

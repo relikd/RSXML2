@@ -27,7 +27,7 @@
 @class RSParsedArticle;
 
 @interface RSParsedFeed : NSObject
-@property (nonatomic, readonly, nonnull) NSString *urlString;
+@property (nonatomic, readonly, nonnull) NSURL *url;
 @property (nonatomic, readonly, nonnull) NSDate *dateParsed;
 @property (nonatomic, readonly, nonnull) NSArray <RSParsedArticle *> *articles;
 
@@ -35,7 +35,7 @@
 @property (nonatomic, nullable) NSString *link;
 @property (nonatomic, nullable) NSString *subtitle;
 
-- (nonnull instancetype)initWithURLString:(NSString * _Nonnull)urlString;
+- (nonnull instancetype)initWithURL:(NSURL * _Nonnull)url;
 - (RSParsedArticle *)appendNewArticle;
 
 @end

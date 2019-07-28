@@ -37,7 +37,7 @@
 
 - (RSXMLData *)xmlData:(NSString *)title urlString:(NSString *)urlString {
 	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:title ofType:@"html" inDirectory:@"Resources"];
-	return [[RSXMLData alloc] initWithData:[[NSData alloc] initWithContentsOfFile:s] urlString:urlString];
+	return [[RSXMLData alloc] initWithData:[[NSData alloc] initWithContentsOfFile:s] url:[NSURL URLWithString:urlString]];
 }
 
 - (void)testDaringFireball {

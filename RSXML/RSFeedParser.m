@@ -35,7 +35,7 @@
 + (BOOL)isFeedParser { return YES; }
 
 - (BOOL)xmlParserWillStartParsing {
-	_parsedFeed = [[RSParsedFeed alloc] initWithURLString:self.documentURI];
+	_parsedFeed = [[RSParsedFeed alloc] initWithURL:self.documentURI];
 	return YES;
 }
 

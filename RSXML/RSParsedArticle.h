@@ -27,9 +27,9 @@
 
 @interface RSParsedArticle : NSObject
 
-- (nonnull instancetype)initWithFeedURL:(NSString * _Nonnull)feedURL dateParsed:(NSDate*)parsed;
+- (nonnull instancetype)initWithFeedURL:(NSURL * _Nonnull)feedURL dateParsed:(NSDate*)parsed;
 
-@property (nonatomic, readonly, nonnull) NSString *feedURL;
+@property (nonatomic, readonly, nonnull) NSURL *feedURL;
 @property (nonatomic, readonly, nonnull) NSDate *dateParsed;
 @property (nonatomic, readonly, nonnull) NSString *articleID; //Calculated. Don't get until other properties have been set.
 

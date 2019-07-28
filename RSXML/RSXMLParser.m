@@ -57,12 +57,12 @@
 - (instancetype)initWithXMLData:(nonnull RSXMLData *)xmlData {
 	self = [super init];
 	if (self) {
-		_documentURI = [xmlData.urlString copy];
+		_documentURI = [xmlData.url copy];
 		_xmlInputError = [xmlData.parserError copy];
 		[self checkIfParserMatches:xmlData.parserClass];
 		_xmlData = xmlData.data;
 		if (!_xmlData) {
-			_xmlInputError = RSXMLMakeError(RSXMLErrorNoData);
+			_xmlInputError = RSXMLMakeError(RSXMLErrorNoData, _documentURI);
 		}
 		_parser = [[RSSAXParser alloc] initWithDelegate:self];
 	}
@@ -159,7 +159,7 @@
 		RSXMLError current = [self getExpectedErrorForClass:xmlParserClass];
 		RSXMLError expected = [self getExpectedErrorForClass:[self class]];
 		if (current != expected) {
-			_xmlInputError =  RSXMLMakeErrorWrongParser(expected, current);
+			_xmlInputError =  RSXMLMakeErrorWrongParser(expected, current, _documentURI);
 			return NO;
 		}
 	}

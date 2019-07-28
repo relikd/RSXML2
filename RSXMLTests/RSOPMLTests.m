@@ -39,7 +39,7 @@
 	NSString *s = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:ext inDirectory:@"Resources"];
 	if (s == nil) return nil;
 	NSData *d = [[NSData alloc] initWithContentsOfFile:s];
-	return [[RSXMLData alloc] initWithData:d urlString:[NSString stringWithFormat:@"%@.%@", name, ext]];
+	return [[RSXMLData alloc] initWithData:d url:[NSURL fileURLWithPath:s]];
 }
 
 - (void)testOPMLExport {
@@ -60,7 +60,7 @@
 	NSLog(@"%@", exportString);
 	
 	NSData *importData = [exportString dataUsingEncoding:NSUTF8StringEncoding];
-	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:importData urlString:@"none"];
+	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:importData url:[NSURL URLWithString:@""]];
 	XCTAssertEqual(xmlData.parserClass, [RSOPMLParser class]);
 	RSOPMLParser *parser = [RSOPMLParser parserWithXMLData:xmlData];
 	XCTAssertNotNil(parser);
@@ -91,7 +91,7 @@
 	XCTAssertEqualObjects(error.domain, kRSXMLParserErrorDomain);
 
 	xmlData = [[RSXMLData alloc] initWithData:[[NSData alloc] initWithContentsOfFile:@"/System/Library/Kernels/kernel"]
-									urlString:@"/System/Library/Kernels/kernel"];
+									url:[NSURL fileURLWithPath:@"/System/Library/Kernels/kernel"]];
 	XCTAssertNotNil(xmlData.parserError);
 	XCTAssert(xmlData.parserError.code == RSXMLErrorMissingLeftCaret);
 	RSXMLParser *parser2 = [xmlData getParser];

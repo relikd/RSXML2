@@ -31,11 +31,11 @@
 
 @implementation RSParsedFeed
 
-- (instancetype)initWithURLString:(NSString *)urlString {
+- (instancetype)initWithURL:(NSURL *)url {
 	
 	self = [super init];
 	if (self) {
-		_urlString = urlString;
+		_url = url;
 		_mutableArticles = [NSMutableArray new];
 		_dateParsed = [NSDate date];
 	}
@@ -50,7 +50,7 @@
  Append new @c RSParsedArticle object to @c .articles and return newly inserted instance.
  */
 - (RSParsedArticle *)appendNewArticle {
-	RSParsedArticle *article = [[RSParsedArticle alloc] initWithFeedURL:self.urlString dateParsed:_dateParsed];
+	RSParsedArticle *article = [[RSParsedArticle alloc] initWithFeedURL:self.url dateParsed:_dateParsed];
 	[_mutableArticles addObject:article];
 	return article;
 }

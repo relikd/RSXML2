@@ -35,11 +35,11 @@
 static const NSUInteger minNumberOfBytesToSearch = 20;
 static const NSUInteger numberOfCharactersToSearch = 4096;
 
-- (instancetype)initWithData:(NSData *)data urlString:(NSString *)urlString {
+- (instancetype)initWithData:(NSData *)data url:(NSURL *)url {
 	self = [super init];
 	if (self) {
 		_data = data;
-		_urlString = urlString;
+		_url = url;
 		_parserError = nil;
 		_parserClass = [self determineParserClass]; // will set error
 		if (!_parserClass && _parserError)
@@ -112,11 +112,11 @@ static const NSUInteger numberOfCharactersToSearch = 4096;
 	// TODO: check for things like images and movies and return nil.
 	if (!_data || _data.length < minNumberOfBytesToSearch) {
 		// TODO: check size, type, etc.
-		_parserError = RSXMLMakeError(RSXMLErrorNoData);
+		_parserError = RSXMLMakeError(RSXMLErrorNoData, _url);
 		return nil;
 	}
 	if (NSNotFound == [self findCString:"<"]) {
-		_parserError = RSXMLMakeError(RSXMLErrorMissingLeftCaret);
+		_parserError = RSXMLMakeError(RSXMLErrorMissingLeftCaret, _url);
 		return nil;
 	}
 	if ([self matchAll:(const char*[]){"<rss", "<channel"} count:2]) { // RSS
@@ -136,7 +136,7 @@ static const NSUInteger numberOfCharactersToSearch = 4096;
 		return [RSHTMLMetadataParser class];
 	}
 	if ([self findCString:"<errors xmlns='http://schemas.google"] != NSNotFound) {
-		_parserError = RSXMLMakeError(RSXMLErrorContainsXMLErrorsTag);
+		_parserError = RSXMLMakeError(RSXMLErrorContainsXMLErrorsTag, _url);
 		return nil;
 	}
 	// else: try slower NSString conversion and search case insensitive.
@@ -154,7 +154,7 @@ static const NSUInteger numberOfCharactersToSearch = 4096;
 			s = [[NSString alloc] initWithBytesNoCopy:(void *)_data.bytes length:_data.length encoding:NSUnicodeStringEncoding freeWhenDone:NO];
 		}
 		if (!s) {
-			_parserError = RSXMLMakeError(RSXMLErrorNoSuitableParser);
+			_parserError = RSXMLMakeError(RSXMLErrorNoSuitableParser, _url);
 			return nil;
 		}
 
@@ -177,7 +177,7 @@ static const NSUInteger numberOfCharactersToSearch = 4096;
 		}
 	}
 	// Try RSS anyway? libxml would return a parsing error
-	_parserError = RSXMLMakeError(RSXMLErrorNoSuitableParser);
+	_parserError = RSXMLMakeError(RSXMLErrorNoSuitableParser, _url);
 	return nil;
 }
 

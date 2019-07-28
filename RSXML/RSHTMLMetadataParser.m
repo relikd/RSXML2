@@ -30,7 +30,6 @@
 #import "NSDictionary+RSXML.h"
 
 @interface RSHTMLMetadataParser()
-@property (nonatomic, readonly) NSURL *baseURL;
 @property (nonatomic) NSString *faviconLink;
 @property (nonatomic) NSMutableArray<RSHTMLMetadataIconLink*> *iconLinks;
 @property (nonatomic) NSMutableArray<RSHTMLMetadataFeedLink*> *feedLinks;
@@ -43,7 +42,6 @@
 + (BOOL)isHTMLParser { return YES; }
 
 - (BOOL)xmlParserWillStartParsing {
-	_baseURL = [NSURL URLWithString:self.documentURI];
 	_iconLinks = [NSMutableArray new];
 	_feedLinks = [NSMutableArray new];
 	return YES;
@@ -90,11 +88,11 @@
 	rel = [rel lowercaseString];
 	
 	if ([rel isEqualToString:@"shortcut icon"]) {
-		self.faviconLink = [link absoluteURLWithBase:self.baseURL];
+		self.faviconLink = [link absoluteURLWithBase:self.documentURI];
 	}
 	else if ([rel isEqualToString:@"icon"] || [rel hasPrefix:@"apple-touch-icon"]) { // also matching "apple-touch-icon-precomposed"
 		RSHTMLMetadataIconLink *icon = [RSHTMLMetadataIconLink new];
-		icon.link = [link absoluteURLWithBase:self.baseURL];
+		icon.link = [link absoluteURLWithBase:self.documentURI];
 		icon.title = rel;
 		icon.sizes = [attribs rsxml_objectForCaseInsensitiveKey:@"sizes"];
 		[self.iconLinks addObject:icon];
@@ -103,7 +101,7 @@
 		RSFeedType type = RSFeedTypeFromLinkTypeAttribute([attribs rsxml_objectForCaseInsensitiveKey:@"type"]);
 		if (type != RSFeedTypeNone) {
 			RSHTMLMetadataFeedLink *feedLink = [RSHTMLMetadataFeedLink new];
-			feedLink.link = [link absoluteURLWithBase:self.baseURL];
+			feedLink.link = [link absoluteURLWithBase:self.documentURI];
 			feedLink.title = [attribs rsxml_objectForCaseInsensitiveKey:@"title"];
 			feedLink.type = type;
 			[self.feedLinks addObject:feedLink];

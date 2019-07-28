@@ -29,7 +29,6 @@
 #import "NSDictionary+RSXML.h"
 
 @interface RSHTMLLinkParser()
-@property (nonatomic, readonly) NSURL *baseURL;
 @property (nonatomic) NSMutableArray<RSHTMLMetadataAnchor*> *mutableLinksList;
 @property (nonatomic) NSMutableString *currentText;
 @end
@@ -41,7 +40,6 @@
 + (BOOL)isHTMLParser { return YES; }
 
 - (BOOL)xmlParserWillStartParsing {
-	_baseURL = [NSURL URLWithString:self.documentURI];
 	_mutableLinksList = [NSMutableArray new];
 	return YES;
 }
@@ -69,7 +67,7 @@
 		[self.mutableLinksList addObject:obj];
 		// set link properties
 		obj.tooltip = [attribs rsxml_objectForCaseInsensitiveKey:@"title"];
-		obj.link = [[NSURL URLWithString:href relativeToURL:self.baseURL] absoluteString];
+		obj.link = [[NSURL URLWithString:href relativeToURL:self.documentURI] absoluteString];
 		// begin storing data for link description
 		[SAXParser beginStoringCharacters];
 		self.currentText = [NSMutableString new];

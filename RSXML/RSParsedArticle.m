@@ -32,7 +32,7 @@
 
 @implementation RSParsedArticle
 
-- (instancetype)initWithFeedURL:(NSString *)feedURL dateParsed:(NSDate*)parsed {
+- (instancetype)initWithFeedURL:(NSURL *)feedURL dateParsed:(NSDate*)parsed {
 	
 	NSParameterAssert(feedURL != nil);
 	
@@ -72,7 +72,7 @@
 - (NSString *)calculatedUniqueID {
 
 	NSAssert(self.feedURL != nil, @"Feed URL should always be set!");
-	NSMutableString *s = [NSMutableString stringWithString:self.feedURL];
+	NSMutableString *s = [NSMutableString stringWithFormat:@"%@", self.feedURL];
 	
 	if (self.guid.length > 0) {
 		[s appendString:self.guid];

@@ -56,11 +56,16 @@ NSString * getErrorMessageForRSXMLError(RSXMLError code, RSXMLError other) {
 	}
 }
 
-NSError * RSXMLMakeError(RSXMLError code) {
-	return RSXMLMakeErrorWrongParser(code, RSXMLErrorNoData);
+NSError * RSXMLMakeError(RSXMLError code, NSURL *uri) {
+	return RSXMLMakeErrorWrongParser(code, RSXMLErrorNoData, uri);
 }
 
-NSError * RSXMLMakeErrorWrongParser(RSXMLError expected, RSXMLError other) {
+NSError * RSXMLMakeErrorWrongParser(RSXMLError expected, RSXMLError other, NSURL *uri) {
+	NSString *documentURI = @"";
+	if (uri) {
+		documentURI = (uri.isFileURL ? [[uri filePathURL] path] : [uri absoluteString]);
+	}
 	return [NSError errorWithDomain:kRSXMLParserErrorDomain code:expected
-						   userInfo:@{NSLocalizedDescriptionKey: getErrorMessageForRSXMLError(expected, other)}];
+						   userInfo:@{ NSLocalizedDescriptionKey: getErrorMessageForRSXMLError(expected, other),
+									   NSLocalizedRecoverySuggestionErrorKey: documentURI }];
 }

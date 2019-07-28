@@ -28,12 +28,12 @@
 @class RSXMLParser;
 
 @interface RSXMLData <__covariant T : RSXMLParser *> : NSObject
-@property (nonatomic, readonly, nonnull) NSString *urlString;
+@property (nonatomic, readonly, nonnull) NSURL *url;
 @property (nonatomic, readonly, nullable) NSData *data;
 @property (nonatomic, readonly, nullable) Class parserClass;
 @property (nonatomic, readonly, nullable) NSError *parserError;
 
-- (instancetype)initWithData:(NSData * _Nonnull)data urlString:(NSString * _Nonnull)urlString;
+- (instancetype)initWithData:(NSData * _Nonnull)data url:(NSURL * _Nonnull)url;
 
 - (T _Nullable)getParser;
 - (BOOL)canParseData;
