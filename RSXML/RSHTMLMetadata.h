@@ -23,6 +23,7 @@
 //  SOFTWARE.
 
 @import Foundation;
+@import CoreGraphics;
 
 typedef enum {
 	RSFeedTypeNone,

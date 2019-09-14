@@ -48,5 +48,7 @@ extern NSString *OPMLXMLURLKey; //xmlUrl
 - (id)attributeForKey:(NSString *)key;
 
 - (NSString *)recursiveDescription;
+#ifdef TARGET_MAC
 - (NSXMLDocument *)exportXML;
+#endif
 @end

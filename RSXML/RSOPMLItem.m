@@ -135,6 +135,8 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	return mStr;
 }
 
+#ifdef TARGET_MAC
+
 /// Can be used to export directly to @c .opml file.
 - (NSXMLDocument *)exportXML {
 	NSXMLElement *head = [NSXMLElement elementWithName:@"head"];
@@ -171,5 +173,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 		[child appendChildToNode:outline];
 	}
 }
+
+#endif
 
 @end

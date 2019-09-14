@@ -42,6 +42,8 @@
 	return [[RSXMLData alloc] initWithData:d url:[NSURL fileURLWithPath:s]];
 }
 
+#ifdef TARGET_MAC
+
 - (void)testOPMLExport {
 	RSOPMLItem *doc = [RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Greetings from CCC",
 													   @"dateCreated" : @"2018-12-27 23:12:04 +0100",
@@ -75,6 +77,8 @@
 	
 	NSLog(@"%@", [document recursiveDescription]);
 }
+
+#endif
 
 - (void)testNotOPML {
 
