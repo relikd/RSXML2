@@ -51,8 +51,11 @@
 	return [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15]];
 }
 
-- (NSString *)absoluteURLWithBase:(NSURL *)baseURL {
-	if (baseURL && ![[self lowercaseString] hasPrefix:@"http"]) {
+- (NSString *)absoluteURLWithBase:(nullable NSURL *)baseURL {
+	// Update links that have no scheme.
+	if (![[NSURL URLWithString:self] scheme]) {
+		// baseURL is only nil for feed links, not for article links!
+		if (!baseURL) baseURL = [NSURL URLWithString:@"http://"];
 		NSURL *resolvedURL = [NSURL URLWithString:self relativeToURL:baseURL];
 		if (resolvedURL.absoluteString) {
 			return resolvedURL.absoluteString;

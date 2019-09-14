@@ -191,7 +191,7 @@ static NSString *kRDFAboutKey = @"rdf:about";
 		switch (len) {
 			case 4:
 				if (EqualBytes(localName, "link", 4)) {
-					self.parsedFeed.link = SAXParser.currentStringWithTrimmedWhitespace;
+					self.parsedFeed.link = [SAXParser.currentStringWithTrimmedWhitespace absoluteURLWithBase:nil];
 					self.baseURL = [NSURL URLWithString:self.parsedFeed.link];
 				}
 				return;

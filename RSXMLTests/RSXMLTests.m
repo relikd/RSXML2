@@ -287,6 +287,14 @@
 	XCTAssertEqualObjects(error.localizedDescription, @"Opening and ending tag mismatch: channel line 0 and rss");
 }
 
+- (void)testHttpSchemePrepending {
+	NSError *error = nil;
+	RSXMLData *xmlData = [self xmlFile:@"ccc-media" extension:@"rdf"];
+	RSParsedFeed *parsedFeed = [[xmlData getParser] parseSync:&error];
+	XCTAssertNil(error);
+	XCTAssertEqualObjects(parsedFeed.link, @"http://media.ccc.de/");
+}
+
 - (void)testDownloadedFeeds {
 	NSError *error = nil;
 	int i = 0;
