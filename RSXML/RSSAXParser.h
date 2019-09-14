@@ -68,11 +68,20 @@
 
 - (instancetype)initWithDelegate:(id<RSSAXParserDelegate>)delegate;
 
+/// Initialize new xml or html parser context and start processing of data.
 - (void)parseBytes:(const void *)bytes numberOfBytes:(NSUInteger)numberOfBytes;
+/// Will stop the sax parser from processing any further. @c saxParserDidReachEndOfDocument: will not be called.
 - (void)cancel;
+/**
+ Delegate can call from @c XMLStartElement.
+ Characters will be available in @c XMLEndElement as @c currentCharacters property.
+ Storing characters is stopped after each @c XMLEndElement.
+ */
 - (void)beginStoringCharacters;
 
+/// Delegate can call from within @c XMLStartElement. Returns @c nil if @c numberOfAttributes @c < @c 1 .
 - (NSDictionary *)attributesDictionary:(const unsigned char **)attributes numberOfAttributes:(NSInteger)numberOfAttributes;
+/// Delegate can call from within @c XMLStartElement. Returns @c nil if @c attributes is @c nil .
 - (NSDictionary *)attributesDictionaryHTML:(const unsigned char **)attributes;
 
 @end

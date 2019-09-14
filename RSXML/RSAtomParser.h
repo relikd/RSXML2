@@ -27,6 +27,7 @@
 // <feed> <entry>
 // https://validator.w3.org/feed/docs/rfc4287.html
 
+/// Feed parser for Atom xml feeds. Expects the tags @c <feed> and @c <entry> to be existent.
 @interface RSAtomParser : RSFeedParser
 
 @end

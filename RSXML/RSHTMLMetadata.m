@@ -44,6 +44,7 @@ RSFeedType RSFeedTypeFromLinkTypeAttribute(NSString * typeStr) {
 
 @implementation RSHTMLMetadataIconLink
 
+// docref in header
 - (CGSize)getSize {
 	if (self.sizes && self.sizes.length > 0) {
 		NSArray<NSString*> *parts = [self.sizes componentsSeparatedByString:@"x"];

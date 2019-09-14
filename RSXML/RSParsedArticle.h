@@ -24,14 +24,12 @@
 
 @import Foundation;
 
-
+/// Parsed result type for articles. Does contain article specific attributes like abstract and content.
 @interface RSParsedArticle : NSObject
-
-- (nonnull instancetype)initWithFeedURL:(NSURL * _Nonnull)feedURL dateParsed:(NSDate*)parsed;
-
 @property (nonatomic, readonly, nonnull) NSURL *feedURL;
 @property (nonatomic, readonly, nonnull) NSDate *dateParsed;
-@property (nonatomic, readonly, nonnull) NSString *articleID; //Calculated. Don't get until other properties have been set.
+/// Calculated. Don't get until other properties have been set.
+@property (nonatomic, readonly, nonnull) NSString *articleID;
 
 @property (nonatomic, nullable) NSString *guid;
 @property (nonatomic, nullable) NSString *title;
@@ -43,7 +41,9 @@
 @property (nonatomic, nullable) NSDate *datePublished;
 @property (nonatomic, nullable) NSDate *dateModified;
 
-- (void)calculateArticleID; // Optimization. Call after all properties have been set. Call on a background thread.
+- (nonnull instancetype)initWithFeedURL:(NSURL * _Nonnull)feedURL dateParsed:(NSDate*)parsed;
+///Initiate calculation of article id. For optimization, call on a background thread after all properties have been set.
+- (void)calculateArticleID;
 
 @end
 

@@ -27,6 +27,7 @@
 
 @class RSHTMLMetadata;
 
+/// HTML parser for html header metadata. Used to extract feed and favicon URLs.
 @interface RSHTMLMetadataParser : RSXMLParser<RSHTMLMetadata*>
 
 @end

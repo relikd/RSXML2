@@ -45,12 +45,12 @@
 	return _parsedFeed;
 }
 
-/// @return @c NSDate by parsing RFC 822 and 8601 date strings.
+// docref in header
 - (NSDate *)dateFromCharacters:(NSData *)data {
 	return RSDateWithBytes(data.bytes, data.length);
 }
 
-/// @return currentString by removing HTML encoded entities.
+// docref in header
 - (NSString *)decodeHTMLEntities:(NSString *)str {
 	return [str rsxml_stringByDecodingHTMLEntities];
 }

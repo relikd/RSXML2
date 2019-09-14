@@ -39,10 +39,7 @@
 + (BOOL)isHTMLParser { return NO; } // override
 - (id)xmlParserWillReturnDocument { return nil; } // override
 
-/**
- Designated initializer. Runs a check whether it matches the detected parser in @c RSXMLData.
- Keeps an internal pointer to the @c RSXMLData and initializes a new @c RSSAXParser.
- */
+// docref in header
 + (instancetype)parserWithXMLData:(nonnull RSXMLData *)xmlData {
 	if ([xmlData.parserClass isSubclassOfClass:[super class]]) {
 		return [[xmlData.parserClass alloc] initWithXMLData:xmlData];
@@ -85,12 +82,7 @@
 	}];
 }
 
-/**
- Parse the XML data on whatever thread this method is called.
- 
- @param error Sets @c error if parser gets unrecognized data or libxml runs into a parsing error.
- @return The parsed object. The object type depends on the underlying data. @c RSParsedFeed, @c RSOPMLItem or @c RSHTMLMetadata.
- */
+// docref in header
 - (id _Nullable)parseSync:(NSError **)error {
 	if (_xmlInputError) {
 		if (error) *error = _xmlInputError;
@@ -109,9 +101,7 @@
 	return [self xmlParserWillReturnDocument];
 }
 
-/**
- Dispatch new background thread, parse the data synchroniously on the background thread and exec callback on the main thread.
- */
+// docref in header
 - (void)parseAsync:(void(^)(id parsedDocument, NSError *error))block {
 	dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{ // QOS_CLASS_DEFAULT
 		@autoreleasepool {
@@ -124,7 +114,7 @@
 	});
 }
 
-/// @return @c YES if @c .xmlInputError is @c nil.
+// docref in header
 - (BOOL)canParse {
 	return (self.xmlInputError == nil);
 }

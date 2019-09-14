@@ -27,6 +27,7 @@
 
 @class RSXMLParser;
 
+/// Wrapper class for xml data. Returns the designated parser for any given xml data.
 @interface RSXMLData <__covariant T : RSXMLParser *> : NSObject
 @property (nonatomic, readonly, nonnull) NSURL *url;
 @property (nonatomic, readonly, nullable) NSData *data;
@@ -35,7 +36,9 @@
 
 - (instancetype)initWithData:(NSData * _Nonnull)data url:(NSURL * _Nonnull)url;
 
+/// @return Kind of @c RSXMLParser or @c nil if no suitable parser found.
 - (T _Nullable)getParser;
+/// @return @c YES if any parser, regardless of type, is suitable.
 - (BOOL)canParseData;
 
 @end

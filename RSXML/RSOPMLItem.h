@@ -23,32 +23,44 @@
 
 @import Foundation;
 
+#ifndef TARGET_IOS
+#define OPML_EXPORT 0
+#endif
+
 // OPML allows for arbitrary attributes.
 // These are the common attributes in OPML files used as RSS subscription lists.
 
-extern NSString *OPMLTextKey; //text
-extern NSString *OPMLTitleKey; //title
-extern NSString *OPMLDescriptionKey; //description
-extern NSString *OPMLTypeKey; //type
-extern NSString *OPMLVersionKey; //version
-extern NSString *OPMLHMTLURLKey; //htmlUrl
-extern NSString *OPMLXMLURLKey; //xmlUrl
+/** Constant: @c \@"text"        */ extern NSString *OPMLTextKey;
+/** Constant: @c \@"title"       */ extern NSString *OPMLTitleKey;
+/** Constant: @c \@"description" */ extern NSString *OPMLDescriptionKey;
+/** Constant: @c \@"type"        */ extern NSString *OPMLTypeKey;
+/** Constant: @c \@"version"     */ extern NSString *OPMLVersionKey;
+/** Constant: @c \@"htmlUrl"     */ extern NSString *OPMLHMTLURLKey;
+/** Constant: @c \@"xmlUrl"      */ extern NSString *OPMLXMLURLKey;
 
 
+/// Parsed result type for opml files. @c children can be arbitrary nested.
 @interface RSOPMLItem : NSObject
+/// Can be arbitrary nested.
 @property (nonatomic) NSArray<RSOPMLItem*> *children;
 @property (nonatomic) NSDictionary *attributes;
-@property (nonatomic, readonly) BOOL isFolder; // true if children.count > 0
-@property (nonatomic, readonly) NSString *displayName; //May be nil.
+/// Returns @c YES if @c children.count @c > @c 0
+@property (nonatomic, readonly) BOOL isFolder;
+@property (nonatomic, readonly, nullable) NSString *displayName;
 
 + (instancetype)itemWithAttributes:(NSDictionary *)attribs;
 
+/// Appends one child to the internal children array (creates new empty array if necessary).
 - (void)addChild:(RSOPMLItem *)child;
+/// Sets a value in the internal dictionary (creates new empty dictionary if necessary).
 - (void)setAttribute:(id)value forKey:(NSString *)key;
+/// @return Value for key (case-independent).
 - (id)attributeForKey:(NSString *)key;
 
+/// Print object description for debugging purposes.
 - (NSString *)recursiveDescription;
-#ifdef TARGET_MAC
+#if OPML_EXPORT
+/// Can be used to export directly to @c .opml file.
 - (NSXMLDocument *)exportXML;
 #endif
 @end

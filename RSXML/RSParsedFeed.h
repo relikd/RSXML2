@@ -26,6 +26,7 @@
 
 @class RSParsedArticle;
 
+/// Parsed result type for feeds. Does contain feed specific attributes and a sorted list or articles.
 @interface RSParsedFeed : NSObject
 @property (nonatomic, readonly, nonnull) NSURL *url;
 @property (nonatomic, readonly, nonnull) NSDate *dateParsed;
@@ -36,6 +37,7 @@
 @property (nonatomic, nullable) NSString *subtitle;
 
 - (nonnull instancetype)initWithURL:(NSURL * _Nonnull)url;
+/// Append new @c RSParsedArticle object to @c .articles and return newly inserted instance.
 - (RSParsedArticle *)appendNewArticle;
 
 @end

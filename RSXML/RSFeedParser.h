@@ -26,10 +26,13 @@
 
 @class RSParsedFeed, RSParsedArticle;
 
+/// Generic feed parser. Used for atom, RSS, and RDF feeds.
 @interface RSFeedParser : RSXMLParser<RSParsedFeed*>
 @property (nonatomic, readonly) RSParsedFeed *parsedFeed;
 @property (nonatomic, weak) RSParsedArticle *currentArticle;
 
+/// @return @c NSDate by parsing RFC 822 and 8601 date strings.
 - (NSDate *)dateFromCharacters:(NSData *)data;
+/// @return currentString by removing HTML encoded entities.
 - (NSString *)decodeHTMLEntities:(NSString *)str;
 @end

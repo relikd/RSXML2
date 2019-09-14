@@ -74,7 +74,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 }
 
 /// @return Value for @c OPMLTitleKey. If not set, use @c OPMLTextKey, else return @c nil.
-- (NSString *)displayName {
+- (nullable NSString *)displayName {
 	NSString *title = [self attributeForKey:OPMLTitleKey];
 	if (!title) {
 		title = [self attributeForKey:OPMLTextKey];
@@ -82,7 +82,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	return title;
 }
 
-/// Appends one child to the internal children array (creates new empty array if necessary).
+// docref in header
 - (void)addChild:(RSOPMLItem *)child {
 	if (!self.mutableChildren) {
 		self.mutableChildren = [NSMutableArray new];
@@ -90,7 +90,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	[self.mutableChildren addObject:child];
 }
 
-/// Sets a value in the internal dictionary (creates new empty dictionary if necessary).
+// docref in header
 - (void)setAttribute:(id)value forKey:(NSString *)key {
 	if (!self.mutableAttributes) {
 		self.mutableAttributes = [NSMutableDictionary new];
@@ -98,7 +98,7 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	[self.mutableAttributes setValue:value forKey:key];
 }
 
-/// @return Value for key (case-independent).
+// docref in header
 - (id)attributeForKey:(NSString *)key {
 	if (self.mutableAttributes.count > 0 && key && key.length > 0) {
 		return [self.mutableAttributes rsxml_objectForCaseInsensitiveKey:key];
@@ -128,16 +128,16 @@ NSString *OPMLXMLURLKey = @"xmlUrl";
 	}
 }
 
-/// Print object description for debugging purposes.
+// docref in header
 - (NSString *)recursiveDescription {
 	NSMutableString *mStr = [NSMutableString new];
 	[self appendStringRecursive:mStr indent:@""];
 	return mStr;
 }
 
-#ifdef TARGET_MAC
+#if OPML_EXPORT
 
-/// Can be used to export directly to @c .opml file.
+// docref in header
 - (NSXMLDocument *)exportXML {
 	NSXMLElement *head = [NSXMLElement elementWithName:@"head"];
 	for (NSString *key in _mutableAttributes) {

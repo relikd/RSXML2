@@ -195,12 +195,12 @@ static const NSUInteger numberOfCharactersToSearch = 4096;
 #pragma mark - Check Methods to Determine Parser Type
 
 
-/// @return Kind of @c RSXMLParser or @c nil if no suitable parser found.
+// docref in header
 - (id)getParser {
 	return [_parserClass parserWithXMLData:self];
 }
 
-/// @return @c YES if any parser, regardless of type, is suitable.
+// docref in header
 - (BOOL)canParseData {
 	return (_parserClass != nil && _parserError == nil);
 }

@@ -29,6 +29,9 @@
 
 @class RSXMLData;
 
+//  ---------------------------------------------------------------
+// |  MARK: - Parser Delegate
+//  ---------------------------------------------------------------
 
 @protocol RSXMLParserDelegate <NSObject>
 @optional
@@ -56,14 +59,34 @@
 @end
 
 
+//  ---------------------------------------------------------------
+// |  MARK: - Parser
+//  ---------------------------------------------------------------
+
+/**
+ Generic wrapper class for @c libxml parsing.
+ Could be one of @c RSRSSParser, @c RSAtomParser, @c RSOPMLParser, @c RSHTMLMetadataParser, and @c RSHTMLLinkParser
+ */
 @interface RSXMLParser<__covariant T> : NSObject <RSXMLParserDelegate, RSSAXParserDelegate>
 @property (nonatomic, readonly, nonnull, copy) NSURL *documentURI;
 @property (nonatomic, assign) BOOL dontStopOnLowerAsciiBytes;
 
+/**
+ Designated initializer. Runs a check whether it matches the detected parser in @c RSXMLData.
+ Keeps an internal pointer to the @c RSXMLData and initializes a new @c RSSAXParser.
+ */
 + (instancetype)parserWithXMLData:(RSXMLData * _Nonnull)xmlData;
 
+/**
+ Parse the XML data on whatever thread this method is called.
+ 
+ @param error Sets @c error if parser gets unrecognized data or @c libxml runs into a parsing error.
+ @return The parsed object. The object type depends on the underlying data. @c RSParsedFeed, @c RSOPMLItem or @c RSHTMLMetadata.
+ */
 - (T _Nullable)parseSync:(NSError ** _Nullable)error;
+/// Dispatch new background thread, parse the data synchroniously on the background thread and exec callback on the main thread.
 - (void)parseAsync:(void(^)(T _Nullable parsedDocument, NSError * _Nullable error))block;
+/// @return @c YES if @c .xmlInputError is @c nil.
 - (BOOL)canParse;
 
 @end

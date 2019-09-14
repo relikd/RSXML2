@@ -36,6 +36,7 @@ RSFeedType RSFeedTypeFromLinkTypeAttribute(NSString * typeStr);
 
 @class RSHTMLMetadataIconLink, RSHTMLMetadataFeedLink;
 
+/// Parsed result type for HTML metadata.
 @interface RSHTMLMetadata : NSObject
 @property (nonatomic, copy, nullable) NSString *faviconLink;
 @property (nonatomic, nonnull) NSArray <RSHTMLMetadataIconLink *> *iconLinks;
@@ -51,6 +52,7 @@ RSFeedType RSFeedTypeFromLinkTypeAttribute(NSString * typeStr);
 
 @interface RSHTMLMetadataIconLink : RSHTMLMetadataLink
 @property (nonatomic, copy, nullable) NSString *sizes;
+/// Parses size on the fly. Expects the following format: @c "{int}x{int}" . Returns @c CGSizeZero otherwise.
 - (CGSize)getSize;
 @end
 

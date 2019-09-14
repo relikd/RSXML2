@@ -29,6 +29,7 @@
 
 @class RSOPMLItem;
 
+/// OPML parser for structured opml files. Expects the tags @c <opml> and @c <outline> to be existent.
 @interface RSOPMLParser: RSXMLParser<RSOPMLItem*>
 
 @end

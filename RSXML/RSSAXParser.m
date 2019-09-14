@@ -94,9 +94,7 @@ const NSErrorDomain kLIBXMLParserErrorDomain = @"LIBXMLParserErrorDomain";
 
 static xmlSAXHandler saxHandlerStruct;
 
-/**
- Initialize new xml or html parser context and start processing of data.
- */
+// docref in header
 - (void)parseBytes:(const void *)bytes numberOfBytes:(NSUInteger)numberOfBytes {
 
 	_parsingError = nil;
@@ -145,18 +143,14 @@ static xmlSAXHandler saxHandlerStruct;
 	}
 }
 
-/// Will stop the sax parser from processing any further. @c saxParserDidReachEndOfDocument: will not be called.
+// docref in header
 - (void)cancel {
 	@autoreleasepool {
 		xmlStopParser(self.context);
 	}
 }
 
-/**
- Delegate can call from @c XMLStartElement.
- Characters will be available in @c XMLEndElement as @c currentCharacters property.
- Storing characters is stopped after each @c XMLEndElement.
- */
+// docref in header
 - (void)beginStoringCharacters {
 	self.storingCharacters = YES;
 	self.characters = [NSMutableData new];
@@ -194,9 +188,7 @@ static xmlSAXHandler saxHandlerStruct;
 #pragma mark - Attributes Dictionary
 
 
-/**
- Delegate can call from within @c XMLStartElement. Returns @c nil if @c numberOfAttributes @c < @c 1.
- */
+// docref in header
 - (NSDictionary *)attributesDictionary:(const xmlChar **)attributes numberOfAttributes:(NSInteger)numberOfAttributes {
 
 	if (numberOfAttributes < 1 || !attributes) {
@@ -240,9 +232,7 @@ static xmlSAXHandler saxHandlerStruct;
 	return d;
 }
 
-/**
- Delegate can call from within @c XMLStartElement. Returns @c nil if @c numberOfAttributes @c < @c 1.
- */
+// docref in header
 - (NSDictionary *)attributesDictionaryHTML:(const xmlChar **)attributes {
 	
 	if (!attributes) {

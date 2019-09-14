@@ -27,5 +27,6 @@
 
 @class RSHTMLMetadataAnchor;
 
+/// HTML parser for html header metadata. Used to extract generic anchor tags.
 @interface RSHTMLLinkParser : RSXMLParser<NSArray<RSHTMLMetadataAnchor*>*>
 @end

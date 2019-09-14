@@ -46,9 +46,7 @@
 	return _mutableArticles;
 }
 
-/**
- Append new @c RSParsedArticle object to @c .articles and return newly inserted instance.
- */
+// docref in header
 - (RSParsedArticle *)appendNewArticle {
 	RSParsedArticle *article = [[RSParsedArticle alloc] initWithFeedURL:self.url dateParsed:_dateParsed];
 	[_mutableArticles addObject:article];

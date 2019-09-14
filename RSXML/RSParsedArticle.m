@@ -46,9 +46,7 @@
 
 #pragma mark - Unique Article ID
 
-/**
- Article ID will be generated on the first access.
- */
+// docref in header
 - (NSString *)articleID {
 	if (!_internalArticleID) {
 		_internalArticleID = self.calculatedUniqueID;
@@ -56,9 +54,7 @@
 	return _internalArticleID;
 }
 
-/**
- Initiate calculation of article id.
- */
+// docref in header
 - (void)calculateArticleID {
 	(void)self.articleID;
 }

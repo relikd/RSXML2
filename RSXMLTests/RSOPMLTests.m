@@ -42,9 +42,8 @@
 	return [[RSXMLData alloc] initWithData:d url:[NSURL fileURLWithPath:s]];
 }
 
-#ifdef TARGET_MAC
-
 - (void)testOPMLExport {
+#if OPML_EXPORT
 	RSOPMLItem *doc = [RSOPMLItem itemWithAttributes:@{OPMLTitleKey : @"Greetings from CCC",
 													   @"dateCreated" : @"2018-12-27 23:12:04 +0100",
 													   @"ownerName" : @"RSXML Parser"}];
@@ -76,9 +75,11 @@
 	XCTAssertEqualObjects([document.children.lastObject attributeForKey:OPMLXMLURLKey], @"http://www.feed2.com/feed.atom");
 	
 	NSLog(@"%@", [document recursiveDescription]);
-}
-
+#else
+	NSLog(@"OPML export is disabled for this framework!");
+	XCTAssertNil(nil);
 #endif
+}
 
 - (void)testNotOPML {
 

@@ -27,6 +27,7 @@
 // <channel> <item>
 // https://cyber.harvard.edu/rss/rss.html
 
+/// Feed parser for RSS xml and RDF xml feeds. Expects the tags @c <channel> and @c <item> to be existent.
 @interface RSRSSParser : RSFeedParser
 
 @end
