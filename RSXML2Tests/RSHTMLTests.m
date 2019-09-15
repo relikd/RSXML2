@@ -23,7 +23,7 @@
 //  SOFTWARE.
 
 #import <XCTest/XCTest.h>
-@import RSXML;
+@import RSXML2;
 
 @interface RSHTMLTests : XCTestCase
 

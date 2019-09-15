@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:RSXML.xcodeproj">
+      location = "self:RSXML2.xcodeproj">
    </FileRef>
 </Workspace>

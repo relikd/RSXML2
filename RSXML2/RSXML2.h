@@ -25,24 +25,24 @@
 @import Foundation;
 
 // General
-#import <RSXML/RSXMLError.h>
-#import <RSXML/NSString+RSXML.h>
-#import <RSXML/RSDateParser.h>
-#import <RSXML/RSXMLData.h>
-#import <RSXML/RSXMLParser.h>
+#import <RSXML2/RSXMLError.h>
+#import <RSXML2/NSString+RSXML.h>
+#import <RSXML2/RSDateParser.h>
+#import <RSXML2/RSXMLData.h>
+#import <RSXML2/RSXMLParser.h>
 
 // RSS & Atom Feeds
-#import <RSXML/RSFeedParser.h>
-#import <RSXML/RSAtomParser.h>
-#import <RSXML/RSRSSParser.h>
-#import <RSXML/RSParsedFeed.h>
-#import <RSXML/RSParsedArticle.h>
+#import <RSXML2/RSFeedParser.h>
+#import <RSXML2/RSAtomParser.h>
+#import <RSXML2/RSRSSParser.h>
+#import <RSXML2/RSParsedFeed.h>
+#import <RSXML2/RSParsedArticle.h>
 
 // OPML
-#import <RSXML/RSOPMLParser.h>
-#import <RSXML/RSOPMLItem.h>
+#import <RSXML2/RSOPMLParser.h>
+#import <RSXML2/RSOPMLItem.h>
 
 // HTML
-#import <RSXML/RSHTMLMetadataParser.h>
-#import <RSXML/RSHTMLLinkParser.h>
-#import <RSXML/RSHTMLMetadata.h>
+#import <RSXML2/RSHTMLMetadataParser.h>
+#import <RSXML2/RSHTMLLinkParser.h>
+#import <RSXML2/RSHTMLMetadata.h>

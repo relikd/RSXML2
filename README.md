@@ -1,8 +1,14 @@
-# RSXML
+[![Current release](https://img.shields.io/github/v/release/relikd/RSXML2)][releases]
+[![macOS 10.10+](https://img.shields.io/badge/macOS-10.10+-888)][releases]
+[![iOS 8.0+](https://img.shields.io/badge/iOS-8.0+-888)][releases]
+[![MIT license](https://img.shields.io/badge/license-MIT-7B2)](LICENSE)
+
+
+# RSXML2
 
 This is utility code for parsing XML and HTML using libXML2’s SAX parser. It does not depend on any other third-party frameworks and builds two targets: one for Mac, one for iOS.
 
-**Note:** This is an actively maintained fork of the [RSXML library by Brent Simmons](https://github.com/brentsimmons/RSXML). The original library seems to be inactive in favor of the new version [RSParser](https://github.com/brentsimmons/RSParser) which is written with Swift support in mind. If you prefer Swift you should go ahead and work with that project. However, the reason for this fork is to keep a version alive which is Objective-C only.
+**Note:** This is an actively maintained fork of the [RSXML library by Brent Simmons](https://github.com/brentsimmons/RSXML). The original library seems to be inactive in favor of the new version [RSParser](https://github.com/brentsimmons/RSParser) which is written with Swift support in mind. If you prefer Swift you should go ahead and use that library. However, the reason for this fork is to keep a version alive which is Objective-C only.
 
 
 
@@ -56,11 +62,4 @@ You can define the parser type by declaring it like this: `RSXMLData<RSFeedParse
 
 
 
-### Extras
-
-`RSDateParser` makes it easy to parse dates from various formats found in different feed types.
-
-`NSString+RSXML` decodes HTML entities.
-
-Also note: there are some unit tests.
-
+[releases]: https://github.com/relikd/RSXML2/releases

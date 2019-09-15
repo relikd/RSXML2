@@ -1,5 +1,11 @@
 # Ignore downloaded files for test cases
-RSXMLTests/Resources/feed_[0-9]*.rss
+RSXML2Tests/Resources/feed_[0-9]*.rss
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
 
 # Xcode
 #
