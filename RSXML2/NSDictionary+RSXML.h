@@ -23,6 +23,10 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSDictionary (RSXML)
 - (nullable id)rsxml_objectForCaseInsensitiveKey:(NSString *)key;
 @end
+
+NS_ASSUME_NONNULL_END

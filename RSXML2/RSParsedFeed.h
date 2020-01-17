@@ -24,6 +24,8 @@
 
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class RSParsedArticle;
 
 /// Parsed result type for feeds. Does contain feed specific attributes and a sorted list or articles.
@@ -41,3 +43,5 @@
 - (RSParsedArticle *)appendNewArticle;
 
 @end
+
+NS_ASSUME_NONNULL_END

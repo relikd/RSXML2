@@ -25,6 +25,8 @@
 @import Foundation;
 #import "RSXMLParser.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class RSXMLParser;
 
 /// Wrapper class for xml data. Returns the designated parser for any given xml data.
@@ -42,3 +44,5 @@
 - (BOOL)canParseData;
 
 @end
+
+NS_ASSUME_NONNULL_END

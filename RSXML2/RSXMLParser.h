@@ -29,6 +29,8 @@
 
 @class RSXMLData;
 
+NS_ASSUME_NONNULL_BEGIN
+
 //  ---------------------------------------------------------------
 // |  MARK: - Parser Delegate
 //  ---------------------------------------------------------------
@@ -55,7 +57,7 @@
 /// @return @c YES if parser supports parsing HTML files.
 + (BOOL)isHTMLParser;
 /// Will be called after the parsing is finished. @return Reference to parsed object.
-- (id)xmlParserWillReturnDocument;
+- (nullable id)xmlParserWillReturnDocument;
 @end
 
 
@@ -91,3 +93,4 @@
 
 @end
 
+NS_ASSUME_NONNULL_END

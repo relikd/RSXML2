@@ -31,6 +31,8 @@ typedef enum {
 	RSFeedTypeAtom
 } RSFeedType;
 
+NS_ASSUME_NONNULL_BEGIN
+
 RSFeedType RSFeedTypeFromLinkTypeAttribute(NSString * typeStr);
 
 
@@ -65,3 +67,5 @@ RSFeedType RSFeedTypeFromLinkTypeAttribute(NSString * typeStr);
 @interface RSHTMLMetadataAnchor : RSHTMLMetadataLink // title: anchor text-value
 @property (nonatomic, copy, nullable) NSString *tooltip;
 @end
+
+NS_ASSUME_NONNULL_END

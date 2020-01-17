@@ -24,6 +24,8 @@
 
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// Parsed result type for articles. Does contain article specific attributes like abstract and content.
 @interface RSParsedArticle : NSObject
 @property (nonatomic, readonly, nonnull) NSURL *feedURL;
@@ -47,3 +49,4 @@
 
 @end
 
+NS_ASSUME_NONNULL_END

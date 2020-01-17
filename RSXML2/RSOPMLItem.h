@@ -27,6 +27,8 @@
 #define OPML_EXPORT 0
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 // OPML allows for arbitrary attributes.
 // These are the common attributes in OPML files used as RSS subscription lists.
 
@@ -55,7 +57,7 @@
 /// Sets a value in the internal dictionary (creates new empty dictionary if necessary).
 - (void)setAttribute:(id)value forKey:(NSString *)key;
 /// @return Value for key (case-independent).
-- (id)attributeForKey:(NSString *)key;
+- (nullable id)attributeForKey:(NSString *)key;
 
 /// Print object description for debugging purposes.
 - (NSString *)recursiveDescription;
@@ -64,3 +66,5 @@
 - (NSXMLDocument *)exportXML;
 #endif
 @end
+
+NS_ASSUME_NONNULL_END
