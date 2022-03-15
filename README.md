@@ -30,7 +30,7 @@ In the previous version, the test case for parsing a non-opml file (with `RSOPML
 
 ## Usage
 
-```
+```objc
 RSXMLData *xmlData = [[RSXMLData alloc] initWithData:d urlString:@"https://www.example.org"];
 // TODO: check xmlData.parserError
 RSFeedParser *parser = [RSFeedParser parserWithXMLData:xmlData];
@@ -44,7 +44,7 @@ RSParsedFeed *document = [parser parseSync:&parseError];
 
 If you don't care about the parser used to decode the data, `[xmlData getParser]` will return the most suitable parser. You can use that parser right away to call `parseSync:`. Anyway, you can also parse the XML file asynchronously with `parseAsync:`.
 
-```
+```objc
 [[xmlData getParser] parseAsync:^(RSParsedFeed *parsedDocument, NSError *error) {
 	// process feed items ...
 }];
