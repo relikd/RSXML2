@@ -23,7 +23,7 @@
 //  SOFTWARE.
 
 @import Foundation;
-#import "RSXMLParser.h"
+#import <RSXML2/RSXMLParser.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -22,7 +22,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "RSXMLParser.h"
+#import <RSXML2/RSXMLParser.h>
 
 // <opml> <outline>
 // http://dev.opml.org/spec2.html#subscriptionLists

@@ -22,7 +22,7 @@
 //  SOFTWARE.
 
 @import Foundation;
-#import "RSSAXParser.h"
+#import <RSXML2/RSSAXParser.h>
 
 #define EqualBytes(bytes1, bytes2, length) (memcmp(bytes1, bytes2, length) == 0)
 //#define EqualBytes(bytes1, bytes2, length) (!strncmp(bytes1, bytes2, length))

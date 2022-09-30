@@ -22,7 +22,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "RSFeedParser.h"
+#import <RSXML2/RSFeedParser.h>
 
 // <channel> <item>
 // https://cyber.harvard.edu/rss/rss.html

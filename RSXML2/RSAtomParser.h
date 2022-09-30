@@ -22,7 +22,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "RSFeedParser.h"
+#import <RSXML2/RSFeedParser.h>
 
 // <feed> <entry>
 // https://validator.w3.org/feed/docs/rfc4287.html

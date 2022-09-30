@@ -23,7 +23,7 @@
 //  SOFTWARE.
 
 @import Foundation;
-#import "RSXMLParser.h"
+#import <RSXML2/RSXMLParser.h>
 
 @class RSHTMLMetadataAnchor;
 
