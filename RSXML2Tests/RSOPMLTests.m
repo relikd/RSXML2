@@ -58,7 +58,6 @@
 	
 	NSXMLDocument *xml = [doc exportXML];
 	NSString *exportString = [xml XMLStringWithOptions:NSXMLNodePrettyPrint];
-	NSLog(@"%@", exportString);
 	
 	NSData *importData = [exportString dataUsingEncoding:NSUTF8StringEncoding];
 	RSXMLData *xmlData = [[RSXMLData alloc] initWithData:importData url:[NSURL URLWithString:@""]];
@@ -73,8 +72,6 @@
 	XCTAssertEqualObjects(document.children.firstObject.displayName, @"Feed \"Title\" 1");
 	XCTAssertEqualObjects(document.children.lastObject.displayName, @"Feed 'Title' 2");
 	XCTAssertEqualObjects([document.children.lastObject attributeForKey:OPMLXMLURLKey], @"http://www.feed2.com/feed.atom");
-	
-	NSLog(@"%@", [document recursiveDescription]);
 #else
 	NSLog(@"OPML export is disabled for this framework!");
 	XCTAssertNil(nil);
@@ -120,8 +117,6 @@
 	XCTAssertEqualObjects(document.children.lastObject.displayName, @"Writers");
 	XCTAssertEqualObjects(document.children.lastObject.children.lastObject.displayName, @"Gerrold");
 	[self checkStructureForOPMLItem:document isRoot:YES];
-	
-	//NSLog(@"\n%@", [document recursiveDescription]);
 	
 	[self measureBlock:^{
 		[parser parseSync:nil];

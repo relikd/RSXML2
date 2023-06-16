@@ -8,13 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		54702A9821D407A00050A741 /* RSXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 54702A9621D4079F0050A741 /* RSXMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		54702A9921D407A00050A741 /* RSXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 54702A9621D4079F0050A741 /* RSXMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54702A9A21D407A00050A741 /* RSXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 54702A9721D407A00050A741 /* RSXMLParser.m */; };
-		54702A9B21D407A00050A741 /* RSXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 54702A9721D407A00050A741 /* RSXMLParser.m */; };
 		54C707DB21D42B710029BFF1 /* NSDictionary+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C707D921D42B710029BFF1 /* NSDictionary+RSXML.m */; };
-		54C707DC21D42B710029BFF1 /* NSDictionary+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C707D921D42B710029BFF1 /* NSDictionary+RSXML.m */; };
 		54C707DD21D42B710029BFF1 /* NSDictionary+RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 54C707DA21D42B710029BFF1 /* NSDictionary+RSXML.h */; };
-		54C707DE21D42B710029BFF1 /* NSDictionary+RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 54C707DA21D42B710029BFF1 /* NSDictionary+RSXML.h */; };
 		54FCE5F421493B5E00FABB65 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 54FCE5F321493B5E00FABB65 /* Resources */; };
 		8400B0F01B8C20A9004C4CFF /* RSXMLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8400B0F11B8C20A9004C4CFF /* RSXMLData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */; };
@@ -39,38 +35,6 @@
 		8486F1161BB646140092794F /* NSString+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8486F1141BB646140092794F /* NSString+RSXML.m */; };
 		84AD0BF51E11A6FB00B38510 /* RSDateParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AD0BF31E11A6FB00B38510 /* RSDateParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AD0BF61E11A6FB00B38510 /* RSDateParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0BF41E11A6FB00B38510 /* RSDateParser.m */; };
-		84AD0C0D1E11B8BE00B38510 /* RSXML2.h in Headers */ = {isa = PBXBuildFile; fileRef = 84F22C101B52DDEA000060CE /* RSXML2.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C0E1E11B8CA00B38510 /* RSXMLError.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E4BE431C8B8FE400A90B41 /* RSXMLError.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C0F1E11B8CA00B38510 /* RSXMLError.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E4BE441C8B8FE400A90B41 /* RSXMLError.m */; };
-		84AD0C101E11B8CA00B38510 /* RSSAXParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84F22C271B52DDFE000060CE /* RSSAXParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C111E11B8CA00B38510 /* RSSAXParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F22C281B52DDFE000060CE /* RSSAXParser.m */; };
-		84AD0C121E11B8CA00B38510 /* RSXMLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8400B0EE1B8C20A9004C4CFF /* RSXMLData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C131E11B8CA00B38510 /* RSXMLData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8400B0EF1B8C20A9004C4CFF /* RSXMLData.m */; };
-		84AD0C141E11B8CA00B38510 /* NSString+RSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 8486F1131BB646140092794F /* NSString+RSXML.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C151E11B8CA00B38510 /* NSString+RSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8486F1141BB646140092794F /* NSString+RSXML.m */; };
-		84AD0C161E11B8CA00B38510 /* RSDateParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AD0BF31E11A6FB00B38510 /* RSDateParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C171E11B8CA00B38510 /* RSDateParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0BF41E11A6FB00B38510 /* RSDateParser.m */; };
-		84AD0C181E11B8CF00B38510 /* RSOPMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51781B5311AD00E63D52 /* RSOPMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C191E11B8CF00B38510 /* RSOPMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51791B5311AD00E63D52 /* RSOPMLParser.m */; };
-		84AD0C1C1E11B8CF00B38510 /* RSOPMLItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 8429D1B41C83A03100F97695 /* RSOPMLItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C1D1E11B8CF00B38510 /* RSOPMLItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429D1B51C83A03100F97695 /* RSOPMLItem.m */; };
-		84AD0C221E11B8D400B38510 /* RSFeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51501B52E80100E63D52 /* RSFeedParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C231E11B8D400B38510 /* RSFeedParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51511B52E80100E63D52 /* RSFeedParser.m */; };
-		84AD0C251E11B8D400B38510 /* RSAtomParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D514A1B52E7FC00E63D52 /* RSAtomParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C261E11B8D400B38510 /* RSAtomParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D514B1B52E7FC00E63D52 /* RSAtomParser.m */; };
-		84AD0C271E11B8D400B38510 /* RSRSSParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51581B52E81B00E63D52 /* RSRSSParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C281E11B8D400B38510 /* RSRSSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51591B52E81B00E63D52 /* RSRSSParser.m */; };
-		84AD0C291E11B8D400B38510 /* RSParsedFeed.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51741B530BF200E63D52 /* RSParsedFeed.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C2A1E11B8D400B38510 /* RSParsedFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51751B530BF200E63D52 /* RSParsedFeed.m */; };
-		84AD0C2B1E11B8D400B38510 /* RSParsedArticle.h in Headers */ = {isa = PBXBuildFile; fileRef = 842D51611B53058B00E63D52 /* RSParsedArticle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C2C1E11B8D400B38510 /* RSParsedArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D51621B53058B00E63D52 /* RSParsedArticle.m */; };
-		84AD0C2F1E11B8DA00B38510 /* RSHTMLMetadataParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BF3E141C8CDD1A005562D8 /* RSHTMLMetadataParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C301E11B8DA00B38510 /* RSHTMLMetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BF3E151C8CDD1A005562D8 /* RSHTMLMetadataParser.m */; };
-		84AD0C311E11B8DA00B38510 /* RSHTMLMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BF3E1A1C8CDD6D005562D8 /* RSHTMLMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C321E11B8DA00B38510 /* RSHTMLMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BF3E1B1C8CDD6D005562D8 /* RSHTMLMetadata.m */; };
-		84AD0C331E11B8DA00B38510 /* RSHTMLLinkParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 8475C4061D57AB4C0076751E /* RSHTMLLinkParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84AD0C341E11B8DA00B38510 /* RSHTMLLinkParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475C4071D57AB4C0076751E /* RSHTMLLinkParser.m */; };
-		84AD0C391E11BAA800B38510 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84AD0C381E11BAA800B38510 /* libxml2.2.tbd */; };
 		84AD0C3B1E11C2D500B38510 /* RSEntityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0C3A1E11C2D500B38510 /* RSEntityTests.m */; };
 		84AD0C3D1E11D75400B38510 /* RSDateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AD0C3C1E11D75400B38510 /* RSDateParserTests.m */; };
 		84BF3E161C8CDD1A005562D8 /* RSHTMLMetadataParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BF3E141C8CDD1A005562D8 /* RSHTMLMetadataParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -127,7 +91,6 @@
 		8486F1141BB646140092794F /* NSString+RSXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RSXML.m"; sourceTree = "<group>"; };
 		84AD0BF31E11A6FB00B38510 /* RSDateParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSDateParser.h; sourceTree = "<group>"; };
 		84AD0BF41E11A6FB00B38510 /* RSDateParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDateParser.m; sourceTree = "<group>"; };
-		84AD0C051E11B7D200B38510 /* RSXML2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RSXML2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84AD0C081E11B7D200B38510 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84AD0C381E11BAA800B38510 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.2.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
 		84AD0C3A1E11C2D500B38510 /* RSEntityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSEntityTests.m; sourceTree = "<group>"; };
@@ -151,14 +114,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		84AD0C011E11B7D200B38510 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				84AD0C391E11BAA800B38510 /* libxml2.2.tbd in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		84F22C091B52DDEA000060CE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -281,7 +236,6 @@
 			children = (
 				84F22C0D1B52DDEA000060CE /* RSXML2.framework */,
 				84F22C171B52DDEA000060CE /* RSXML2Tests.xctest */,
-				84AD0C051E11B7D200B38510 /* RSXML2.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -303,31 +257,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		84AD0C021E11B7D200B38510 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				84AD0C1C1E11B8CF00B38510 /* RSOPMLItem.h in Headers */,
-				84AD0C271E11B8D400B38510 /* RSRSSParser.h in Headers */,
-				84AD0C161E11B8CA00B38510 /* RSDateParser.h in Headers */,
-				54702A9921D407A00050A741 /* RSXMLParser.h in Headers */,
-				84AD0C101E11B8CA00B38510 /* RSSAXParser.h in Headers */,
-				84AD0C331E11B8DA00B38510 /* RSHTMLLinkParser.h in Headers */,
-				84AD0C2F1E11B8DA00B38510 /* RSHTMLMetadataParser.h in Headers */,
-				84AD0C251E11B8D400B38510 /* RSAtomParser.h in Headers */,
-				84AD0C121E11B8CA00B38510 /* RSXMLData.h in Headers */,
-				84AD0C311E11B8DA00B38510 /* RSHTMLMetadata.h in Headers */,
-				84AD0C221E11B8D400B38510 /* RSFeedParser.h in Headers */,
-				84AD0C0E1E11B8CA00B38510 /* RSXMLError.h in Headers */,
-				54C707DE21D42B710029BFF1 /* NSDictionary+RSXML.h in Headers */,
-				84AD0C2B1E11B8D400B38510 /* RSParsedArticle.h in Headers */,
-				84AD0C291E11B8D400B38510 /* RSParsedFeed.h in Headers */,
-				84AD0C181E11B8CF00B38510 /* RSOPMLParser.h in Headers */,
-				84AD0C141E11B8CA00B38510 /* NSString+RSXML.h in Headers */,
-				84AD0C0D1E11B8BE00B38510 /* RSXML2.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		84F22C0A1B52DDEA000060CE /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -356,24 +285,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		84AD0C041E11B7D200B38510 /* RSXML2iOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 84AD0C0A1E11B7D200B38510 /* Build configuration list for PBXNativeTarget "RSXML2iOS" */;
-			buildPhases = (
-				84AD0C001E11B7D200B38510 /* Sources */,
-				84AD0C011E11B7D200B38510 /* Frameworks */,
-				84AD0C021E11B7D200B38510 /* Headers */,
-				84AD0C031E11B7D200B38510 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = RSXML2iOS;
-			productName = RSXML2iOS;
-			productReference = 84AD0C051E11B7D200B38510 /* RSXML2.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		84F22C0C1B52DDEA000060CE /* RSXML2 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 84F22C211B52DDEA000060CE /* Build configuration list for PBXNativeTarget "RSXML2" */;
@@ -417,15 +328,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = relikd;
 				TargetAttributes = {
-					84AD0C041E11B7D200B38510 = {
-						CreatedOnToolsVersion = 8.2.1;
-					};
 					84F22C0C1B52DDEA000060CE = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = UY657LKNHJ;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 					};
 					84F22C161B52DDEA000060CE = {
 						CreatedOnToolsVersion = 7.0;
@@ -448,19 +358,11 @@
 			targets = (
 				84F22C0C1B52DDEA000060CE /* RSXML2 */,
 				84F22C161B52DDEA000060CE /* RSXML2Tests */,
-				84AD0C041E11B7D200B38510 /* RSXML2iOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		84AD0C031E11B7D200B38510 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		84F22C0B1B52DDEA000060CE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -479,30 +381,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		84AD0C001E11B7D200B38510 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				84AD0C231E11B8D400B38510 /* RSFeedParser.m in Sources */,
-				84AD0C171E11B8CA00B38510 /* RSDateParser.m in Sources */,
-				84AD0C191E11B8CF00B38510 /* RSOPMLParser.m in Sources */,
-				84AD0C341E11B8DA00B38510 /* RSHTMLLinkParser.m in Sources */,
-				84AD0C281E11B8D400B38510 /* RSRSSParser.m in Sources */,
-				84AD0C151E11B8CA00B38510 /* NSString+RSXML.m in Sources */,
-				84AD0C2C1E11B8D400B38510 /* RSParsedArticle.m in Sources */,
-				84AD0C301E11B8DA00B38510 /* RSHTMLMetadataParser.m in Sources */,
-				84AD0C2A1E11B8D400B38510 /* RSParsedFeed.m in Sources */,
-				84AD0C261E11B8D400B38510 /* RSAtomParser.m in Sources */,
-				84AD0C1D1E11B8CF00B38510 /* RSOPMLItem.m in Sources */,
-				54702A9B21D407A00050A741 /* RSXMLParser.m in Sources */,
-				84AD0C131E11B8CA00B38510 /* RSXMLData.m in Sources */,
-				84AD0C321E11B8DA00B38510 /* RSHTMLMetadata.m in Sources */,
-				54C707DC21D42B710029BFF1 /* NSDictionary+RSXML.m in Sources */,
-				84AD0C111E11B8CA00B38510 /* RSSAXParser.m in Sources */,
-				84AD0C0F1E11B8CA00B38510 /* RSXMLError.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		84F22C081B52DDEA000060CE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -550,58 +428,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		84AD0C0B1E11B7D200B38510 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"TARGET_IOS=1",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = "${SDKROOT}/usr/include/libxml2";
-				INFOPLIST_FILE = RSXML2iOS/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = de.relikd.RSXML2iOS;
-				PRODUCT_NAME = RSXML2;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		84AD0C0C1E11B7D200B38510 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREPROCESSOR_DEFINITIONS = "TARGET_IOS=1";
-				HEADER_SEARCH_PATHS = "${SDKROOT}/usr/include/libxml2";
-				INFOPLIST_FILE = RSXML2iOS/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = de.relikd.RSXML2iOS;
-				PRODUCT_NAME = RSXML2;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		84F22C1F1B52DDEA000060CE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -750,8 +576,11 @@
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = UY657LKNHJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -762,6 +591,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = de.relikd.RSXML2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -773,8 +603,11 @@
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = UY657LKNHJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -785,6 +618,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = de.relikd.RSXML2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -821,15 +655,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		84AD0C0A1E11B7D200B38510 /* Build configuration list for PBXNativeTarget "RSXML2iOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				84AD0C0B1E11B7D200B38510 /* Debug */,
-				84AD0C0C1E11B7D200B38510 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		84F22C071B52DDEA000060CE /* Build configuration list for PBXProject "RSXML2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

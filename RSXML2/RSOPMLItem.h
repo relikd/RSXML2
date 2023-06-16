@@ -23,9 +23,10 @@
 
 @import Foundation;
 
-#ifndef TARGET_IOS
-#define OPML_EXPORT 0
-#endif
+//#ifndef TARGET_IOS
+//#define OPML_EXPORT 0
+//#endif
+#define OPML_EXPORT 1
 
 NS_ASSUME_NONNULL_BEGIN
 
