@@ -21,7 +21,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 #import <RSXML2/RSSAXParser.h>
 
 #define EqualBytes(bytes1, bytes2, length) (memcmp(bytes1, bytes2, length) == 0)

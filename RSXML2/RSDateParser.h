@@ -21,7 +21,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 
 /*Common web dates -- RFC 822 and 8601 -- are handled here:

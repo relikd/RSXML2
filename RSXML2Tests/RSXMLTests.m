@@ -284,7 +284,7 @@
 	[[xmlData getParser] parseSync:&error];
 	XCTAssertNotNil(error);
 	XCTAssertEqual(error.code, 76);
-	XCTAssertEqualObjects(error.localizedDescription, @"Opening and ending tag mismatch: channel line 0 and rss");
+	XCTAssertEqualObjects(error.localizedDescription, @"Opening and ending tag mismatch: channel line 10 and rss");
 }
 
 - (void)testHttpSchemePrepending {
