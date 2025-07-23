@@ -334,9 +334,7 @@
 				TargetAttributes = {
 					84F22C0C1B52DDEA000060CE = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = UY657LKNHJ;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Automatic;
 					};
 					84F22C161B52DDEA000060CE = {
 						CreatedOnToolsVersion = 7.0;
@@ -581,6 +579,8 @@
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
@@ -613,6 +613,8 @@
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
